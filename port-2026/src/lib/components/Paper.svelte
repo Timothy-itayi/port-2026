@@ -27,14 +27,15 @@
 		if (shadow) gsap.killTweensOf(shadow);
 
 		const tl = gsap.timeline({
+			delay: 0.5, /* 0.5s delay after button press to prevent jolt */
 			onComplete: () => {
 				isAnimating = false;
 			}
 		});
 
-		// Reset paper state - start hidden deep inside the printer (negative y)
+		// Reset paper state - start completely hidden inside the printer
 		gsap.set(paperRef, {
-			y: -180, /* Tucked way up behind the visor and black bar */
+			y: -200, /* Hidden deep behind the visor */
 			opacity: 1,
 			rotateX: 0,
 			transformOrigin: 'top center'
@@ -44,60 +45,70 @@
 			gsap.set(shadow, { opacity: 0 });
 		}
 
-		// Phase 1: Slow emergence - reveals the bottom edge first, then middle
+		// Phase 1: Extremely slow initial sliver emergence
 		tl.to(paperRef, {
-			y: -30, /* Raised final reveal point */
-			rotateX: -5,
-			duration: 2.8, /* Sped up by 20% */
+			y: -185, /* Just a tiny sliver revealed first */
+			rotateX: -1,
+			duration: 1.0,
 			ease: 'power1.in'
 		})
 			.to(
 				shadow,
 				{
-					opacity: 1,
-					duration: 1.6 /* Sped up by 20% */
+					opacity: 0.4,
+					duration: 0.8
 				},
-				'>-1.6'
+				'<'
 			)
-			// Phase 2: Steady gradual slide to full reveal
+			// Phase 2: Steady mechanical slide to reveal content
 			.to(
 				paperRef,
 				{
-					y: 60, /* Raised final position */
-					rotateX: -8,
-					duration: 3.2, /* Sped up by 20% */
+					y: 45, /* Full reveal point */
+					rotateX: -6,
+					duration: 2.2, /* Much faster reveal */
 					ease: 'none'
 				},
 				'>'
 			)
-			// Phase 3: Gentle curl and settle
+			// Phase 3: Fast settle into final resting position
 			.to(
 				paperRef,
 				{
-					y: 50, /* Raised final position */
-					rotateX: 4,
-					duration: 1.6, /* Sped up by 20% */
-					ease: 'power1.out'
+					y: 35,
+					rotateX: 3,
+					duration: 0.8,
+					ease: 'power2.out'
 				},
-				'>-0.4'
+				'>-0.3'
 			)
 			.to(
 				paperRef,
 				{
-					y: 45, /* Final resting position - higher than before */
-					rotateX: 2,
-					duration: 1.0, /* Sped up by 20% */
+					y: 30, /* Final resting position - significantly higher */
+					rotateX: 1,
+					duration: 0.6,
 					ease: 'power1.inOut'
 				},
-				'>-0.3'
+				'>-0.2'
+			)
+			.to(
+				shadow,
+				{
+					opacity: 1,
+					duration: 0.6
+				},
+				'<'
 			);
 	}
 
 	export function reset() {
 		if (paperRef) {
 			gsap.killTweensOf(paperRef);
+			const shadow = paperRef.querySelector('.paper-sheet-curl-shadow');
+			if (shadow) gsap.killTweensOf(shadow);
 			gsap.set(paperRef, { 
-				y: 0, 
+				y: -200, 
 				opacity: 0, 
 				rotateX: 0 
 			});
