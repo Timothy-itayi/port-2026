@@ -18,9 +18,43 @@
 	pointer-events: auto;
 }
 
+.paper-container.inspected {
+	z-index: 2000; /* Way on top of everything including visor */
+	clip-path: none; /* Disable clipping when inspecting */
+}
+
+/* ========== PAPER BACKDROP ========== */
+.paper-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.6);
+	backdrop-filter: blur(4px);
+	z-index: 1500;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.6s ease;
+}
+
+.paper-backdrop.visible {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.paper-container.inspected .paper-sheet-curl-shadow {
+	opacity: 0 !important;
+}
+
 /* ========== PAPER SHEET (Single Continuous Sheet) ========== */
 .paper-sheet {
 	position: relative;
+	width: 100%;
+	border: none;
+	padding: 0;
+	margin: 0;
+	text-align: left;
+	cursor: pointer;
+	outline: none;
+	appearance: none;
 	background: #ffffff !important;
 	background-color: #ffffff !important;
 	border-radius: 2px;
@@ -39,6 +73,10 @@
 	/* Paper edges and depth */
 	border-left: 1px solid rgba(0, 0, 0, 0.03);
 	border-right: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+.paper-sheet:hover {
+	filter: brightness(0.98);
 }
 
 /* Remove any potential tint from parent gradients or filters */
