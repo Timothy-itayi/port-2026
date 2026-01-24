@@ -44,6 +44,8 @@
 	transform-style: preserve-3d;
 	transform-origin: top center;
 	opacity: 0;
+	transform: translateY(-500px); /* Start far above to avoid flashing */
+	transition: filter 0.2s ease; /* Smooth hover transition */
 	will-change: transform, opacity;
 	
 	/* Extremely high-contrast shadow to separate from tan printer */
@@ -57,8 +59,50 @@
 	border-right: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-.paper-sheet:hover {
-	filter: brightness(0.98);
+.paper-sheet:hover:not(:disabled) {
+	filter: brightness(0.92) contrast(1.1);
+	transform: translateY(-2px) rotateX(2deg) !important;
+	box-shadow:
+		0 25px 70px rgba(0, 0, 0, 0.5),
+		0 15px 30px rgba(0, 0, 0, 0.3),
+		inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.paper-sheet:active:not(:disabled) {
+	filter: brightness(0.85) contrast(1.2);
+	transform: translateY(1px) rotateX(0deg) !important;
+}
+
+.paper-sheet:disabled {
+	cursor: default;
+}
+
+.paper-sheet.animating {
+	cursor: wait;
+}
+
+.paper-sheet.ready::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 50%;
+	height: 100%;
+	background: linear-gradient(
+		90deg,
+		transparent,
+		rgba(255, 255, 255, 0.2),
+		transparent
+	);
+	transform: skewX(-20deg);
+	animation: shine 1.2s ease-out forwards;
+	pointer-events: none;
+}
+
+@keyframes shine {
+	to {
+		left: 200%;
+	}
 }
 
 /* Remove any potential tint from parent gradients or filters */
@@ -154,8 +198,139 @@
 .preview-line.medium { width: 70%; }
 .preview-line.short { width: 40%; }
 
-.preview-github, .preview-email {
+.preview-about, .preview-contact {
 	margin-top: 8px;
+}
+
+/* ========== ZINE STYLE (ABOUT) ========== */
+.zine-content {
+	padding: 8px;
+	border: 1px solid #000;
+	background: #fff;
+	color: #000;
+	font-family: 'Courier New', monospace;
+	image-rendering: pixelated;
+	position: relative;
+	overflow: hidden;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+}
+
+.zine-header-compact {
+	display: flex;
+	justify-content: flex-end;
+	margin-bottom: 4px;
+}
+
+.zine-top-right-image {
+	width: 24px;
+	height: 24px;
+	border: 1px solid #000;
+	overflow: hidden;
+}
+
+.zine-top-right-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	filter: contrast(1.1);
+}
+
+.zine-subheader-compact {
+	font-size: 6px;
+	text-align: center;
+	background: #000;
+	color: #fff;
+	padding: 1px;
+	margin-bottom: 6px;
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.zine-body {
+	display: grid;
+	grid-template-columns: 1fr 2fr;
+	gap: 6px;
+	flex: 1;
+	min-height: 0;
+}
+
+.zine-left-compact {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border: 1px solid #000;
+	padding: 2px;
+	gap: 2px;
+	align-self: flex-start;
+	max-height: fit-content; /* Ensure it stays tight */
+}
+
+.zine-fig-label {
+	font-size: 5px;
+	align-self: flex-start;
+}
+
+.zine-image-placeholder {
+	width: 100%;
+	aspect-ratio: 1;
+	background: #fff;
+	border: 1px solid #000;
+	position: relative;
+	overflow: hidden;
+}
+
+.zine-photo {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	filter: contrast(1.2) brightness(0.95);
+	image-rendering: auto;
+}
+
+.zine-caption {
+	font-size: 5px;
+	text-align: center;
+	line-height: 1;
+}
+
+.zine-headline {
+	font-weight: 950;
+	font-size: 10px; /* Scaled down */
+	margin-bottom: 2px;
+	line-height: 0.9;
+	text-transform: uppercase;
+}
+
+.zine-text {
+	font-size: 6px; /* Very small but fits the zine look */
+	line-height: 1.1;
+	text-align: justify;
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 8; /* Limit lines to keep card short */
+	-webkit-box-orient: vertical;
+}
+
+/* Override the paper dimensions for ABOUT specifically */
+.paper-container.zine {
+	width: 76%; /* Match the width of other papers */
+}
+
+.paper-container.zine .paper-sheet {
+	min-height: 120px; /* Further reduced height */
+	aspect-ratio: 1 / 0.85; /* Slightly wider than tall for a compact landscape feel */
+	background: #fff !important;
+	border: 1px solid #000;
+	box-shadow: 4px 4px 0 #000;
+	border-radius: 0;
+}
+
+.paper-container.zine .paper-sheet::before,
+.paper-container.zine .paper-sheet::after {
+	display: none;
 }
 
 /* ========== CURL SHADOW ========== */

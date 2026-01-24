@@ -52,24 +52,22 @@
 		// Animate visor opening to let paper through
 		if (visorEl) {
 			const tl = gsap.timeline();
+			// Spring open - quick lift with overshoot
 			tl.to(visorEl, {
-				rotationX: 45,
-				duration: 0.3,
-				ease: 'power2.out'
+				rotationX: 50,
+				duration: 0.2,
+				ease: 'power3.out'
 			})
-				.add(() => {
-					// Start paper animation after visor opens
-					isPrinting = true;
-				})
-				.to(
-					visorEl,
-					{
-						rotationX: 15,
-						duration: 0.8,
-						ease: 'elastic.out(1.2, 0.4)'
-					},
-					'>0.6'
-				);
+			// Spring back with natural sway
+			.to(visorEl, {
+				rotationX: 12,
+				duration: 1.2,
+				ease: 'elastic.out(1.0, 0.3)'
+			})
+			.add(() => {
+				// Start paper animation as visor settles
+				isPrinting = true;
+			}, 0.35); // Trigger print early during the spring-back
 		} else {
 			// If no visor, start immediately
 			isPrinting = true;
@@ -171,7 +169,7 @@
 							</div>
 
 							<div class="button-row">
-								{#each ['PROJECTS', 'GITHUB', 'EMAIL'] as label}
+								{#each ['PROJECTS', 'ABOUT', 'CONTACT'] as label}
 									<div class="button-wrapper">
 										<button
 											class="tactile-button"

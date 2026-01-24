@@ -3,7 +3,7 @@
 	import gsap from 'gsap';
 
 	onMount(() => {
-		gsap.from('.github-content', {
+		gsap.from('.contact-content', {
 			opacity: 0,
 			y: 20,
 			duration: 1,
@@ -13,19 +13,19 @@
 </script>
 
 <svelte:head>
-	<title>Github | Timothy Itayi</title>
+	<title>Contact | Timothy Itayi</title>
 </svelte:head>
 
-<main class="github-page">
-	<div class="github-content">
-		<h1>GITHUB</h1>
-		<p>Redirecting to repository...</p>
+<main class="contact-page">
+	<div class="contact-content">
+		<h1>CONTACT</h1>
+		<p>Feel free to reach out for collaborations or just a chat.</p>
 		<button onclick={() => window.history.back()}>GO BACK</button>
 	</div>
 </main>
 
 <style>
-	.github-page {
+	.contact-page {
 		min-height: 100vh;
 		background: #ffffff;
 		color: #1a1a1a;
@@ -33,7 +33,7 @@
 		font-family: 'Inter', system-ui, sans-serif;
 	}
 
-	.github-content {
+	.contact-content {
 		max-width: 800px;
 		margin: 0 auto;
 	}
