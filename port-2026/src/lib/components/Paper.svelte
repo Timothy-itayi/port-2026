@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 	import gsap from 'gsap';
 	import './paper.css';
 
@@ -8,52 +9,101 @@
 
 	let paperRef: HTMLElement;
 	let isAnimating = false;
-	let isInspected = false;
+	let isTransitioning = false;
 	let lastAnimatedContent: string | null = null;
+
+	onMount(() => {
+		isTransitioning = false;
+		isAnimating = false;
+	});
 
 	$: if (visible && !isAnimating && content && content !== lastAnimatedContent) {
 		animatePrint();
 	}
 
 	function handlePaperClick() {
-		if (isAnimating || !visible) return;
+		if (isAnimating || isTransitioning || !visible) return;
 		
-		isInspected = !isInspected;
-		if (isInspected) {
-			inspectPaper();
+		// If clicking "PROJECTS", zoom into the projects page
+		if (content === 'PROJECTS') {
+			zoomIntoPage('/projects');
 		} else {
-			uninspectPaper();
+			// For other items, we can just do the standard inspect for now
+			// but user asked for "zooming into a new web page", so we'll 
+			// implement the zoom logic as the default for now.
+			zoomIntoPage('/' + content.toLowerCase());
 		}
 	}
 
-	function inspectPaper() {
+	function zoomIntoPage(path: string) {
+		isTransitioning = true;
 		isAnimating = true;
-		gsap.to(paperRef, {
-			x: -280, /* Move left toward center of console */
-			y: -60,  /* Move up toward vertical center */
-			scale: 2.2,
-			rotateX: 0,
-			duration: 0.8,
-			ease: 'power3.inOut',
-			onComplete: () => {
-				isAnimating = false;
-			}
-		});
-	}
 
-	function uninspectPaper() {
-		isAnimating = true;
-		gsap.to(paperRef, {
-			x: 0,
-			y: 45, /* Back to resting position */
-			scale: 1,
-			rotateX: 2,
-			duration: 0.8,
-			ease: 'power3.inOut',
-			onComplete: () => {
-				isAnimating = false;
+		// Kill any existing settle animations
+		gsap.killTweensOf(paperRef);
+
+		const rect = paperRef.getBoundingClientRect();
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+		const centerX = rect.left + rect.width / 2;
+		const centerY = rect.top + rect.height / 2;
+		const deltaX = viewportWidth / 2 - centerX;
+		const deltaY = viewportHeight / 2 - centerY;
+		const currentScale = Number(gsap.getProperty(paperRef, 'scale')) || 1;
+		const scaleToCover = Math.max(viewportWidth / rect.width, viewportHeight / rect.height) * 1.05;
+
+		const tl = gsap.timeline({
+			onComplete: async () => {
+				await goto(path);
+				// Delay resetting flags to ensure route change is visually stable
+				setTimeout(() => {
+					isTransitioning = false;
+					isAnimating = false;
+				}, 100);
 			}
 		});
+
+		// Ensure we don't have a jump when changing transformOrigin
+		// and move the paper to the front immediately but smoothly
+		tl.set(paperRef.parentElement, { 
+			zIndex: 5000, 
+			clipPath: 'none' 
+		})
+		.set(paperRef, { 
+			transformOrigin: 'center center',
+			force3D: true
+		});
+
+		// Stage 1: Move the paper to dead-center
+		tl.to(paperRef, {
+			x: `+=${deltaX}`,
+			y: `+=${deltaY}`,
+			rotateX: 0,
+			duration: 0.55,
+			ease: 'power2.out',
+			force3D: true
+		});
+
+		// Stage 2: Expand outward to consume the viewport
+		tl.to(
+			paperRef,
+			{
+				scale: currentScale * scaleToCover,
+				duration: 0.75,
+				ease: 'power4.in',
+				force3D: true
+			},
+			'>-0.05'
+		);
+
+		// Fade out the console/printer as we zoom into the white paper
+		// We target the children of the container to avoid blurring the paper itself
+		tl.to('.console-cover, .console-shell', {
+			opacity: 0,
+			duration: 0.7,
+			ease: 'power2.in',
+			force3D: true
+		}, '<0.1');
 	}
 
 	function animatePrint() {
@@ -137,7 +187,11 @@
 
 	export function reset() {
 		if (paperRef) {
+			// Prevent snapping back during a transition to avoid flickering
+			if (isTransitioning) return;
+
 			gsap.killTweensOf(paperRef);
+			gsap.killTweensOf('.console-container');
 			gsap.set(paperRef, { 
 				y: 0, 
 				x: 0,
@@ -145,22 +199,18 @@
 				opacity: 0, 
 				rotateX: 0 
 			});
+			gsap.set('.console-container', {
+				opacity: 1,
+				filter: 'blur(0px) brightness(1)'
+			});
 			isAnimating = false;
-			isInspected = false;
+			isTransitioning = false;
 			lastAnimatedContent = null;
 		}
 	}
 </script>
 
-<!-- svelte-ignore a11y_click_events_have_key_events -->
-<!-- svelte-ignore a11y_no_static_element_interactions -->
-<div 
-	class="paper-backdrop" 
-	class:visible={isInspected} 
-	onclick={handlePaperClick}
-></div>
-
-<div class="paper-container" class:visible class:inspected={isInspected}>
+<div class="paper-container" class:visible class:transitioning={isTransitioning}>
 	<button 
 		class="paper-sheet" 
 		bind:this={paperRef}
@@ -169,9 +219,32 @@
 	>
 		<div class="paper-content">
 			<div class="paper-header">{content || 'PRINTING...'}</div>
-			<div class="paper-line"></div>
-			<div class="paper-line"></div>
-			<div class="paper-line short"></div>
+			{#if content === 'PROJECTS'}
+				<div class="preview-projects">
+					<div class="preview-grid">
+						<div class="preview-card"></div>
+						<div class="preview-card"></div>
+						<div class="preview-card"></div>
+						<div class="preview-card"></div>
+					</div>
+				</div>
+			{:else if content === 'GITHUB'}
+				<div class="preview-github">
+					<div class="preview-line long"></div>
+					<div class="preview-line medium"></div>
+					<div class="preview-line short"></div>
+				</div>
+			{:else if content === 'EMAIL'}
+				<div class="preview-email">
+					<div class="preview-line medium"></div>
+					<div class="preview-line long"></div>
+					<div class="preview-line short"></div>
+				</div>
+			{:else}
+				<div class="paper-line"></div>
+				<div class="paper-line"></div>
+				<div class="paper-line short"></div>
+			{/if}
 		</div>
 		<div class="paper-sheet-curl-shadow"></div>
 	</button>

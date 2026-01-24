@@ -18,29 +18,11 @@
 	pointer-events: auto;
 }
 
-.paper-container.inspected {
-	z-index: 2000; /* Way on top of everything including visor */
-	clip-path: none; /* Disable clipping when inspecting */
+.paper-container.transitioning {
+	/* We handle z-index and clip-path in GSAP to avoid the flash */
 }
 
-/* ========== PAPER BACKDROP ========== */
-.paper-backdrop {
-	position: fixed;
-	inset: 0;
-	background: rgba(0, 0, 0, 0.6);
-	backdrop-filter: blur(4px);
-	z-index: 1500;
-	opacity: 0;
-	pointer-events: none;
-	transition: opacity 0.6s ease;
-}
-
-.paper-backdrop.visible {
-	opacity: 1;
-	pointer-events: auto;
-}
-
-.paper-container.inspected .paper-sheet-curl-shadow {
+.paper-container.transitioning .paper-sheet-curl-shadow {
 	opacity: 0 !important;
 }
 
@@ -112,10 +94,10 @@
 
 /* ========== PAPER CONTENT ========== */
 .paper-content {
-	padding: 16px 14px;
+	padding: 20px 18px;
 	display: flex;
 	flex-direction: column;
-	gap: 8px;
+	gap: 10px;
 	position: relative;
 	z-index: 1;
 }
@@ -125,9 +107,13 @@
 	font-size: 11px;
 	letter-spacing: 0.15em;
 	text-transform: uppercase;
-	color: #2a2520;
+	color: #1a1a1a;
 	font-weight: 700;
-	margin-bottom: 6px;
+	margin-bottom: 12px;
+	border-bottom: 1px solid #1a1a1a;
+	padding-bottom: 4px;
+	display: inline-block;
+	width: 100%;
 }
 
 .paper-line {
@@ -139,6 +125,37 @@
 
 .paper-line.short {
 	width: 45%;
+}
+
+/* ========== PAGE PREVIEWS ========== */
+.preview-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 6px;
+	margin-top: 4px;
+}
+
+.preview-card {
+	height: 35px;
+	background: #f5f5f5;
+	border: 1px solid #e0e0e0;
+	border-radius: 2px;
+}
+
+.preview-line {
+	height: 4px;
+	background: #4a4035;
+	border-radius: 1px;
+	opacity: 0.2;
+	margin-bottom: 6px;
+}
+
+.preview-line.long { width: 90%; }
+.preview-line.medium { width: 70%; }
+.preview-line.short { width: 40%; }
+
+.preview-github, .preview-email {
+	margin-top: 8px;
 }
 
 /* ========== CURL SHADOW ========== */

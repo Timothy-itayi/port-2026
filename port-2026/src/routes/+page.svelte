@@ -2,7 +2,7 @@
 	import { onMount, tick } from 'svelte';
 	import gsap from 'gsap';
 	import './console.css';
-	import Paper from '$lib/components/Paper.svelte';
+	import Paper from '../lib/components/Paper.svelte';
 
 	let selectedButton: string | null = null;
 	let lineOneEl: HTMLElement | null = null;
