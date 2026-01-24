@@ -12,6 +12,7 @@
 	let isTransitioning = false;
 	let isReady = false;
 	let lastAnimatedContent: string | null = null;
+	let isHovering = false;
 
 	onMount(() => {
 		isTransitioning = false;
@@ -22,6 +23,40 @@
 	$: if (visible && !isAnimating && content && content !== lastAnimatedContent) {
 		isReady = false;
 		animatePrint();
+	}
+
+	function handleMouseEnter() {
+		if (isTransitioning || isAnimating || !isReady || !paperRef) return;
+		isHovering = true;
+		
+		const isAbout = content === 'ABOUT';
+		const hoverY = isAbout ? 15 : 42; // Subtle lift
+		const hoverRotateX = isAbout ? 2 : 1;
+
+		gsap.to(paperRef, {
+			y: hoverY,
+			rotateX: hoverRotateX,
+			duration: 0.3,
+			ease: 'power2.out',
+			overwrite: 'auto'
+		});
+	}
+
+	function handleMouseLeave() {
+		if (isTransitioning || isAnimating || !paperRef) return;
+		isHovering = false;
+		
+		const isAbout = content === 'ABOUT';
+		const settleY = isAbout ? 18 : 45;
+		const settleRotateX = isAbout ? 1 : 2;
+
+		gsap.to(paperRef, {
+			y: settleY,
+			rotateX: settleRotateX,
+			duration: 0.4,
+			ease: 'power2.inOut',
+			overwrite: 'auto'
+		});
 	}
 
 	function handlePaperClick() {
@@ -229,8 +264,11 @@
 				duration: 0.8, // Slightly faster settle
 				ease: 'power2.out',
 				onStart: () => {
-					// Allow clicking as it begins to settle for "immediate" feel
+					// Mark as no longer "printing" so it can be interacted with
 					isAnimating = false;
+				},
+				onComplete: () => {
+					// Only mark as ready (shine + hover) after it's fully settled
 					isReady = true;
 				}
 			}, '>-0.2');
@@ -277,7 +315,13 @@
 				y: 45,
 				rotateX: 2,
 				duration: 0.6,
-				ease: 'power1.inOut'
+				ease: 'power1.inOut',
+				onStart: () => {
+					isAnimating = false;
+				},
+				onComplete: () => {
+					isReady = true;
+				}
 			}, '>-0.2');
 		}
 	}
@@ -314,6 +358,8 @@
 		class:ready={isReady}
 		bind:this={paperRef}
 		onclick={handlePaperClick}
+		onmouseenter={handleMouseEnter}
+		onmouseleave={handleMouseLeave}
 		aria-label="Inspect paper"
 		type="button"
 		disabled={isTransitioning}

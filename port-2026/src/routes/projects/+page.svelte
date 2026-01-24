@@ -2,16 +2,38 @@
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 
-	let visible = false;
+	let projects = [
+		{
+			title: 'Amber',
+			author: 'Timothy Itayi',
+			image: '/projects/amber-app-icon.png',
+			description: 'A specialized application for managing high-frequency data streams and real-time analytics.'
+		},
+		{
+			title: 'Restock',
+			author: 'Timothy Itayi',
+			image: '/projects/restock-icon-app.png',
+			description: 'Inventory management system optimized for low-latency updates and automated replenishment.'
+		}
+	];
 
 	onMount(() => {
-		visible = true;
-		gsap.from('.projects-content', {
+		// Simple entrance animation
+		const tl = gsap.timeline();
+		tl.from('.top-nav, .main-header, .section-divider', {
+			opacity: 0,
+			y: -10,
+			duration: 0.6,
+			stagger: 0.1,
+			ease: 'power2.out'
+		});
+		tl.from('.project-card', {
 			opacity: 0,
 			y: 20,
-			duration: 1,
-			ease: 'power3.out'
-		});
+			duration: 0.6,
+			stagger: 0.1,
+			ease: 'power2.out'
+		}, '-=0.3');
 	});
 </script>
 
@@ -19,62 +41,315 @@
 	<title>Projects | Timothy Itayi</title>
 </svelte:head>
 
-<main class="projects-page">
-	<div class="projects-content">
-		<h1>PROJECTS</h1>
-		<div class="placeholder-grid">
-			<div class="project-card"></div>
-			<div class="project-card"></div>
-			<div class="project-card"></div>
+<div class="archive-wrapper">
+	<div class="archive-container">
+		<!-- Top Bar -->
+		<nav class="top-nav">
+			<div class="nav-links">
+				<a href="/">Control Panel</a>
+			
+			</div>
+			<div class="beta-tag">BETA</div>
+		</nav>
+
+		<!-- Main Header -->
+		<header class="main-header">
+			<div class="brand">
+				<h1 class="archival-title">
+					PROJECTS
+				</h1>
+				
+			</div>
+			
+		</header>
+
+		<!-- Section Title -->
+		<div class="section-divider">
+			<h2>LATEST WORKS ADDED</h2>
 		</div>
-		<button onclick={() => window.history.back()}>GO BACK</button>
+
+		<!-- Project Grid -->
+		<main class="project-grid">
+			{#each projects as project}
+				<div class="project-card">
+					<div class="card-header">
+						<div class="header-row">
+							<div class="label">Title</div>
+							<div class="value">{project.title}</div>
+						</div>
+						<div class="header-row author">
+							<div class="label">Author</div>
+							<div class="value">{project.author}</div>
+						</div>
+					</div>
+					<div class="card-image">
+						<div class="image-inner">
+							<img src={project.image} alt={project.title} />
+						</div>
+					</div>
+					<div class="card-footer-desc">
+						<div class="desc-label">Notes:</div>
+						<div class="desc-text">{project.description}</div>
+					</div>
+				</div>
+			{/each}
+		</main>
+
+		<!-- Footer -->
+		<footer class="archive-footer">
+			<div class="footer-content">
+				<div class="footer-left">
+					© 2026 TIMOTHY ITAYI / SYSTEM ENGINEER
+				</div>
+				<div class="footer-right">
+					LAST UPDATED: JAN 24 2026 [EST]
+				</div>
+			</div>
+		</footer>
 	</div>
-</main>
+</div>
 
 <style>
-	.projects-page {
+	:global(body) {
+		background: #f0f0f0;
+		margin: 0;
+		padding: 0;
+	}
+
+	.archive-wrapper {
 		min-height: 100vh;
-		background: #ffffff;
-		color: #1a1a1a;
-		padding: 4rem 2rem;
-		font-family: 'Inter', system-ui, sans-serif;
+		background: #fff;
+		color: #000;
+		font-family: 'Courier New', Courier, monospace;
+		padding: 0 1rem 4rem 1rem;
+		display: flex;
+		flex-direction: column;
 	}
 
-	.projects-content {
-		max-width: 800px;
+	.archive-container {
+		max-width: 1200px;
 		margin: 0 auto;
+		width: 100%;
+		flex-grow: 1;
+		display: flex;
+		flex-direction: column;
 	}
 
-	h1 {
-		font-family: 'Courier New', monospace;
-		font-size: 3rem;
-		letter-spacing: 0.2em;
-		border-bottom: 2px solid #1a1a1a;
-		padding-bottom: 1rem;
-		margin-bottom: 3rem;
+	/* Top Nav */
+	.top-nav {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 0.5rem 0;
+		border-bottom: 1px solid #000;
+		font-size: 0.85rem;
+		font-weight: bold;
 	}
 
-	.placeholder-grid {
+	.nav-links {
+		display: flex;
+		gap: 1.5rem;
+		align-items: center;
+	}
+
+	.nav-links a {
+		color: #000;
+		text-decoration: none;
+		border-bottom: 2px solid transparent;
+	}
+
+	.nav-links a:hover, .nav-links a.active {
+		border-bottom: 2px solid #000;
+	}
+
+	.nav-dropdown {
+		cursor: pointer;
+	}
+
+	.arrow {
+		font-size: 0.6rem;
+		margin-left: 2px;
+	}
+
+	.beta-tag {
+		color: #ff0000;
+		font-weight: 900;
+		font-size: 0.9rem;
+	}
+
+	/* Main Header */
+	.main-header {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+		grid-template-columns: 2fr 1fr;
 		gap: 2rem;
-		margin-bottom: 3rem;
+		padding: 2.5rem 0;
+		align-items: start;
+	}
+
+	.archival-title {
+		font-size: 4rem;
+		line-height: 0.85;
+		margin: 0;
+		font-weight: 900;
+		letter-spacing: -3px;
+	}
+
+	.subtitle {
+		margin: 0.5rem 0 0 0;
+		font-size: 1.2rem;
+		font-weight: bold;
+		opacity: 0.8;
+	}
+
+	.description {
+		font-size: 1.1rem;
+		line-height: 1.2;
+		font-weight: bold;
+		padding-top: 0.5rem;
+		text-align: right;
+	}
+
+	/* Section Divider */
+	.section-divider {
+		border-top: 1px solid #000;
+		padding: 0.5rem 0;
+		margin-bottom: 1.5rem;
+	}
+
+	.section-divider h2 {
+		font-size: 0.8rem;
+		margin: 0;
+		letter-spacing: 0.1em;
+		font-weight: 900;
+	}
+
+	/* Project Grid */
+	.project-grid {
+		display: grid;
+		grid-template-columns: repeat(2, 1fr);
+		gap: 2.5rem;
+		margin-bottom: 4rem;
 	}
 
 	.project-card {
-		height: 200px;
-		background: #f5f5f5;
-		border: 1px solid #e0e0e0;
-		border-radius: 8px;
+		border: 1px solid #000;
+		background: #fff;
+		display: flex;
+		flex-direction: column;
+		box-shadow: 6px 6px 0 #000;
+		transition: transform 0.2s;
 	}
 
-	button {
-		padding: 0.8rem 1.5rem;
-		background: #1a1a1a;
-		color: #ffffff;
-		border: none;
-		border-radius: 4px;
-		cursor: pointer;
-		font-family: monospace;
+	.project-card:hover {
+		transform: translate(-2px, -2px);
+		box-shadow: 8px 8px 0 #000;
+	}
+
+	.card-header {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.header-row {
+		display: grid;
+		grid-template-columns: 80px 1fr;
+		border-bottom: 1px solid #000;
+	}
+
+	.label {
+		padding: 0.8rem;
+		font-weight: 900;
+		border-right: 1px solid #000;
+		font-size: 0.85rem;
+	}
+
+	.value {
+		padding: 0.8rem;
+		font-size: 0.85rem;
+		font-weight: bold;
+	}
+
+	.card-image {
+		padding: 1.5rem;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #fff;
+		border-bottom: 1px solid #000;
+	}
+
+	.image-inner {
+		width: 100%;
+		aspect-ratio: 16/9;
+		border: 1px solid #000;
+		overflow: hidden;
+		background: #eee;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.image-inner img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		padding: 10px;
+	}
+
+	.card-footer-desc {
+		padding: 1rem;
+		background: #f9f9f9;
+		flex-grow: 1;
+	}
+
+	.desc-label {
+		font-size: 0.7rem;
+		font-weight: 900;
+		margin-bottom: 0.3rem;
+		text-decoration: underline;
+	}
+
+	.desc-text {
+		font-size: 0.85rem;
+		line-height: 1.4;
+		font-weight: bold;
+	}
+
+	/* Footer */
+	.archive-footer {
+		margin-top: auto;
+		border-top: 1px solid #000;
+		padding: 1.5rem 0;
+	}
+
+	.footer-content {
+		display: flex;
+		justify-content: space-between;
+		font-size: 0.75rem;
+		font-weight: 900;
+	}
+
+	/* Responsive */
+	@media (max-width: 900px) {
+		.main-header {
+			grid-template-columns: 1fr;
+			gap: 1.5rem;
+		}
+		.description {
+			text-align: left;
+		}
+		.project-grid {
+			grid-template-columns: 1fr;
+		}
+	}
+
+	@media (max-width: 600px) {
+		.archival-title {
+			font-size: 2.5rem;
+		}
+		.footer-content {
+			flex-direction: column;
+			gap: 0.5rem;
+		}
 	}
 </style>

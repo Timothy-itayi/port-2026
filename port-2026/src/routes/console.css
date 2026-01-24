@@ -1,11 +1,11 @@
 :root {
-	color-scheme: dark;
+	color-scheme: light;
 }
 
 body {
 	margin: 0;
-	background: radial-gradient(ellipse at top, #2a1a1a 0%, #1a0f0f 45%, #0d0808 100%);
-	color: #ffeae4;
+
+	
 	font-family: 'Inter', system-ui, sans-serif;
 }
 

@@ -61,7 +61,6 @@
 
 .paper-sheet:hover:not(:disabled) {
 	filter: brightness(0.92) contrast(1.1);
-	transform: translateY(-2px) rotateX(2deg) !important;
 	box-shadow:
 		0 25px 70px rgba(0, 0, 0, 0.5),
 		0 15px 30px rgba(0, 0, 0, 0.3),
@@ -70,7 +69,6 @@
 
 .paper-sheet:active:not(:disabled) {
 	filter: brightness(0.85) contrast(1.2);
-	transform: translateY(1px) rotateX(0deg) !important;
 }
 
 .paper-sheet:disabled {
@@ -79,30 +77,6 @@
 
 .paper-sheet.animating {
 	cursor: wait;
-}
-
-.paper-sheet.ready::after {
-	content: '';
-	position: absolute;
-	top: 0;
-	left: -100%;
-	width: 50%;
-	height: 100%;
-	background: linear-gradient(
-		90deg,
-		transparent,
-		rgba(255, 255, 255, 0.2),
-		transparent
-	);
-	transform: skewX(-20deg);
-	animation: shine 1.2s ease-out forwards;
-	pointer-events: none;
-}
-
-@keyframes shine {
-	to {
-		left: 200%;
-	}
 }
 
 /* Remove any potential tint from parent gradients or filters */
