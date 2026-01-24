@@ -1,0 +1,119 @@
+/* ========== PAPER CONTAINER ========== */
+.paper-container {
+	position: absolute;
+	top: -5px; /* Aligned with slit at top: 38px (which is 5px above output area) */
+	left: 50%;
+	transform: translateX(-50%);
+	width: 76%;
+	pointer-events: none;
+	z-index: 15; /* Behind visor (z-index: 20) but in front of slit/black bar */
+	perspective: 1000px;
+	perspective-origin: center top;
+	
+	/* Clip everything above the slit position to hide the paper "inside" the machine */
+	clip-path: inset(0 -100% -200% -100%);
+}
+
+.paper-container.visible {
+	pointer-events: auto;
+}
+
+/* ========== PAPER SHEET (Single Continuous Sheet) ========== */
+.paper-sheet {
+	position: relative;
+	background: #ffffff !important;
+	background-color: #ffffff !important;
+	border-radius: 2px;
+	min-height: 200px;
+	transform-style: preserve-3d;
+	transform-origin: top center;
+	opacity: 0;
+	will-change: transform, opacity;
+	
+	/* Extremely high-contrast shadow to separate from tan printer */
+	box-shadow:
+		0 20px 60px rgba(0, 0, 0, 0.4),
+		0 10px 20px rgba(0, 0, 0, 0.2),
+		inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+
+	/* Paper edges and depth */
+	border-left: 1px solid rgba(0, 0, 0, 0.03);
+	border-right: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+/* Remove any potential tint from parent gradients or filters */
+.paper-sheet * {
+	background: transparent !important;
+	color: #1a1a1a !important; /* Ensure text is dark and sharp */
+}
+
+/* Top edge - where paper emerges from slit */
+.paper-sheet::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 4px;
+	background: linear-gradient(180deg, #fffcf8 0%, #fff8f0 100%);
+	border-radius: 2px 2px 0 0;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* Bottom edge */
+.paper-sheet::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.05));
+	border-radius: 0 0 2px 2px;
+}
+
+/* ========== PAPER CONTENT ========== */
+.paper-content {
+	padding: 16px 14px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	position: relative;
+	z-index: 1;
+}
+
+.paper-header {
+	font-family: 'Courier New', monospace;
+	font-size: 11px;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+	color: #2a2520;
+	font-weight: 700;
+	margin-bottom: 6px;
+}
+
+.paper-line {
+	height: 6px;
+	background: linear-gradient(90deg, #4a4035 0%, #4a4035 70%, transparent 70%);
+	border-radius: 2px;
+	opacity: 0.4;
+}
+
+.paper-line.short {
+	width: 45%;
+}
+
+/* ========== CURL SHADOW ========== */
+/* Dynamic shadow that follows the curl */
+.paper-sheet-curl-shadow {
+	position: absolute;
+	bottom: -8px;
+	left: 5%;
+	right: 5%;
+	height: 20px;
+	background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.15) 0%, transparent 70%);
+	filter: blur(6px);
+	transform: scaleY(0.3);
+	pointer-events: none;
+	z-index: -1;
+}

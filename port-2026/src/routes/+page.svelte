@@ -1,16 +1,22 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import gsap from 'gsap';
 	import './console.css';
+	import Paper from '$lib/components/Paper.svelte';
 
-	let sliderActive = false;
+	let selectedButton: string | null = null;
+	let lineOneEl: HTMLElement | null = null;
+	let lineTwoEl: HTMLElement | null = null;
+	let promptEl: HTMLElement | null = null;
+	let visorEl: HTMLElement | null = null;
 
-	const typeLine = (
-		element: HTMLElement | null,
-		text: string,
-		duration = 1.6
-	) => {
+	let isPrinting = false;
+	let printContent = '';
+	let paperComponent: Paper;
+
+	const typeLine = (element: HTMLElement | null, text: string, duration = 1.6) => {
 		if (!element) return;
+		element.textContent = '';
 		const state = { count: 0 };
 		gsap.to(state, {
 			count: text.length,
@@ -22,53 +28,119 @@
 		});
 	};
 
-	onMount(() => {
-		const lineOne = document.querySelector<HTMLElement>('[data-terminal-line="1"]');
-		const lineTwo = document.querySelector<HTMLElement>('[data-terminal-line="2"]');
-		const prompt = document.querySelector<HTMLElement>('[data-terminal-line="3"]');
+	const truncateText = (text: string, maxLength: number = 24): string => {
+		if (text.length <= maxLength) return text;
+		return text.slice(0, maxLength - 3) + '...';
+	};
 
-		typeLine(lineOne, 'SYSTEM READY', 1.1);
-		gsap.delayedCall(1.4, () => typeLine(lineTwo, 'PORTFOLIO MODULE LOADED', 1.6));
-		gsap.delayedCall(3.3, () => typeLine(prompt, '> SELECT COMMAND', 1.1));
+	const triggerPrint = async (label: string) => {
+		// Reset state before starting new print
+		if (paperComponent) {
+			paperComponent.reset();
+		}
+		
+		// Reset printing flag to ensure clean state
+		isPrinting = false;
+		
+		// Wait for reset to complete
+		await tick();
+		
+		// Set content
+		printContent = label;
+		await tick();
 
-		const slider = document.querySelector<HTMLElement>('.slider');
-		const sliderKnob = document.querySelector<HTMLElement>('.slider-knob');
-
-		const toggleSlider = () => {
-			if (!sliderKnob) return;
-			sliderActive = !sliderActive;
-			gsap.to(sliderKnob, {
-				x: sliderActive ? 140 : 0,
-				duration: 0.25,
+		// Animate visor opening to let paper through
+		if (visorEl) {
+			const tl = gsap.timeline();
+			tl.to(visorEl, {
+				rotationX: 45,
+				duration: 0.3,
 				ease: 'power2.out'
-			});
-		};
-
-		slider?.addEventListener('click', toggleSlider);
-
-		const buttons = document.querySelectorAll<HTMLElement>('.tactile-button');
-		buttons.forEach((button) => {
-			button.addEventListener('click', () => {
-				gsap.fromTo(
-					button,
-					{ y: 0 },
-					{ y: 2, duration: 0.1, yoyo: true, repeat: 1, ease: 'power1.out' }
+			})
+				.add(() => {
+					// Start paper animation after visor opens
+					isPrinting = true;
+				})
+				.to(
+					visorEl,
+					{
+						rotationX: 15,
+						duration: 0.8,
+						ease: 'elastic.out(1.2, 0.4)'
+					},
+					'>0.6'
 				);
-			});
+		} else {
+			// If no visor, start immediately
+			isPrinting = true;
+		}
+	};
+
+	const handleButtonClick = (label: string, event: MouseEvent) => {
+		selectedButton = label;
+
+		const button = event.currentTarget as HTMLElement;
+		gsap.fromTo(button, { y: 0 }, { y: 2, duration: 0.1, yoyo: true, repeat: 1, ease: 'power1.out' });
+
+		if (promptEl) {
+			const promptText = truncateText(`> ${label}`, 20);
+			typeLine(promptEl, promptText, 0.6);
+		}
+
+		// Trigger the print animation
+		triggerPrint(label);
+	};
+
+	const handleVisorClick = (event: MouseEvent) => {
+		const visor = event.currentTarget as HTMLElement;
+
+		// Flick forward, then spring back with overshoot and natural decay
+		const tl = gsap.timeline();
+		tl.to(visor, {
+			rotationX: 38,
+			perspective: 150,
+			duration: 0.1,
+			ease: 'power2.out'
+		}).to(visor, {
+			rotationX: 15,
+			perspective: 150,
+			duration: 0.95,
+			ease: 'elastic.out(1.25, 0.35)'
 		});
+	};
+
+	onMount(() => {
+		lineOneEl = document.querySelector<HTMLElement>('[data-terminal-line="1"]');
+		lineTwoEl = document.querySelector<HTMLElement>('[data-terminal-line="2"]');
+		promptEl = document.querySelector<HTMLElement>('[data-terminal-line="3"]');
+		visorEl = document.querySelector<HTMLElement>('.roller-bar:last-child');
+
+		typeLine(lineOneEl, 'SYSTEM READY', 1.0);
+		gsap.delayedCall(1.3, () => typeLine(lineTwoEl, 'PORTFOLIO LOADED', 1.4));
+		gsap.delayedCall(3.0, () => typeLine(promptEl, '> SELECT CMD', 0.9));
+
+		// Add click handler to visor
+		visorEl?.addEventListener('click', handleVisorClick);
 
 		return () => {
-			slider?.removeEventListener('click', toggleSlider);
+			visorEl?.removeEventListener('click', handleVisorClick);
 		};
 	});
 </script>
 
 <svelte:head>
-	<title>Tactile Console UI</title>
+	<title>Timothy Itayi | Portfolio</title>
 </svelte:head>
 
 <main class="stage">
 	<section class="console-container">
+		<!-- Console Top Cover -->
+		<div class="console-cover">
+			<div class="cover-ridge"></div>
+			<div class="cover-ridge"></div>
+			<div class="cover-ridge"></div>
+		</div>
+
 		<div class="console-shell">
 			<div class="console-shell-shadow"></div>
 			<div class="console-shell-highlight"></div>
@@ -76,7 +148,7 @@
 			<div class="console-housing">
 				<div class="console-housing-inner">
 					<div class="console-top">
-						<div class="top-title">COMMAND UNIT</div>
+						<div class="top-title">TIMOTHY ITAYI</div>
 						<div class="top-strip">
 							<span></span>
 							<span></span>
@@ -84,6 +156,7 @@
 					</div>
 
 					<div class="console-body">
+						<!-- Left Panel: Terminal + Buttons -->
 						<div class="console-left">
 							<div class="console-screen">
 								<div class="screen-bezel"></div>
@@ -97,62 +170,62 @@
 								</div>
 							</div>
 
-							<div class="console-sliders">
-								<div class="slider">
-									<div class="slider-track"></div>
-									<div class="slider-knob"></div>
-								</div>
-								<div class="slider">
-									<div class="slider-track"></div>
-									<div class="slider-knob"></div>
-								</div>
-							</div>
-
-							<div class="console-knobs">
-								<div class="knob">
-									<div class="knob-face"></div>
-									<div class="knob-notch"></div>
-								</div>
-								<div class="knob">
-									<div class="knob-face"></div>
-									<div class="knob-notch"></div>
-								</div>
-								<div class="knob">
-									<div class="knob-face"></div>
-									<div class="knob-notch"></div>
-								</div>
+							<div class="button-row">
+								{#each ['PROJECTS', 'GITHUB', 'EMAIL'] as label}
+									<div class="button-wrapper">
+										<button
+											class="tactile-button"
+											aria-label={label}
+											onclick={(e) => handleButtonClick(label, e)}
+										>
+											<span class="button-shadow"></span>
+											<span class="button-outline"></span>
+											<span class="button-top"></span>
+											<span class="button-edge"></span>
+											<span class="button-face"></span>
+											<span class="button-label">{label}</span>
+										</button>
+									</div>
+								{/each}
 							</div>
 						</div>
 
-						<div class="console-right">
-							<div class="button-cluster">
-								{#each ['APPS', 'WEBSITES', 'COLLABS', 'BLOG'] as label}
-									<div class="button-wrapper">
-										<button class="tactile-button" aria-label={label}>
-											<span class="button-shadow"></span>
-											<span class="button-outline"></span>
-											<span class="button-top"></span>
-											<span class="button-edge"></span>
-											<span class="button-face"></span>
-											<span class="button-label">{label}</span>
-										</button>
-									</div>
-								{/each}
+						<!-- Right Panel: Printer -->
+						<div class="console-right printer">
+							<!-- Printer Top / Paper Feed -->
+							<div class="printer-top">
+								<div class="printer-roller">
+									<div class="roller-bar"></div>
+									<div class="roller-bar"></div>
+								</div>
 							</div>
 
-							<div class="button-cluster small">
-								{#each ['EMAIL', 'GITHUB'] as label}
-									<div class="button-wrapper">
-										<button class="tactile-button small" aria-label={label}>
-											<span class="button-shadow"></span>
-											<span class="button-outline"></span>
-											<span class="button-top"></span>
-											<span class="button-edge"></span>
-											<span class="button-face"></span>
-											<span class="button-label">{label}</span>
-										</button>
-									</div>
-								{/each}
+							<!-- Paper Output Area -->
+							<div class="printer-output">
+								<div class="paper-slot">
+									<div class="paper-slot-shadow"></div>
+									<div class="paper-slot-edge"></div>
+								</div>
+								<!-- Animated Paper Component -->
+								<Paper
+									bind:this={paperComponent}
+									content={printContent}
+									visible={isPrinting}
+								/>
+							</div>
+
+							<!-- Printer Body -->
+							<div class="printer-body">
+								<div class="printer-window">
+									<div class="printer-window-inner"></div>
+								</div>
+								<div class="printer-vents">
+									<span></span>
+									<span></span>
+									<span></span>
+									<span></span>
+									<span></span>
+								</div>
 							</div>
 						</div>
 					</div>

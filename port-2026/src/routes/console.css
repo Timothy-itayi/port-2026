@@ -21,12 +21,52 @@ body {
 }
 
 .console-container {
-	width: min(980px, 94vw);
+	width: min(1020px, 96vw);
+	display: flex;
+	flex-direction: column;
 }
 
+/* ========== CONSOLE COVER (TOP) ========== */
+.console-cover {
+	position: relative;
+	height: 40px;
+	margin: 0 30px;
+	background: linear-gradient(180deg, #d4c8c0 0%, #b8a89a 40%, #a09080 100%);
+	border-radius: 12px 12px 0 0;
+	display: flex;
+	justify-content: center;
+	gap: 8px;
+	padding-top: 12px;
+	box-shadow:
+		inset 0 2px 0 rgba(255, 255, 255, 0.4),
+		inset 0 -2px 4px rgba(0, 0, 0, 0.2),
+		0 -4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.console-cover::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: 12px 12px 0 0;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	border-bottom: none;
+	pointer-events: none;
+}
+
+.cover-ridge {
+	width: 60px;
+	height: 6px;
+	background: linear-gradient(180deg, #8a7a6a, #6a5a4a);
+	border-radius: 3px;
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.2),
+		0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* ========== CONSOLE SHELL ========== */
 .console-shell {
 	position: relative;
-	border-radius: 34px;
+	border-radius: 0 0 34px 34px;
 	padding: 34px;
 	background: linear-gradient(155deg, #4a2828 0%, #2d1818 40%, #1a0e0e 100%);
 	box-shadow:
@@ -35,23 +75,24 @@ body {
 		inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
-/* Outer rim - white accent */
 .console-shell::before {
 	content: '';
 	position: absolute;
 	inset: 0;
-	border-radius: 34px;
+	border-radius: 0 0 34px 34px;
 	border: 2px solid rgba(255, 255, 255, 0.2);
+	border-top: none;
 	pointer-events: none;
 }
 
-/* Inner accent line - white */
 .console-shell::after {
 	content: '';
 	position: absolute;
 	inset: 8px;
-	border-radius: 28px;
+	inset-top: 0;
+	border-radius: 0 0 28px 28px;
 	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-top: none;
 	pointer-events: none;
 }
 
@@ -59,7 +100,7 @@ body {
 .console-shell-highlight {
 	position: absolute;
 	inset: 12px;
-	border-radius: 26px;
+	border-radius: 0 0 26px 26px;
 	pointer-events: none;
 }
 
@@ -71,6 +112,7 @@ body {
 	background: linear-gradient(155deg, rgba(255, 220, 210, 0.15), transparent 55%);
 }
 
+/* ========== CONSOLE HOUSING ========== */
 .console-housing {
 	position: relative;
 	border-radius: 26px;
@@ -82,7 +124,6 @@ body {
 		0 8px 24px rgba(0, 0, 0, 0.5);
 }
 
-/* White outline */
 .console-housing::before {
 	content: '';
 	position: absolute;
@@ -92,7 +133,6 @@ body {
 	pointer-events: none;
 }
 
-/* Inner white accent */
 .console-housing::after {
 	content: '';
 	position: absolute;
@@ -113,7 +153,6 @@ body {
 		inset 0 -6px 16px rgba(0, 0, 0, 0.5);
 }
 
-/* White outline */
 .console-housing-inner::before {
 	content: '';
 	position: absolute;
@@ -123,7 +162,6 @@ body {
 	pointer-events: none;
 }
 
-/* Secondary inner white border */
 .console-housing-inner::after {
 	content: '';
 	position: absolute;
@@ -133,6 +171,7 @@ body {
 	pointer-events: none;
 }
 
+/* ========== CONSOLE TOP BAR ========== */
 .console-top {
 	display: flex;
 	justify-content: space-between;
@@ -199,9 +238,10 @@ body {
 	border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* ========== CONSOLE BODY ========== */
 .console-body {
 	display: grid;
-	grid-template-columns: 1.15fr 1.85fr;
+	grid-template-columns: 1.4fr 1fr;
 	gap: 20px;
 	position: relative;
 	padding: 12px;
@@ -211,10 +251,11 @@ body {
 	box-shadow: inset 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
+/* ========== LEFT PANEL ========== */
 .console-left {
 	position: relative;
 	display: grid;
-	gap: 18px;
+	gap: 16px;
 	padding: 16px;
 	border-radius: 16px;
 	background: linear-gradient(
@@ -229,7 +270,6 @@ body {
 		0 6px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* Outer white accent */
 .console-left::before {
 	content: '';
 	position: absolute;
@@ -240,7 +280,6 @@ body {
 	pointer-events: none;
 }
 
-/* Inner white line */
 .console-left::after {
 	content: '';
 	position: absolute;
@@ -250,46 +289,7 @@ body {
 	pointer-events: none;
 }
 
-.console-right {
-	position: relative;
-	display: grid;
-	gap: 20px;
-	align-content: start;
-	padding: 16px;
-	border-radius: 16px;
-	background: linear-gradient(
-		165deg,
-		rgba(120, 55, 55, 0.75) 0%,
-		rgba(85, 38, 38, 0.85) 40%,
-		rgba(50, 22, 22, 0.92) 100%
-	);
-	box-shadow:
-		inset 0 2px 0 rgba(255, 200, 180, 0.1),
-		inset 0 -2px 0 rgba(0, 0, 0, 0.5),
-		0 6px 16px rgba(0, 0, 0, 0.4);
-}
-
-/* Outer white accent */
-.console-right::before {
-	content: '';
-	position: absolute;
-	inset: 0;
-	border-radius: 16px;
-	border: 1px solid rgba(255, 255, 255, 0.2);
-	box-shadow: inset 0 0 20px rgba(255, 180, 160, 0.06);
-	pointer-events: none;
-}
-
-/* Inner white line */
-.console-right::after {
-	content: '';
-	position: absolute;
-	inset: 5px;
-	border-radius: 12px;
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	pointer-events: none;
-}
-
+/* ========== SCREEN ========== */
 .console-screen {
 	position: relative;
 	padding: 20px;
@@ -299,6 +299,9 @@ body {
 		0 4px 12px rgba(0, 0, 0, 0.4),
 		inset 0 1px 0 rgba(255, 255, 255, 0.06),
 		inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+	height: 180px;
+	min-height: 180px;
+	max-height: 180px;
 }
 
 .screen-bezel {
@@ -335,10 +338,12 @@ body {
 .screen-content {
 	position: relative;
 	display: grid;
-	gap: 10px;
-	height: 100%;
-	min-height: 120px;
-	padding: 14px;
+	grid-template-rows: auto auto auto;
+	gap: 8px;
+	height: 140px;
+	min-height: 140px;
+	max-height: 140px;
+	padding: 12px;
 	background: linear-gradient(145deg, #0a1f1a, #082820);
 	color: #bfffe9;
 	font-family: 'Courier New', monospace;
@@ -352,37 +357,40 @@ body {
 }
 
 .screen-line {
-	font-size: 14px;
-	letter-spacing: 0.14em;
+	font-size: 11px;
+	letter-spacing: 0.12em;
 	text-transform: uppercase;
-	line-height: 1.6;
-	min-height: 20px;
+	line-height: 18px;
+	height: 18px;
+	min-height: 18px;
+	max-height: 18px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: block;
 }
 
 .screen-cursor {
 	display: inline-block;
-	width: 10px;
-	height: 16px;
+	width: 8px;
+	height: 14px;
 	background: #bfffe9;
 	animation: blink 0.7s steps(1) infinite;
-	margin-left: 6px;
+	margin-left: 4px;
+	vertical-align: middle;
 }
 
-.button-cluster {
+/* ========== BUTTON ROW ========== */
+.button-row {
 	display: grid;
-	grid-template-columns: repeat(2, 1fr);
-	gap: 16px;
-}
-
-.button-cluster.small {
-	grid-template-columns: repeat(2, 1fr);
-	gap: 14px;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 12px;
 }
 
 .button-wrapper {
 	position: relative;
 	padding: 4px;
-	border-radius: 16px;
+	border-radius: 14px;
 	background: linear-gradient(165deg, rgba(30, 40, 55, 0.9), rgba(10, 15, 22, 0.95));
 	box-shadow:
 		inset 0 1px 0 rgba(255, 255, 255, 0.08),
@@ -397,25 +405,16 @@ body {
 	border: none;
 	background: none;
 	padding: 0;
-	height: 56px;
+	height: 48px;
 	cursor: pointer;
-}
-
-.tactile-button.small {
-	height: 38px;
 }
 
 .tactile-button span {
 	position: absolute;
-	border-radius: 12px;
+	border-radius: 10px;
 	transition: transform 0.12s ease, box-shadow 0.12s ease;
 }
 
-.tactile-button.small span {
-	border-radius: 10px;
-}
-
-/* Layer 1: Deep shadow (blur behind) */
 .button-shadow {
 	inset: 4px;
 	bottom: -4px;
@@ -424,14 +423,12 @@ body {
 	z-index: 1;
 }
 
-/* Layer 2: Dark outline (outer border) */
 .button-outline {
 	inset: 0;
 	background: linear-gradient(165deg, #4a5568, #1a202c);
 	z-index: 2;
 }
 
-/* Layer 3: Button top (main body, sits above outline) */
 .button-top {
 	inset: 2px;
 	background: linear-gradient(155deg, #f0f4f8, #a0aec0);
@@ -441,17 +438,15 @@ body {
 	z-index: 3;
 }
 
-/* Layer 4: Edge bevel (mid layer) */
 .button-edge {
-	inset: 6px;
+	inset: 5px;
 	background: linear-gradient(155deg, #e2e8f0, #a0aec0);
 	box-shadow: inset 0 -2px 4px rgba(0, 0, 0, 0.15);
 	z-index: 4;
 }
 
-/* Layer 5: Face highlight (innermost, with shine) */
 .button-face {
-	inset: 10px;
+	inset: 8px;
 	background: linear-gradient(155deg, #ffffff, #cbd5e0);
 	box-shadow:
 		inset 0 3px 10px rgba(255, 255, 255, 0.9),
@@ -459,14 +454,13 @@ body {
 	z-index: 5;
 }
 
-/* Layer 6: Label text */
 .button-label {
 	position: absolute;
 	inset: 0;
 	display: grid;
 	place-items: center;
-	font-size: 10px;
-	letter-spacing: 0.2em;
+	font-size: 9px;
+	letter-spacing: 0.18em;
 	text-transform: uppercase;
 	color: #1a202c;
 	font-weight: 700;
@@ -474,7 +468,6 @@ body {
 	z-index: 6;
 }
 
-/* Active state: push down */
 .tactile-button:active .button-top {
 	transform: translateY(4px);
 	box-shadow:
@@ -494,7 +487,6 @@ body {
 	transform: translateY(3px);
 }
 
-/* Hover glow */
 .tactile-button:hover .button-top {
 	box-shadow:
 		0 10px 20px rgba(0, 0, 0, 0.4),
@@ -502,105 +494,258 @@ body {
 		0 0 20px rgba(128, 200, 255, 0.2);
 }
 
-.console-sliders {
-	display: grid;
-	gap: 18px;
-}
-
-.slider {
+/* ========== RIGHT PANEL: PRINTER ========== */
+.console-right.printer {
 	position: relative;
-	height: 26px;
-	border-radius: 999px;
-	background: linear-gradient(165deg, #0d131c, #1a2230);
-	box-shadow:
-		inset 0 2px 6px rgba(0, 0, 0, 0.7),
-		inset 0 -1px 0 rgba(255, 255, 255, 0.06),
-		0 2px 4px rgba(0, 0, 0, 0.3);
-	cursor: pointer;
-}
-
-.slider-track {
-	position: absolute;
-	inset: 9px 20px;
-	border-radius: 999px;
-	background: linear-gradient(90deg, #1e2a3a, #2a3848);
-	box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.5);
-}
-
-.slider-knob {
-	position: absolute;
-	top: 5px;
-	left: 20px;
-	width: 48px;
-	height: 16px;
-	border-radius: 999px;
-	background: linear-gradient(165deg, #ffffff, #a8b5c8);
-	box-shadow:
-		0 4px 12px rgba(0, 0, 0, 0.45),
-		inset 0 1px 0 rgba(255, 255, 255, 0.9),
-		inset 0 -1px 0 rgba(0, 0, 0, 0.15);
-}
-
-.slider-knob::before {
-	content: '';
-	position: absolute;
-	inset: 3px 12px;
-	border-radius: 999px;
-	background: linear-gradient(90deg, #c8d0dc, #e8eef4, #c8d0dc);
-}
-
-.console-knobs {
 	display: flex;
-	gap: 18px;
-	margin-top: 8px;
-}
-
-.knob {
-	position: relative;
-	width: 42px;
-	height: 42px;
-	border-radius: 50%;
-	background: linear-gradient(165deg, #3a4556, #1a2030);
+	flex-direction: column;
+	gap: 0;
+	padding: 0;
+	border-radius: 16px;
+	background: linear-gradient(165deg, #d8ccc4 0%, #c4b8a8 50%, #a89888 100%);
 	box-shadow:
-		0 6px 14px rgba(0, 0, 0, 0.5),
-		inset 0 1px 0 rgba(255, 255, 255, 0.1),
-		inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+		inset 0 2px 0 rgba(255, 255, 255, 0.5),
+		inset 0 -3px 0 rgba(0, 0, 0, 0.15),
+		0 8px 20px rgba(0, 0, 0, 0.4);
 }
 
-.knob::before {
+.console-right.printer::before {
 	content: '';
 	position: absolute;
-	inset: 3px;
-	border-radius: 50%;
-	background: linear-gradient(165deg, #e8eef4, #8a9aae);
-	box-shadow:
-		0 4px 10px rgba(0, 0, 0, 0.35),
-		inset 0 2px 0 rgba(255, 255, 255, 0.8);
+	inset: 0;
+	border-radius: 16px;
+	border: 1px solid rgba(255, 255, 255, 0.4);
+	pointer-events: none;
+	z-index: 10;
 }
 
-.knob-face {
+.console-right.printer::after {
+	content: '';
 	position: absolute;
-	inset: 7px;
-	border-radius: 50%;
-	background: linear-gradient(165deg, #ffffff, #b8c4d4);
-	box-shadow:
-		inset 0 3px 8px rgba(255, 255, 255, 0.9),
-		inset 0 -3px 6px rgba(0, 0, 0, 0.1);
+	inset: 4px;
+	border-radius: 13px;
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	pointer-events: none;
+	z-index: 10;
 }
 
-.knob-notch {
+/* Printer Top with Visor */
+.printer-top {
+	position: relative;
+	padding: 10px 12px 0;
+	background: linear-gradient(180deg, #e8dcd4, #d8ccc0);
+	z-index: 25; /* High z-index to mask the paper moving behind it */
+}
+
+.printer-roller {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0;
+}
+
+/* Roller bar acts as hinge */
+.roller-bar:first-child {
+	width: 90%;
+	height: 6px;
+	background: linear-gradient(180deg, #3a3028, #1a1410, #2a2018);
+	border-radius: 3px 3px 0 0;
+	box-shadow:
+		inset 0 1px 0 rgba(255, 255, 255, 0.15),
+		0 1px 2px rgba(0, 0, 0, 0.3);
+	z-index: 3;
+}
+
+/* Visor cover - curved at TOP, flat at bottom */
+.roller-bar:last-child {
+	position: relative;
+	width: 88%;
+	height: 24px;
+	background: linear-gradient(
+		180deg,
+		rgba(50, 45, 40, 0.9) 0%,
+		rgba(40, 35, 30, 0.92) 50%,
+		rgba(35, 30, 25, 0.88) 100%
+	);
+	border-radius: 20px 20px 4px 4px;
+	box-shadow:
+		0 6px 16px rgba(0, 0, 0, 0.4),
+		inset 0 2px 0 rgba(255, 255, 255, 0.1),
+		inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+	transform-origin: top center;
+	transform-style: preserve-3d;
+	transform: perspective(150px) rotateX(15deg);
+	margin-top: -1px;
+	z-index: 20; /* High z-index to stay in front */
+	cursor: pointer;
+	transition: box-shadow 0.2s ease;
+	will-change: transform;
+}
+
+.roller-bar:last-child:hover {
+	box-shadow:
+		0 8px 20px rgba(0, 0, 0, 0.5),
+		inset 0 2px 0 rgba(255, 255, 255, 0.15),
+		inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.roller-bar:last-child::before {
+	content: '';
 	position: absolute;
-	width: 14px;
-	height: 5px;
-	background: linear-gradient(180deg, #2d3748, #1a202c);
-	border-radius: 999px;
-	top: 9px;
+	top: 6px;
+	left: 15%;
+	right: 15%;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.12), transparent);
+	border-radius: 1px;
+}
+
+/* Paper slot sits directly under visor */
+.printer-top::after {
+	content: '';
+	position: relative;
+	display: block;
+	width: 86%;
+	height: 10px;
+	margin: 0 auto;
+	margin-top: -7px; /* Raised by 5px */
+	background: linear-gradient(180deg, #000, #0a0805, #1a1410);
+	border-radius: 2px;
+	box-shadow:
+		inset 0 3px 8px rgba(0, 0, 0, 0.9),
+		inset 0 4px 0 rgba(255, 255, 255, 0.08),
+		0 1px 0 rgba(255, 255, 255, 0.08);
+	z-index: 1;
+}
+
+/* Thin opaque line inside the slot (paper exit slit) */
+.printer-top {
+	position: relative;
+}
+
+.printer-top::before {
+	content: '';
+	position: absolute;
 	left: 50%;
 	transform: translateX(-50%);
-	box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.5);
-	z-index: 2;
+	width: 76%;
+	height: 1px;
+	top: 38px; /* Raised by 5px (from 43px) */
+	background: #ffffff; /* Brighter, solid white for the slit edge */
+	box-shadow: 
+		0 1px 3px rgba(255, 255, 255, 0.5),
+		0 0 10px rgba(255, 255, 255, 0.2);
+	border-radius: 1px;
+	z-index: 26; /* In front of the printer top (z-index: 25) */
 }
 
+/* Printer Output */
+.printer-output {
+	position: relative;
+	padding: 0 16px;
+	padding-top: 8px;
+	min-height: 100px;
+	background: linear-gradient(180deg, #d4c8bc, #c8bcb0);
+}
+
+.paper-slot {
+	display: none;
+}
+
+.paper-slot-shadow {
+	position: absolute;
+	inset: 0;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.5), transparent);
+	border-radius: 2px;
+}
+
+.paper-slot-edge {
+	position: absolute;
+	inset: 2px 4px;
+	background: #000;
+	border-radius: 1px;
+}
+
+.paper {
+	position: relative;
+	background: linear-gradient(180deg, #fff8f0, #f5ebe0);
+	min-height: 80px;
+	border-radius: 0 0 4px 4px;
+	padding: 12px 10px;
+	box-shadow:
+		0 4px 12px rgba(0, 0, 0, 0.15),
+		inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.paper::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 16px;
+	background: linear-gradient(180deg, rgba(0, 0, 0, 0.06), transparent);
+}
+
+.paper-content {
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+}
+
+.paper-line {
+	height: 6px;
+	background: linear-gradient(90deg, #3a3028, #3a3028 60%, transparent 60%);
+	border-radius: 2px;
+	opacity: 0.5;
+}
+
+.paper-line.short {
+	width: 40%;
+}
+
+/* Printer Body */
+.printer-body {
+	padding: 14px 16px;
+	background: linear-gradient(180deg, #c4b8a8, #b8a898);
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.printer-window {
+	width: 50px;
+	height: 26px;
+	background: linear-gradient(165deg, #1a1815, #2a2520);
+	border-radius: 5px;
+	padding: 3px;
+	box-shadow:
+		inset 0 2px 6px rgba(0, 0, 0, 0.6),
+		0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.printer-window-inner {
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(165deg, #0a2820, #0d3528);
+	border-radius: 3px;
+	box-shadow: inset 0 0 8px rgba(0, 255, 180, 0.1);
+}
+
+.printer-vents {
+	display: flex;
+	gap: 3px;
+}
+
+.printer-vents span {
+	width: 3px;
+	height: 20px;
+	background: linear-gradient(180deg, #8a7a68, #6a5a48);
+	border-radius: 1px;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* ========== ANIMATIONS ========== */
 @keyframes blink {
 	0%,
 	100% {
@@ -610,4 +755,3 @@ body {
 		opacity: 0;
 	}
 }
-
