@@ -1,12 +1,35 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 	import gsap from 'gsap';
 	import type { PageData } from './$types.js';
+	import { BREAKPOINTS } from '$lib/utils/viewport.js';
 
 	export let data: PageData;
 	const { project } = data;
 
+	let resizeHandler: (() => void) | null = null;
+
+	const checkViewportAndRedirect = () => {
+		if (browser && window.innerWidth < BREAKPOINTS.tablet) {
+			goto(`/mobile/projects/${project.slug}`, { replaceState: true });
+		}
+	};
+
 	onMount(() => {
+		// Check viewport on mount and redirect if needed
+		checkViewportAndRedirect();
+
+		// Debounced resize handler
+		let resizeTimer: ReturnType<typeof setTimeout>;
+		resizeHandler = () => {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(checkViewportAndRedirect, 100);
+		};
+		
+		window.addEventListener('resize', resizeHandler);
+
 		const tl = gsap.timeline();
 		tl.from('.top-nav, .project-header, .sidebar-item, .content-body', {
 			opacity: 0,
@@ -15,6 +38,12 @@
 			stagger: 0.1,
 			ease: 'power2.out'
 		});
+	});
+
+	onDestroy(() => {
+		if (browser && resizeHandler) {
+			window.removeEventListener('resize', resizeHandler);
+		}
 	});
 </script>
 

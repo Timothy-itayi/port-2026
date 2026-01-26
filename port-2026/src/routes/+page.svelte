@@ -3,6 +3,8 @@
 	import gsap from 'gsap';
 	import './console.css';
 	import Paper from '../lib/components/Paper.svelte';
+	import MobilePanel from '../lib/components/MobilePanel.svelte';
+	import { showMobileUI } from '$lib/utils/viewport';
 
 	let selectedButton: string | null = null;
 	let lineOneEl: HTMLElement | null = null;
@@ -152,104 +154,112 @@
 </svelte:head>
 
 <main class="stage">
-	<section class="console-container">
-		<!-- Console Top Cover -->
-		<div class="console-cover">
-			<div class="cover-ridge"></div>
-			<div class="cover-ridge"></div>
-			<div class="cover-ridge"></div>
-		</div>
+	{#if $showMobileUI}
+		<!-- Mobile Handheld Device UI -->
+		<section class="mobile-container">
+			<MobilePanel />
+		</section>
+	{:else}
+		<!-- Desktop Console + Printer UI -->
+		<section class="console-container">
+			<!-- Console Top Cover -->
+			<div class="console-cover">
+				<div class="cover-ridge"></div>
+				<div class="cover-ridge"></div>
+				<div class="cover-ridge"></div>
+			</div>
 
-		<div class="console-shell">
-			<div class="console-shell-shadow"></div>
-			<div class="console-shell-highlight"></div>
+			<div class="console-shell">
+				<div class="console-shell-shadow"></div>
+				<div class="console-shell-highlight"></div>
 
-			<div class="console-housing">
-				<div class="console-housing-inner">
-					<div class="console-top">
-						<div class="top-title">TIMOTHY ITAYI</div>
-						<div class="top-strip">
-							<span></span>
-							<span></span>
-						</div>
-					</div>
-
-					<div class="console-body">
-						<!-- Left Panel: Terminal + Buttons -->
-						<div class="console-left">
-							<div class="console-screen">
-								<div class="screen-bezel"></div>
-								<div class="screen-frame"></div>
-								<div class="screen-content">
-									<div class="screen-line" data-terminal-line="1"></div>
-									<div class="screen-line" data-terminal-line="2"></div>
-									<div class="screen-line" data-terminal-line="3">
-										<span class="screen-cursor"></span>
-									</div>
-								</div>
-							</div>
-
-							<div class="button-row">
-								{#each ['PROJECTS', 'ABOUT', 'CONTACT'] as label}
-									<div class="button-wrapper">
-										<button
-											class="tactile-button"
-											aria-label={label}
-											onclick={(e) => handleButtonClick(label, e)}
-										>
-											<span class="button-shadow"></span>
-											<span class="button-outline"></span>
-											<span class="button-top"></span>
-											<span class="button-edge"></span>
-											<span class="button-face"></span>
-											<span class="button-label">{label}</span>
-										</button>
-									</div>
-								{/each}
+				<div class="console-housing">
+					<div class="console-housing-inner">
+						<div class="console-top">
+							<div class="top-title">CONTROL PANEL</div>
+							<div class="top-strip">
+								<span></span>
+								<span></span>
 							</div>
 						</div>
 
-						<!-- Right Panel: Printer -->
-						<div class="console-right printer">
-							<!-- Printer Top / Paper Feed -->
-							<div class="printer-top">
-								<div class="printer-roller">
-									<div class="roller-bar"></div>
-									<div class="roller-bar"></div>
+						<div class="console-body">
+							<!-- Left Panel: Terminal + Buttons -->
+							<div class="console-left">
+								<div class="console-screen">
+									<div class="screen-bezel"></div>
+									<div class="screen-frame"></div>
+									<div class="screen-content">
+										<div class="screen-line" data-terminal-line="1"></div>
+										<div class="screen-line" data-terminal-line="2"></div>
+										<div class="screen-line" data-terminal-line="3">
+											<span class="screen-cursor"></span>
+										</div>
+									</div>
+								</div>
+
+								<div class="button-row">
+									{#each ['PROJECTS', 'ABOUT', 'CONTACT'] as label}
+										<div class="button-wrapper">
+											<button
+												class="tactile-button"
+												aria-label={label}
+												onclick={(e) => handleButtonClick(label, e)}
+											>
+												<span class="button-shadow"></span>
+												<span class="button-outline"></span>
+												<span class="button-top"></span>
+												<span class="button-edge"></span>
+												<span class="button-face"></span>
+												<span class="button-label">{label}</span>
+											</button>
+										</div>
+									{/each}
 								</div>
 							</div>
 
-							<!-- Paper Output Area -->
-							<div class="printer-output">
-								<div class="paper-slot">
-									<div class="paper-slot-shadow"></div>
-									<div class="paper-slot-edge"></div>
+							<!-- Right Panel: Printer -->
+							<div class="console-right printer">
+								<!-- Printer Top / Paper Feed -->
+								<div class="printer-top">
+									<div class="printer-roller">
+										<div class="roller-bar"></div>
+										<div class="roller-bar"></div>
+									</div>
 								</div>
-								<!-- Animated Paper Component -->
-								<Paper
-									bind:this={paperComponent}
-									content={printContent}
-									visible={isPrinting}
-								/>
-							</div>
 
-							<!-- Printer Body -->
-							<div class="printer-body">
-								<div class="printer-window">
-									<div class="printer-window-inner"></div>
+								<!-- Paper Output Area -->
+								<div class="printer-output">
+									<div class="paper-slot">
+										<div class="paper-slot-shadow"></div>
+										<div class="paper-slot-edge"></div>
+									</div>
+									<!-- Animated Paper Component -->
+									<Paper
+										bind:this={paperComponent}
+										content={printContent}
+										visible={isPrinting}
+									/>
 								</div>
-								<div class="printer-vents">
-									<span></span>
-									<span></span>
-									<span></span>
-									<span></span>
-									<span></span>
+
+								<!-- Printer Body -->
+								<div class="printer-body">
+									<div class="printer-window">
+										<div class="printer-window-inner"></div>
+									</div>
+									<div class="printer-vents">
+										<span></span>
+										<span></span>
+										<span></span>
+										<span></span>
+										<span></span>
+									</div>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-		</div>
-	</section>
+		</section>
+	{/if}
 </main>

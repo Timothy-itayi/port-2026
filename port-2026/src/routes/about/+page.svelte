@@ -1,8 +1,31 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, onDestroy } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 	import gsap from 'gsap';
+	import { BREAKPOINTS } from '$lib/utils/viewport.js';
+
+	let resizeHandler: (() => void) | null = null;
+
+	const checkViewportAndRedirect = () => {
+		if (browser && window.innerWidth < BREAKPOINTS.tablet) {
+			goto('/mobile/about', { replaceState: true });
+		}
+	};
 
 	onMount(() => {
+		// Check viewport on mount and redirect if needed
+		checkViewportAndRedirect();
+
+		// Debounced resize handler
+		let resizeTimer: ReturnType<typeof setTimeout>;
+		resizeHandler = () => {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(checkViewportAndRedirect, 100);
+		};
+		
+		window.addEventListener('resize', resizeHandler);
+
 		gsap.from('.dossier', {
 			scale: 0.9,
 			opacity: 0,
@@ -17,6 +40,12 @@
 			stagger: 0.03,
 			delay: 0.3
 		});
+	});
+
+	onDestroy(() => {
+		if (browser && resizeHandler) {
+			window.removeEventListener('resize', resizeHandler);
+		}
 	});
 </script>
 
