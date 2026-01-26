@@ -20,13 +20,33 @@
 </script>
 
 <div class="mobile-projects">
+	<!-- Frame Header -->
+	<div class="frame-header">
+		<span class="frame-label">Portfolio</span>
+		<span class="frame-line"></span>
+	</div>
+
 	<!-- Header -->
 	<div class="page-header">
-		<div class="header-line">
-			<span class="header-icon">◫</span>
-			<h1 class="header-title">PROJECTS</h1>
+		<div class="header-main">
+			<div class="header-icon-box">
+				<span class="header-icon">◫</span>
+			</div>
+			<div class="header-text">
+				<h1 class="header-title">Projects</h1>
+				<div class="header-sub">{projects.length} projects in portfolio</div>
+			</div>
 		</div>
-		<div class="header-sub">PORTFOLIO ARCHIVE • {projects.length} ENTRIES</div>
+		<div class="header-status">
+			<div class="data-label">Status</div>
+			<div class="data-value">Active</div>
+		</div>
+	</div>
+
+	<!-- Section Divider -->
+	<div class="section-divider">
+		<span class="section-label">All Projects</span>
+		<span class="section-line"></span>
 	</div>
 
 	<!-- Project List -->
@@ -36,11 +56,19 @@
 				class="project-card" 
 				onclick={() => handleProjectClick(project.slug)}
 			>
-				<div class="card-index">#{String(i + 1).padStart(2, '0')}</div>
+				<div class="card-left">
+					<div class="card-index">#{String(i + 1).padStart(2, '0')}</div>
+					<div class="card-icon-box">
+						<div class="card-icon-inner"></div>
+					</div>
+				</div>
 				<div class="card-content">
 					<div class="card-header">
 						<span class="card-title">{project.title}</span>
-						<span class="card-arrow">▸</span>
+						<div class="card-specs">
+							<span class="spec-dot"></span>
+							<span class="spec-text">V27-A5</span>
+						</div>
 					</div>
 					<div class="card-meta">
 						<span class="meta-author">{project.author}</span>
@@ -48,6 +76,12 @@
 						<span class="meta-type">PROJECT</span>
 					</div>
 					<div class="card-desc">{project.description}</div>
+				</div>
+				<div class="card-right">
+					<div class="load-btn">
+						<span class="load-arrow">▸</span>
+						<span class="load-text">LOAD></span>
+					</div>
 				</div>
 			</button>
 		{/each}
@@ -66,42 +100,124 @@
 		padding: 20px;
 		display: flex;
 		flex-direction: column;
-		gap: 20px;
-		color: #e4e8eb;
-		font-family: 'Inter', 'SF Pro Display', -apple-system, system-ui, sans-serif;
+		gap: 18px;
+		color: #fafafa;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+		background: #0a0a0b;
+	}
+
+	/* Frame Header */
+	.frame-header {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		padding-bottom: 12px;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	}
+
+	.frame-label {
+		font-size: 0.75rem;
+		font-weight: 500;
+		color: #71717a;
+		letter-spacing: 0.02em;
+		white-space: nowrap;
+	}
+
+	.frame-line {
+		flex: 1;
+		height: 1px;
+		background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0%, transparent 100%);
 	}
 
 	/* Header */
 	.page-header {
-		padding-bottom: 16px;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		display: flex;
+		justify-content: space-between;
+		align-items: flex-start;
+		padding: 20px;
+		background: #1c1c1f;
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 16px;
 	}
 
-	.header-line {
+	.header-main {
 		display: flex;
 		align-items: center;
-		gap: 12px;
+		gap: 14px;
+	}
+
+	.header-icon-box {
+		width: 44px;
+		height: 44px;
+		background: rgba(139, 92, 246, 0.15);
+		border: 1px solid rgba(139, 92, 246, 0.4);
+		border-radius: 12px;
+		display: grid;
+		place-items: center;
 	}
 
 	.header-icon {
-		font-size: 1.3rem;
-		color: #7dd3c0;
+		font-size: 1.4rem;
+		color: #8b5cf6;
+	}
+
+	.header-text {
+		flex: 1;
 	}
 
 	.header-title {
-		font-size: 1.5rem;
+		font-size: 1.4rem;
 		font-weight: 700;
-		letter-spacing: 0.08em;
+		letter-spacing: -0.01em;
 		margin: 0;
-		color: #e4e8eb;
+		color: #fafafa;
 	}
 
 	.header-sub {
-		font-size: 0.7rem;
-		color: rgba(228, 232, 235, 0.45);
-		margin-top: 6px;
-		letter-spacing: 0.08em;
+		font-size: 0.85rem;
+		color: #71717a;
+		margin-top: 4px;
 		font-weight: 500;
+	}
+
+	.header-status {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+		gap: 4px;
+	}
+
+	.data-label {
+		font-size: 0.75rem;
+		font-weight: 500;
+		color: #71717a;
+	}
+
+	.data-value {
+		font-size: 0.85rem;
+		font-weight: 600;
+		color: #8b5cf6;
+	}
+
+	/* Section Divider */
+	.section-divider {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+	}
+
+	.section-label {
+		font-size: 0.8rem;
+		font-weight: 600;
+		color: #a1a1aa;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+	}
+
+	.section-line {
+		flex: 1;
+		height: 1px;
+		background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0%, transparent 100%);
 	}
 
 	/* Projects List */
@@ -113,33 +229,57 @@
 
 	.project-card {
 		display: flex;
-		gap: 14px;
-		padding: 16px;
-		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		border-radius: 14px;
+		gap: 0;
+		padding: 0;
+		background: #1c1c1f;
+		border: 1px solid rgba(255, 255, 255, 0.12);
+		border-radius: 16px;
 		font-family: inherit;
 		cursor: pointer;
-		transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+		transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 		text-align: left;
 		width: 100%;
+		overflow: hidden;
 	}
 
-	.project-card:hover,
-	.project-card:active {
-		background: rgba(255, 255, 255, 0.06);
-		border-color: rgba(255, 255, 255, 0.12);
-		transform: translateY(-2px);
-		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+	.project-card:hover {
+		border-color: #8b5cf6;
+		transform: translateY(-4px);
+		box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
+	}
+
+	.card-left {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		padding: 16px;
+		background: #141416;
+		border-right: 1px solid rgba(255, 255, 255, 0.08);
+		gap: 8px;
 	}
 
 	.card-index {
-		font-size: 0.75rem;
+		font-size: 0.8rem;
 		font-weight: 700;
-		color: rgba(125, 211, 192, 0.5);
-		min-width: 28px;
-		padding-top: 2px;
-		font-family: 'SF Mono', monospace;
+		color: #8b5cf6;
+	}
+
+	.card-icon-box {
+		width: 36px;
+		height: 36px;
+		background: rgba(139, 92, 246, 0.15);
+		border: 1px solid rgba(139, 92, 246, 0.4);
+		border-radius: 10px;
+		display: grid;
+		place-items: center;
+	}
+
+	.card-icon-inner {
+		width: 18px;
+		height: 18px;
+		background: #8b5cf6;
+		border-radius: 50%;
 	}
 
 	.card-content {
@@ -147,39 +287,40 @@
 		display: flex;
 		flex-direction: column;
 		gap: 6px;
+		padding: 16px;
 	}
 
 	.card-header {
 		display: flex;
 		justify-content: space-between;
-		align-items: center;
+		align-items: flex-start;
 	}
 
 	.card-title {
 		font-size: 1rem;
 		font-weight: 600;
-		color: #e4e8eb;
-		letter-spacing: 0.02em;
+		color: #fafafa;
+		letter-spacing: 0.01em;
 	}
 
-	.card-arrow {
-		font-size: 0.9rem;
-		color: rgba(228, 232, 235, 0.3);
-		transition: all 0.2s ease;
+	.card-specs {
+		display: none;
 	}
 
-	.project-card:hover .card-arrow,
-	.project-card:active .card-arrow {
-		transform: translateX(4px);
-		color: #7dd3c0;
+	.spec-dot {
+		display: none;
+	}
+
+	.spec-text {
+		display: none;
 	}
 
 	.card-meta {
 		display: flex;
 		align-items: center;
 		gap: 8px;
-		font-size: 0.7rem;
-		color: rgba(228, 232, 235, 0.45);
+		font-size: 0.8rem;
+		color: #71717a;
 		font-weight: 500;
 	}
 
@@ -187,9 +328,13 @@
 		opacity: 0.4;
 	}
 
+	.meta-type {
+		color: #8b5cf6;
+	}
+
 	.card-desc {
-		font-size: 0.8rem;
-		color: rgba(228, 232, 235, 0.6);
+		font-size: 0.9rem;
+		color: #a1a1aa;
 		line-height: 1.5;
 		display: -webkit-box;
 		-webkit-line-clamp: 2;
@@ -198,24 +343,55 @@
 		overflow: hidden;
 	}
 
+	.card-right {
+		display: flex;
+		align-items: center;
+		padding: 16px;
+		border-left: 1px solid rgba(255, 255, 255, 0.08);
+	}
+
+	.load-btn {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 4px;
+	}
+
+	.load-arrow {
+		font-size: 1.1rem;
+		color: #8b5cf6;
+		transition: transform 0.2s ease;
+	}
+
+	.load-text {
+		font-size: 0.65rem;
+		font-weight: 600;
+		color: #71717a;
+		letter-spacing: 0.02em;
+	}
+
+	.project-card:hover .load-arrow {
+		transform: translateX(4px);
+	}
+
 	/* Footer */
 	.page-footer {
 		display: flex;
 		align-items: center;
-		gap: 14px;
-		padding-top: 20px;
-		color: rgba(228, 232, 235, 0.3);
+		gap: 16px;
+		padding-top: 18px;
+		color: #71717a;
 	}
 
 	.footer-line {
 		flex: 1;
 		height: 1px;
-		background: rgba(255, 255, 255, 0.06);
+		background: rgba(255, 255, 255, 0.08);
 	}
 
 	.footer-text {
-		font-size: 0.65rem;
-		letter-spacing: 0.08em;
-		font-weight: 500;
+		font-size: 0.8rem;
+		letter-spacing: 0.04em;
+		font-weight: 600;
 	}
 </style>

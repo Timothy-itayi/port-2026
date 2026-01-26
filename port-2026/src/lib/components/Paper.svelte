@@ -7,6 +7,7 @@
 
 	export let content: string = '';
 	export let visible: boolean = false;
+	export let onPrintComplete: ((content: string) => void) | undefined = undefined;
 
 	let paperRef: HTMLElement;
 	let isAnimating = false;
@@ -38,7 +39,7 @@
 		} else if (content === 'PROJECTS') {
 			hoverY = 25;
 			hoverRotateX = 1.5;
-		} else if (content === 'CONTACT') {
+		} else if (content === 'RESUME') {
 			hoverY = 20;
 			hoverRotateX = 1;
 		} else {
@@ -67,7 +68,7 @@
 		} else if (content === 'PROJECTS') {
 			settleY = 28;
 			settleRotateX = 1.2;
-		} else if (content === 'CONTACT') {
+		} else if (content === 'RESUME') {
 			settleY = 22;
 			settleRotateX = 0.8;
 		} else {
@@ -92,6 +93,8 @@
 			zoomIntoPage('/projects');
 		} else if (content === 'ABOUT') {
 			inspectPaper('/about');
+		} else if (content === 'RESUME') {
+			inspectPaperAndDownload();
 		} else {
 			// For other items, we can just do the standard inspect for now
 			// but user asked for "zooming into a new web page", so we'll 
@@ -144,6 +147,90 @@
 			x: `+=${deltaX}`,
 			y: `+=${deltaY}`,
 			scale: 1.8, // Reduced from 2.2 to be less overwhelming
+			rotateX: 0,
+			duration: 0.8,
+			ease: 'power3.inOut',
+			force3D: true
+		});
+
+		// Fade out the console slightly but keep it visible (the "inspect" effect)
+		tl.to('.console-cover, .console-shell', {
+			opacity: 0.3,
+			filter: 'blur(4px)',
+			duration: 0.8,
+			ease: 'power2.inOut',
+			force3D: true
+		}, '<');
+	}
+
+	function inspectPaperAndDownload() {
+		isTransitioning = true;
+		isAnimating = true;
+
+		// Kill any existing settle animations
+		gsap.killTweensOf(paperRef);
+
+		const rect = paperRef.getBoundingClientRect();
+		const viewportWidth = window.innerWidth;
+		const viewportHeight = window.innerHeight;
+		const centerX = rect.left + rect.width / 2;
+		const centerY = rect.top + rect.height / 2;
+		const deltaX = viewportWidth / 2 - centerX;
+		const deltaY = viewportHeight / 2 - centerY;
+
+		const tl = gsap.timeline({
+			onComplete: () => {
+				// Trigger resume download
+				const link = document.createElement('a');
+				link.href = '/Software-Engineer_CV.pdf';
+				link.download = 'Software-Engineer_CV.pdf';
+				document.body.appendChild(link);
+				link.click();
+				document.body.removeChild(link);
+				
+				// Reset after a brief delay
+				setTimeout(() => {
+					isTransitioning = false;
+					isAnimating = false;
+					// Reset paper position
+					if (paperRef) {
+						gsap.set(paperRef, {
+							x: 0,
+							y: 0,
+							scale: 1,
+							rotateX: 0
+						});
+					}
+					gsap.set('.console-cover, .console-shell', {
+						opacity: 1,
+						filter: 'blur(0px)'
+					});
+					if (paperRef?.parentElement) {
+						gsap.set(paperRef.parentElement, {
+							zIndex: 'auto',
+							clipPath: ''
+						});
+					}
+				}, 500);
+			}
+		});
+
+		// Ensure we don't have a jump when changing transformOrigin
+		tl.set(paperRef.parentElement, { 
+			zIndex: 5000, 
+			clipPath: 'none' 
+		})
+		.set(paperRef, { 
+			transformOrigin: 'center center',
+			force3D: true
+		});
+
+		// Stage 1: Move the paper to dead-center and scale up SIGNIFICANTLY 
+		// but NOT covering the whole screen. We want an "inspect" feel.
+		tl.to(paperRef, {
+			x: `+=${deltaX}`,
+			y: `+=${deltaY}`,
+			scale: 1.8,
 			rotateX: 0,
 			duration: 0.8,
 			ease: 'power3.inOut',
@@ -246,31 +333,37 @@
 		if (shadow) gsap.killTweensOf(shadow);
 
 		const isAbout = content === 'ABOUT';
-		const isContact = content === 'CONTACT';
+		const isResume = content === 'RESUME';
 		const startY = -500; // Force start far above to prevent any flash
 
-		const tl = gsap.timeline({
-			onComplete: () => {
-				isAnimating = false;
-				isReady = true;
+		// For resume, wait a tick to ensure content is rendered and we can measure height
+		const initAnimation = () => {
+			const tl = gsap.timeline({
+				onComplete: () => {
+					isAnimating = false;
+					isReady = true;
+					// Notify parent that resume print is complete (for timeline completion)
+					if (onPrintComplete && content === 'RESUME') {
+						onPrintComplete(content);
+					}
+				}
+			});
+
+			// 1. Force the start position far above to prevent any flash
+			tl.set(paperRef, {
+				y: startY,
+				x: 0,
+				scale: 1,
+				opacity: 1,
+				rotateX: 0,
+				transformOrigin: 'top center'
+			});
+
+			if (shadow) {
+				tl.set(shadow, { opacity: 0 });
 			}
-		});
 
-		// 1. Force the start position far above to prevent any flash
-		tl.set(paperRef, {
-			y: startY,
-			x: 0,
-			scale: 1,
-			opacity: 1,
-			rotateX: 0,
-			transformOrigin: 'top center'
-		});
-
-		if (shadow) {
-			tl.set(shadow, { opacity: 0 });
-		}
-
-		if (isAbout) {
+			if (isAbout) {
 			// ABOUT card: Start at -500, slide down continuously
 			// The paper is ~120px tall. The mask is at roughly y=0.
 			// At y=-120, the bottom of the paper is at y=0 (just touching the mask)
@@ -308,11 +401,13 @@
 				opacity: 1,
 				duration: 0.8 // Match settle duration exactly
 			}, '<'); 
-		} else if (isContact) {
-			// CONTACT card: Similar to ABOUT but with different timing
+		} else if (isResume) {
+			// RESUME card: Similar to ABOUT but with different timing
+			// Calculate height dynamically - measure after content is rendered
+			const resumeHeight = paperRef.offsetHeight || 180;
 			// Stage 1: Slide from -500 to just barely peeking
 			tl.to(paperRef, {
-				y: -109, // Contact paper is ~110px tall
+				y: -(resumeHeight - 1), // Resume paper height minus 1px to peek
 				rotateX: -1,
 				duration: 1.2,
 				ease: 'power2.out'
@@ -384,6 +479,18 @@
 					isReady = true;
 				}
 			}, '>-0.2');
+			}
+		};
+		
+		// For resume, wait for content to render before starting animation
+		if (isResume) {
+			tick().then(() => {
+				// Force a reflow to ensure height is calculated
+				void paperRef.offsetHeight;
+				initAnimation();
+			});
+		} else {
+			initAnimation();
 		}
 	}
 
@@ -417,7 +524,7 @@
 	class:transitioning={isTransitioning} 
 	class:about-paper={content === 'ABOUT'}
 	class:projects-paper={content === 'PROJECTS'}
-	class:contact-paper={content === 'CONTACT'}
+	class:resume-paper={content === 'RESUME'}
 >
 	<button 
 		class="paper-sheet" 
@@ -432,7 +539,7 @@
 		disabled={isTransitioning}
 	>
 		<div class="paper-content">
-			{#if content !== 'ABOUT' && content !== 'PROJECTS'}
+			{#if content !== 'ABOUT' && content !== 'PROJECTS' && content !== 'RESUME'}
 				<div class="paper-header">{content || 'PRINTING...'}</div>
 			{/if}
 			{#if content === 'PROJECTS'}
@@ -566,11 +673,133 @@
 						</div>
 					</div>
 				</div>
-			{:else if content === 'CONTACT'}
-				<div class="contact-preview-full">
-					<h1 class="contact-title">CONTACT</h1>
-					<p class="contact-description">Feel free to reach out for collaborations or just a chat.</p>
-					<div class="contact-button">GO BACK</div>
+			{:else if content === 'RESUME'}
+				<div class="cv-preview-full">
+					<div class="cv-header">
+						<h1 class="cv-name">TIMOTHY ITAYI</h1>
+						<div class="cv-title">SOFTWARE ENGINEER</div>
+						<div class="cv-contact">
+							<span>hello@timothyitayi.com</span>
+							<span>•</span>
+							<span>github.com/timothyitayi</span>
+							<span>•</span>
+							<span>Melbourne, AU</span>
+						</div>
+					</div>
+					<div class="cv-section">
+						<div class="cv-section-title">EXPERIENCE</div>
+						<div class="cv-item">
+							<div class="cv-item-header">
+								<span class="cv-role">Senior Software Engineer</span>
+								<span class="cv-date">2023 - Present</span>
+							</div>
+							<div class="cv-company">Company Name • Melbourne, AU</div>
+							<div class="cv-description">
+								• Built scalable systems using TypeScript and Go
+								• Led architecture decisions for microservices
+								• Mentored junior engineers and improved code quality
+							</div>
+						</div>
+						<div class="cv-item">
+							<div class="cv-item-header">
+								<span class="cv-role">Software Engineer</span>
+								<span class="cv-date">2021 - 2023</span>
+							</div>
+							<div class="cv-company">Previous Company • Remote</div>
+							<div class="cv-description">
+								• Developed full-stack applications with React and Node.js
+								• Optimized database queries reducing latency by 40%
+								• Implemented CI/CD pipelines and automated testing
+							</div>
+						</div>
+						<div class="cv-item">
+							<div class="cv-item-header">
+								<span class="cv-role">Junior Developer</span>
+								<span class="cv-date">2020 - 2021</span>
+							</div>
+							<div class="cv-company">Startup Company</div>
+							<div class="cv-description">
+								• Built features for web applications using modern frameworks
+								• Collaborated with design team on UI/UX improvements
+							</div>
+						</div>
+					</div>
+					<div class="cv-section">
+						<div class="cv-section-title">TECHNICAL SKILLS</div>
+						<div class="cv-skills-group">
+							<div class="cv-skill-category">
+								<span class="cv-skill-label">Languages:</span>
+								<div class="cv-skills">
+									<span>TypeScript</span>
+									<span>JavaScript</span>
+									<span>Go</span>
+									<span>Rust</span>
+									<span>Python</span>
+								</div>
+							</div>
+							<div class="cv-skill-category">
+								<span class="cv-skill-label">Frontend:</span>
+								<div class="cv-skills">
+									<span>Svelte</span>
+									<span>React</span>
+									<span>Vue</span>
+									<span>Next.js</span>
+								</div>
+							</div>
+							<div class="cv-skill-category">
+								<span class="cv-skill-label">Backend:</span>
+								<div class="cv-skills">
+									<span>Node.js</span>
+									<span>Express</span>
+									<span>PostgreSQL</span>
+									<span>MongoDB</span>
+								</div>
+							</div>
+							<div class="cv-skill-category">
+								<span class="cv-skill-label">Tools:</span>
+								<div class="cv-skills">
+									<span>Docker</span>
+									<span>Kubernetes</span>
+									<span>Git</span>
+									<span>AWS</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="cv-section">
+						<div class="cv-section-title">PROJECTS</div>
+						<div class="cv-item">
+							<div class="cv-item-header">
+								<span class="cv-role">Portfolio Website</span>
+								<span class="cv-date">2026</span>
+							</div>
+							<div class="cv-description">
+								Built interactive portfolio with SvelteKit, GSAP animations, and responsive design
+							</div>
+						</div>
+						<div class="cv-item">
+							<div class="cv-item-header">
+								<span class="cv-role">Open Source Contributions</span>
+								<span class="cv-date">2024 - Present</span>
+							</div>
+							<div class="cv-description">
+								Contributing to various open source projects in TypeScript and Go ecosystems
+							</div>
+						</div>
+					</div>
+					<div class="cv-section">
+						<div class="cv-section-title">EDUCATION</div>
+						<div class="cv-item">
+							<div class="cv-item-header">
+								<span class="cv-role">Bachelor of Computer Science</span>
+								<span class="cv-date">2016 - 2020</span>
+							</div>
+							<div class="cv-company">University Name • Melbourne, AU</div>
+							<div class="cv-description">
+								Focus on software engineering and distributed systems
+							</div>
+						</div>
+					</div>
 				</div>
 			{:else}
 				<div class="paper-line"></div>

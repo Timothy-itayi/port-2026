@@ -10,10 +10,10 @@
 	let menuOpen = $state(false);
 
 	const navItems = [
-		{ label: 'HOME', path: '/mobile', icon: '⌂', exact: true },
-		{ label: 'PROJECTS', path: '/mobile/projects', icon: '◫', exact: false },
-		{ label: 'ABOUT', path: '/mobile/about', icon: '◉', exact: true },
-		{ label: 'CONTACT', path: '/mobile/contact', icon: '◈', exact: true }
+		{ label: 'HOME', path: '/mobile', icon: '⌂', id: 'MH-01', exact: true },
+		{ label: 'PROJECTS', path: '/mobile/projects', icon: '◫', id: 'MH-02', exact: false },
+		{ label: 'ABOUT', path: '/mobile/about', icon: '◉', id: 'MH-03', exact: true },
+		{ label: 'RESUME', path: '/mobile/resume', icon: '◈', id: 'MH-04', exact: true }
 	];
 
 	let currentPath = $derived($page.url.pathname);
@@ -77,7 +77,7 @@
 		if (path === '/mobile') return 'HOME';
 		if (path.startsWith('/mobile/projects')) return 'PROJECTS';
 		if (path === '/mobile/about') return 'ABOUT';
-		if (path === '/mobile/contact') return 'CONTACT';
+		if (path === '/mobile/resume') return 'RESUME';
 		return 'PORTFOLIO';
 	};
 </script>
@@ -122,7 +122,10 @@
 					onclick={() => handleNavClick(item.path)}
 				>
 					<span class="menu-icon">{item.icon}</span>
-					<span class="menu-label">{item.label}</span>
+					<div class="menu-text">
+						<span class="menu-label">{item.label}</span>
+						<span class="menu-id">{item.id}</span>
+					</div>
 					<span class="menu-arrow">▸</span>
 				</button>
 			{/each}

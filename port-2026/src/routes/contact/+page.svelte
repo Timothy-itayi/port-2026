@@ -9,7 +9,7 @@
 
 	const checkViewportAndRedirect = () => {
 		if (browser && window.innerWidth < BREAKPOINTS.tablet) {
-			goto('/mobile/contact', { replaceState: true });
+			goto('/mobile/resume', { replaceState: true });
 		}
 	};
 
@@ -26,7 +26,7 @@
 		
 		window.addEventListener('resize', resizeHandler);
 
-		gsap.from('.contact-content', {
+		gsap.from('.resume-content', {
 			opacity: 0,
 			y: 20,
 			duration: 1,
@@ -42,19 +42,27 @@
 </script>
 
 <svelte:head>
-	<title>Contact | Timothy Itayi</title>
+	<title>Resume | Timothy Itayi</title>
 </svelte:head>
 
-<main class="contact-page">
-	<div class="contact-content">
-		<h1>CONTACT</h1>
-		<p>Feel free to reach out for collaborations or just a chat.</p>
+<main class="resume-page">
+	<div class="resume-content">
+		<h1>RESUME</h1>
+		<p>Download my resume for hiring managers.</p>
+		<button onclick={() => {
+			const link = document.createElement('a');
+			link.href = '/Software-Engineer_CV.pdf';
+			link.download = 'Software-Engineer_CV.pdf';
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		}}>DOWNLOAD RESUME</button>
 		<button onclick={() => window.history.back()}>GO BACK</button>
 	</div>
 </main>
 
 <style>
-	.contact-page {
+	.resume-page {
 		min-height: 100vh;
 		background: #ffffff;
 		color: #1a1a1a;
@@ -62,9 +70,12 @@
 		font-family: 'Inter', system-ui, sans-serif;
 	}
 
-	.contact-content {
+	.resume-content {
 		max-width: 800px;
 		margin: 0 auto;
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
 	}
 
 	h1 {
@@ -84,5 +95,6 @@
 		border-radius: 4px;
 		cursor: pointer;
 		font-family: monospace;
+		margin-right: 1rem;
 	}
 </style>

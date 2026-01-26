@@ -199,7 +199,7 @@
 								</div>
 
 								<div class="button-row">
-									{#each ['PROJECTS', 'ABOUT', 'CONTACT'] as label}
+									{#each ['PROJECTS', 'ABOUT', 'RESUME'] as label}
 										<div class="button-wrapper">
 											<button
 												class="tactile-button"
@@ -239,6 +239,14 @@
 										bind:this={paperComponent}
 										content={printContent}
 										visible={isPrinting}
+										onPrintComplete={(content) => {
+											if (content === 'RESUME' && promptEl) {
+												// Wait a moment after animation completes, then show download instruction
+												setTimeout(() => {
+													typeLine(promptEl, '> TAP PAGE TO DOWNLOAD', 0.8);
+												}, 400);
+											}
+										}}
 									/>
 								</div>
 
