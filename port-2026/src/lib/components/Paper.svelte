@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
+	import { onMount, tick } from 'svelte';
 	import { goto } from '$app/navigation';
 	import gsap from 'gsap';
+	import { projects } from '$lib/data/projects.js';
 	import './paper.css';
 
 	export let content: string = '';
@@ -29,9 +30,21 @@
 		if (isTransitioning || isAnimating || !isReady || !paperRef) return;
 		isHovering = true;
 		
-		const isAbout = content === 'ABOUT';
-		const hoverY = isAbout ? 15 : 42; // Subtle lift
-		const hoverRotateX = isAbout ? 2 : 1;
+		// Different hover effects for each paper type
+		let hoverY, hoverRotateX;
+		if (content === 'ABOUT') {
+			hoverY = 15;
+			hoverRotateX = 2;
+		} else if (content === 'PROJECTS') {
+			hoverY = 25;
+			hoverRotateX = 1.5;
+		} else if (content === 'CONTACT') {
+			hoverY = 20;
+			hoverRotateX = 1;
+		} else {
+			hoverY = 42;
+			hoverRotateX = 1;
+		}
 
 		gsap.to(paperRef, {
 			y: hoverY,
@@ -46,9 +59,21 @@
 		if (isTransitioning || isAnimating || !paperRef) return;
 		isHovering = false;
 		
-		const isAbout = content === 'ABOUT';
-		const settleY = isAbout ? 18 : 45;
-		const settleRotateX = isAbout ? 1 : 2;
+		// Different settle positions for each paper type
+		let settleY, settleRotateX;
+		if (content === 'ABOUT') {
+			settleY = 18;
+			settleRotateX = 1;
+		} else if (content === 'PROJECTS') {
+			settleY = 28;
+			settleRotateX = 1.2;
+		} else if (content === 'CONTACT') {
+			settleY = 22;
+			settleRotateX = 0.8;
+		} else {
+			settleY = 45;
+			settleRotateX = 2;
+		}
 
 		gsap.to(paperRef, {
 			y: settleY,
@@ -91,13 +116,15 @@
 		const deltaY = viewportHeight / 2 - centerY;
 
 		const tl = gsap.timeline({
-			onComplete: async () => {
-				await goto(path);
-				// Delay resetting flags to ensure route change is visually stable
-				setTimeout(() => {
-					isTransitioning = false;
-					isAnimating = false;
-				}, 100);
+			onComplete: () => {
+				(async () => {
+					await goto(path);
+					// Delay resetting flags to ensure route change is visually stable
+					setTimeout(() => {
+						isTransitioning = false;
+						isAnimating = false;
+					}, 100);
+				})();
 			}
 		});
 
@@ -151,13 +178,15 @@
 		const scaleToCover = Math.max(viewportWidth / rect.width, viewportHeight / rect.height) * 1.05;
 
 		const tl = gsap.timeline({
-			onComplete: async () => {
-				await goto(path);
-				// Delay resetting flags to ensure route change is visually stable
-				setTimeout(() => {
-					isTransitioning = false;
-					isAnimating = false;
-				}, 100);
+			onComplete: () => {
+				(async () => {
+					await goto(path);
+					// Delay resetting flags to ensure route change is visually stable
+					setTimeout(() => {
+						isTransitioning = false;
+						isAnimating = false;
+					}, 100);
+				})();
 			}
 		});
 
@@ -217,6 +246,7 @@
 		if (shadow) gsap.killTweensOf(shadow);
 
 		const isAbout = content === 'ABOUT';
+		const isContact = content === 'CONTACT';
 		const startY = -500; // Force start far above to prevent any flash
 
 		const tl = gsap.timeline({
@@ -278,6 +308,37 @@
 				opacity: 1,
 				duration: 0.8 // Match settle duration exactly
 			}, '<'); 
+		} else if (isContact) {
+			// CONTACT card: Similar to ABOUT but with different timing
+			// Stage 1: Slide from -500 to just barely peeking
+			tl.to(paperRef, {
+				y: -109, // Contact paper is ~110px tall
+				rotateX: -1,
+				duration: 1.2,
+				ease: 'power2.out'
+			});
+			
+			// Stage 2: Settle
+			tl.to(paperRef, {
+				y: 22,
+				rotateX: 0.8,
+				duration: 0.7,
+				ease: 'power2.out',
+				onStart: () => {
+					isAnimating = false;
+				},
+				onComplete: () => {
+					isReady = true;
+				}
+			}, '>-0.2');
+
+			// Shadow fade
+			if (shadow) {
+				tl.to(shadow, {
+					opacity: 1,
+					duration: 0.7
+				}, '<');
+			}
 		} else {
 			// Standard cards: Start from -500, move to -210 (safely hidden)
 			tl.to(paperRef, { y: -210, duration: 0.01 });
@@ -351,7 +412,13 @@
 	}
 </script>
 
-<div class="paper-container" class:visible class:transitioning={isTransitioning} class:zine={content === 'ABOUT'}>
+<div class="paper-container" 
+	class:visible 
+	class:transitioning={isTransitioning} 
+	class:about-paper={content === 'ABOUT'}
+	class:projects-paper={content === 'PROJECTS'}
+	class:contact-paper={content === 'CONTACT'}
+>
 	<button 
 		class="paper-sheet" 
 		class:animating={isAnimating}
@@ -365,17 +432,59 @@
 		disabled={isTransitioning}
 	>
 		<div class="paper-content">
-			{#if content !== 'ABOUT'}
+			{#if content !== 'ABOUT' && content !== 'PROJECTS'}
 				<div class="paper-header">{content || 'PRINTING...'}</div>
 			{/if}
 			{#if content === 'PROJECTS'}
-				<div class="preview-projects">
-					<div class="preview-grid">
-						<div class="preview-card"></div>
-						<div class="preview-card"></div>
-						<div class="preview-card"></div>
-						<div class="preview-card"></div>
+				<div class="projects-preview-full">
+					<nav class="preview-nav">
+						<div class="nav-links">
+							<span>Control Panel</span>
+							<span>Clones</span>
+						</div>
+						<div class="beta-tag">BETA</div>
+					</nav>
+
+					<header class="preview-header">
+						<h1 class="archival-title">PROJECTS</h1>
+					</header>
+
+					<div class="section-divider">
+						<h2>LATEST WORKS ADDED</h2>
 					</div>
+
+					<div class="preview-project-grid">
+						{#each projects as project}
+							<div class="preview-project-card">
+								<div class="card-header">
+									<div class="header-row">
+										<div class="label">Title</div>
+										<div class="value">{project.title}</div>
+									</div>
+									<div class="header-row author">
+										<div class="label">Author</div>
+										<div class="value">{project.author}</div>
+									</div>
+								</div>
+								<div class="card-image">
+									<div class="image-inner">
+										<img src={project.image} alt={project.title} />
+									</div>
+								</div>
+								<div class="card-footer-desc">
+									<div class="desc-label">Notes:</div>
+									<div class="desc-text">{project.description}</div>
+								</div>
+							</div>
+						{/each}
+					</div>
+
+					<footer class="preview-footer">
+						<div class="footer-content">
+							<div class="footer-left">© 2026 TIMOTHY ITAYI</div>
+							<div class="footer-right">JAN 24 2026</div>
+						</div>
+					</footer>
 				</div>
 			{:else if content === 'ABOUT'}
 				<div class="zine-content">
@@ -395,18 +504,18 @@
 							<div class="zine-caption">Timothy</div>
 						</div>
 						<div class="zine-right">
-							<div class="zine-headline">A MASTER SPEAKS</div>
+							<div class="zine-headline">THE ENGINEER</div>
 							<div class="zine-text">
-								If you have stumbled upon this terminal in the slightest I am sure that you know by now that the web is not just run by code, shadow servers or any "mains" of any kind. The world is run by a rare group of engineers who communicate via low-latency protocols and carry the title master...
+								I am a software engineer based in Melbourne, originally from Zimbabwe. I grew up in New Zealand and now live in Australia with my wife. I am an avid sports fan—I don't follow many but do enjoy it when I see it. I enjoy F1, endurance racing, dirt rally, UFC and boxing. I'm passionate about building thoughtful software that balances practical engineering with creative design...
 							</div>
 						</div>
 					</div>
 				</div>
 			{:else if content === 'CONTACT'}
-				<div class="preview-contact">
-					<div class="preview-line medium"></div>
-					<div class="preview-line long"></div>
-					<div class="preview-line short"></div>
+				<div class="contact-preview-full">
+					<h1 class="contact-title">CONTACT</h1>
+					<p class="contact-description">Feel free to reach out for collaborations or just a chat.</p>
+					<div class="contact-button">GO BACK</div>
 				</div>
 			{:else}
 				<div class="paper-line"></div>

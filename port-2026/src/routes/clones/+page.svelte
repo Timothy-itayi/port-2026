@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
-	import { projects } from '$lib/data/projects.js';
+	import { clones } from '$lib/data/clones.js';
 
 	onMount(() => {
 		// Simple entrance animation
@@ -24,7 +24,7 @@
 </script>
 
 <svelte:head>
-	<title>Projects | Timothy Itayi</title>
+	<title>Clones | Timothy Itayi</title>
 </svelte:head>
 
 <div class="archive-wrapper">
@@ -33,7 +33,7 @@
 		<nav class="top-nav">
 			<div class="nav-links">
 				<a href="/">Control Panel</a>
-				<a href="/clones">Clones</a>
+				<a href="/projects">Projects</a>
 			</div>
 			<div class="beta-tag">BETA</div>
 		</nav>
@@ -42,11 +42,9 @@
 		<header class="main-header">
 			<div class="brand">
 				<h1 class="archival-title">
-					PROJECTS
+					CLONES
 				</h1>
-				
 			</div>
-			
 		</header>
 
 		<!-- Section Title -->
@@ -56,27 +54,27 @@
 
 		<!-- Project Grid -->
 		<main class="project-grid">
-			{#each projects as project}
-				<a href="/projects/{project.slug}" class="project-card-link">
+			{#each clones as clone}
+				<a href="/clones/{clone.slug}" class="project-card-link">
 					<div class="project-card">
 						<div class="card-header">
 							<div class="header-row">
 								<div class="label">Title</div>
-								<div class="value">{project.title}</div>
+								<div class="value">{clone.title}</div>
 							</div>
 							<div class="header-row author">
 								<div class="label">Author</div>
-								<div class="value">{project.author}</div>
+								<div class="value">{clone.author}</div>
 							</div>
 						</div>
 						<div class="card-image">
 							<div class="image-inner">
-								<img src={project.image} alt={project.title} />
+								<img src={clone.image} alt={clone.title} />
 							</div>
 						</div>
 						<div class="card-footer-desc">
 							<div class="desc-label">Notes:</div>
-							<div class="desc-text">{project.description}</div>
+							<div class="desc-text">{clone.description}</div>
 						</div>
 					</div>
 				</a>
@@ -150,15 +148,6 @@
 		border-bottom: 2px solid #000;
 	}
 
-	.nav-dropdown {
-		cursor: pointer;
-	}
-
-	.arrow {
-		font-size: 0.6rem;
-		margin-left: 2px;
-	}
-
 	.beta-tag {
 		color: #ff0000;
 		font-weight: 900;
@@ -182,21 +171,6 @@
 		letter-spacing: -3px;
 	}
 
-	.subtitle {
-		margin: 0.5rem 0 0 0;
-		font-size: 1.2rem;
-		font-weight: bold;
-		opacity: 0.8;
-	}
-
-	.description {
-		font-size: 1.1rem;
-		line-height: 1.2;
-		font-weight: bold;
-		padding-top: 0.5rem;
-		text-align: right;
-	}
-
 	/* Section Divider */
 	.section-divider {
 		border-top: 1px solid #000;
@@ -216,7 +190,7 @@
 		display: grid;
 		grid-template-columns: repeat(2, 1fr);
 		gap: 2.5rem;
-		margin-bottom: 4rem;
+		margin-bottom: 2rem;
 	}
 
 	.project-card-link {
@@ -328,9 +302,6 @@
 		.main-header {
 			grid-template-columns: 1fr;
 			gap: 1.5rem;
-		}
-		.description {
-			text-align: left;
 		}
 		.project-grid {
 			grid-template-columns: 1fr;

@@ -42,27 +42,25 @@
 				</div>
 				
 				<div class="zine-right">
-					<div class="zine-headline">A MASTER SPEAKS</div>
+					<div class="zine-headline">THE ENGINEER</div>
 					<div class="zine-text-content">
 						<p>
-							If you have woken up in the slightest I am sure that you know by now that the world is not run by 
-							government, shadow governments or any "ments" of any kind. The world is run by an elite group 
-							of engineers who communicate telepathically and carry the title master.
+							I am a software engineer based in Melbourne, originally from Zimbabwe. I grew up in New Zealand 
+							and now live in Australia with my wife. I am an avid sports fan—I don't follow many but do enjoy 
+							it when I see it. I enjoy F1, endurance racing, dirt rally, UFC and boxing.
 						</p>
 						<p>
-							We were granted the rare opportunity to interview one about the groups plans on the direction 
-							of the world moving forward and here is a scary hint... You haven't heard about any engineers 
-							getting the virus... according to our master that is not just a coincidence.
+							I'm passionate about building thoughtful software that balances practical engineering with creative design. Outside work, you'll find me surrounded by books, experimenting with odd tech projects, or getting lost on long walks to clear my head. I believe the best ideas come from curiosity and a willingness to tinker, fail, and try again.
 						</p>
 						<p>
-							Will they share their immunity with us or will... [READ MORE ON PAGE 4]
+							Some projects need a miracle to deploy and a little incense for the servers doesn’t hurt.
 						</p>
 					</div>
 				</div>
 			</div>
 			
 			<div class="zine-footer">
-				Don't believe the news the world is doing fine!
+				Building things, breaking things, fixing things.
 			</div>
 		</div>
 
