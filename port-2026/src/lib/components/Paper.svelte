@@ -487,27 +487,82 @@
 					</footer>
 				</div>
 			{:else if content === 'ABOUT'}
-				<div class="zine-content">
-					<div class="zine-header-compact">
-						<div class="zine-top-right-image">
-							<img src="/about/top-right-corner.jpg" alt="Decoration" />
+				<div class="dossier-preview">
+					<!-- Header -->
+					<div class="dp-header">
+						<div class="dp-brand">
+							<div class="dp-seal">&#9881;</div>
+							<div class="dp-agency">
+								<div class="dp-agency-name">Bureau of Engineering Investigation</div>
+								<div class="dp-agency-sub">PERSONNEL DOSSIER</div>
+							</div>
+						</div>
+						<div class="dp-file-info">
+							<span class="dp-file-label">FILE</span>
+							<span class="dp-file-value">#2026-TI-0x3F</span>
 						</div>
 					</div>
-					<div class="zine-subheader-compact">SYSTEM ENGINEER / CREATIVE DEVELOPER</div>
-					<div class="zine-body">
-						<div class="zine-left-compact">
-							<div class="zine-fig-label">[fig.1.1]</div>
-							<div class="zine-image-placeholder">
-								<img src="/about/about-image-1.jpeg" alt="Timothy" class="zine-photo" />
-								<div class="zine-pixel-cat"></div>
+					
+					<!-- Body -->
+					<div class="dp-body">
+						<!-- Photo Column -->
+						<div class="dp-photo-col">
+							<div class="dp-taped-photo">
+								<div class="dp-tape dp-tape-top"></div>
+								<div class="dp-tape dp-tape-bottom"></div>
+								<img src="/about/about-image-1.jpeg" alt="Timothy" />
 							</div>
-							<div class="zine-caption">Timothy</div>
+							<div class="dp-photo-label">SUBJECT #TI-001</div>
+							<div class="dp-stamps">
+								<span class="dp-stamp dp-classified">CLASSIFIED</span>
+								<span class="dp-stamp dp-approved">APPROVED</span>
+							</div>
 						</div>
-						<div class="zine-right">
-							<div class="zine-headline">THE ENGINEER</div>
-							<div class="zine-text">
-								I am a software engineer based in Melbourne, originally from Zimbabwe. I grew up in New Zealand and now live in Australia with my wife. I am an avid sports fan—I don't follow many but do enjoy it when I see it. I enjoy F1, endurance racing, dirt rally, UFC and boxing. I'm passionate about building thoughtful software that balances practical engineering with creative design...
+						
+						<!-- Data Column -->
+						<div class="dp-data-col">
+							<div class="dp-data-section">
+								<div class="dp-data-row"><span class="dp-label">SUBJECT</span><span class="dp-value dp-highlight-name">TIMOTHY ITAYI</span></div>
+								<div class="dp-data-row"><span class="dp-label">CODENAME</span><span class="dp-value dp-highlight-codename">"THE ENGINEER"</span></div>
+								<div class="dp-data-row"><span class="dp-label">CLASS</span><span class="dp-value">SYSTEM ENGINEER</span></div>
+								<div class="dp-data-row"><span class="dp-label">LOCATION</span><span class="dp-value">MELBOURNE, AU</span></div>
+								<div class="dp-data-row"><span class="dp-label">STATUS</span><span class="dp-value dp-status-active">ACTIVE</span></div>
 							</div>
+							
+							<div class="dp-data-section dp-wanted-section">
+								<div class="dp-section-title">WANTED FOR:</div>
+								<div class="dp-wanted-content">Refactoring • Docs • Friday deploys</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- Intel Grid -->
+					<div class="dp-intel-grid">
+						<div class="dp-intel-box">
+							<div class="dp-intel-title">STACK</div>
+							<div class="dp-intel-tags">
+								<span class="dp-tag">TS</span>
+								<span class="dp-tag">Svelte</span>
+								<span class="dp-tag">Go</span>
+								<span class="dp-tag">Rust</span>
+							</div>
+						</div>
+						<div class="dp-intel-box">
+							<div class="dp-intel-title">INTERESTS</div>
+							<div class="dp-intel-text">F1, UFC, books</div>
+						</div>
+						<div class="dp-intel-box">
+							<div class="dp-intel-title">ANTI-PATTERNS</div>
+							<div class="dp-intel-text dp-anti">Magic numbers, god classes</div>
+						</div>
+					</div>
+					
+					<!-- Footer -->
+					<div class="dp-footer">
+						<div class="dp-bio-label">KEYSTROKE ANALYSIS</div>
+						<div class="dp-key-combo">
+							<span class="dp-key">CTRL+C</span>
+							<span class="dp-key">CTRL+V</span>
 						</div>
 					</div>
 				</div>
