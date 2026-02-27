@@ -1,399 +1,270 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import gsap from 'gsap';
+	import { projects, categoryLabels, getProjectsByCategory, getFeaturedProject } from '$lib/data/projects.js';
+	import type { ProjectCategory } from '$lib/data/projects.js';
 
-	let logLines: HTMLElement[] = [];
-
-	const modules = [
-		{ id: 'AS1', label: 'VIEW PROJECTS', path: '/mobile/projects', desc: 'Browse portfolio works', feed: 'LD09' },
-		{ id: 'AS2', label: 'READ DOSSIER', path: '/mobile/about', desc: 'Personnel file', feed: 'LD09' },
-		{ id: 'AS7', label: 'GET RESUME', path: '/mobile/resume', desc: 'Download CV', feed: 'LD09' }
-	];
-
-	const typeLine = (element: HTMLElement | null, text: string, duration = 0.6) => {
-		if (!element) return;
-		element.textContent = '';
-		const state = { count: 0 };
-		gsap.to(state, {
-			count: text.length,
-			duration,
-			ease: 'none',
-			onUpdate: () => {
-				element.textContent = text.slice(0, Math.floor(state.count));
-			}
-		});
-	};
-
-	onMount(() => {
-		// Welcome sequence
-		if (logLines[0]) typeLine(logLines[0], '> Welcome to my portfolio', 0.5);
-		gsap.delayedCall(0.6, () => {
-			if (logLines[1]) typeLine(logLines[1], '> Building creative solutions', 0.5);
-		});
-		gsap.delayedCall(1.2, () => {
-			if (logLines[2]) typeLine(logLines[2], '> Explore below', 0.4);
-		});
-
-		// Animate modules
-		gsap.from('.module-link', {
-			opacity: 0,
-			y: 15,
-			duration: 0.4,
-			stagger: 0.1,
-			delay: 1.6,
-			ease: 'power2.out'
-		});
-	});
+	const featured = getFeaturedProject();
+	const categories: ProjectCategory[] = ['personal', 'web-app', 'mobile-app'];
 </script>
 
-<div class="mobile-home">
-	<!-- Frame Header -->
-	<div class="frame-header">
-		<span class="frame-label">Portfolio</span>
-		<span class="frame-line"></span>
-	</div>
-
-	<!-- Hero Block -->
-	<div class="log-block">
-		<div class="log-header">
-			<div>
-				<h1 class="log-title">Timothy Itayi</h1>
-				<div class="log-subtitle">Software Engineer</div>
-			</div>
-			<div class="data-state">
-				<div class="data-label">AVAILABLE</div>
-			</div>
+<div class="gtv-home">
+	<!-- Featured Hero -->
+	<button class="hero" onclick={() => goto(`/mobile/projects/${featured.slug}`)}>
+		<div class="hero-image">
+			<img src={featured.image} alt={featured.title} />
 		</div>
-		<div class="log-content">
-			<div class="log-line" bind:this={logLines[0]}></div>
-			<div class="log-line" bind:this={logLines[1]}></div>
-			<div class="log-line highlight" bind:this={logLines[2]}></div>
+		<div class="hero-gradient"></div>
+		<div class="hero-content">
+			<h1 class="hero-title">{featured.title}</h1>
+			<div class="hero-meta">
+				<span class="hero-year">{featured.year}</span>
+				<span class="hero-dot">·</span>
+				<span class="hero-category">{categoryLabels[featured.category]}</span>
+				{#if featured.client}
+					<span class="hero-dot">·</span>
+					<span class="hero-client">{featured.client}</span>
+				{/if}
+			</div>
+			<p class="hero-desc">{featured.description}</p>
 		</div>
-	</div>
+	</button>
 
-	<!-- Section Divider -->
-	<div class="section-divider">
-		<span class="section-label">Quick Links</span>
-	</div>
-
-	<!-- Module Links -->
-	<div class="module-links">
-		{#each modules as module}
-			<button class="module-link" onclick={() => goto(module.path)}>
-				<div class="module-left">
-					<div class="module-id-box">{module.id}</div>
+	<!-- Category Rows -->
+	{#each categories as cat}
+		{@const catProjects = getProjectsByCategory(cat)}
+		{#if catProjects.length > 0}
+			<section class="row-section">
+				<div class="row-header">
+					<h2 class="row-title">{categoryLabels[cat]}</h2>
+					<button class="row-see-all" onclick={() => goto('/mobile/projects')}>See all</button>
 				</div>
-				<div class="module-right">
-					<div class="module-label">{module.label}</div>
-					<div class="module-desc">{module.desc}</div>
-					<span class="module-arrow">▸</span>
+				<div class="row-scroll">
+					{#each catProjects as project}
+						<button class="row-card" onclick={() => goto(`/mobile/projects/${project.slug}`)}>
+							<div class="row-card-image">
+								<img src={project.image} alt={project.title} />
+							</div>
+							<div class="row-card-info">
+								<span class="row-card-title">{project.title}</span>
+								<span class="row-card-meta">{project.year}</span>
+							</div>
+						</button>
+					{/each}
 				</div>
-			</button>
-		{/each}
-	</div>
-
-	<!-- Status Grid -->
-	<div class="status-section">
-		<div class="section-label">SYSTEM STATUS</div>
-		<div class="status-grid">
-			<div class="status-card">
-				<span class="status-key">VERSION</span>
-				<span class="status-val">2.026</span>
-			</div>
-			<div class="status-card">
-				<span class="status-key">MODE</span>
-				<span class="status-val active">MOBILE</span>
-			</div>
-			<div class="status-card">
-				<span class="status-key">STATUS</span>
-				<span class="status-val active">ONLINE</span>
-			</div>
-			<div class="status-card">
-				<span class="status-key">UPTIME</span>
-				<span class="status-val">∞</span>
-			</div>
-		</div>
-	</div>
+			</section>
+		{/if}
+	{/each}
 
 	<!-- Footer -->
-	<div class="home-footer">
-		<span>TIMOTHY ITAYI © 2026</span>
-		<div class="footer-dots">
-			<span class="fdot"></span>
-			<span class="fdot"></span>
-			<span class="fdot muted"></span>
-		</div>
-	</div>
+	<footer class="gtv-footer">
+		<span>Timothy Itayi © 2026</span>
+	</footer>
 </div>
 
 <style>
-	.mobile-home {
-		padding: 20px;
+	.gtv-home {
 		display: flex;
 		flex-direction: column;
-		gap: 20px;
-		min-height: 100%;
-		color: #fafafa;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-		background: #0a0a0b;
+		gap: 28px;
+		padding-bottom: 24px;
+		background: #0a0a0a;
+		color: #e8e8e8;
+		font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 	}
 
-	/* Frame Header */
-	.frame-header {
-		display: flex;
-		align-items: center;
-		gap: 16px;
-		padding-bottom: 12px;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-	}
-
-	.frame-label {
-		font-size: 0.75rem;
-		font-weight: 500;
-		color: #71717a;
-		letter-spacing: 0.02em;
-		white-space: nowrap;
-	}
-
-	.frame-line {
-		flex: 1;
-		height: 1px;
-		background: linear-gradient(90deg, rgba(255, 255, 255, 0.12) 0%, transparent 100%);
-	}
-
-	/* Log Block (Hero) */
-	.log-block {
-		background: #1c1c1f;
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 16px;
-		padding: 24px;
-		box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-	}
-
-	.log-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: flex-start;
-		margin-bottom: 20px;
-	}
-
-	.log-title {
-		font-size: 1.75rem;
-		font-weight: 700;
-		color: #fafafa;
-		letter-spacing: -0.02em;
-		margin: 0;
-		line-height: 1.2;
-	}
-
-	.log-subtitle {
-		font-size: 0.85rem;
-		color: #71717a;
-		margin-top: 6px;
-		font-weight: 500;
-	}
-
-	.data-state {
-		display: flex;
-		flex-direction: column;
-		align-items: flex-end;
-		gap: 6px;
-	}
-
-	.data-label {
-		font-size: 0.7rem;
-		font-weight: 600;
-		color: #fff;
-		background: #8b5cf6;
-		padding: 6px 12px;
-		border-radius: 20px;
-		letter-spacing: 0.04em;
-	}
-
-	.log-content {
-		padding: 16px;
-		background: #141416;
-		border-radius: 12px;
-		border: 1px solid rgba(255, 255, 255, 0.08);
-	}
-
-	.log-line {
-		font-size: 0.95rem;
-		color: #06b6d4;
-		min-height: 1.4em;
-		font-weight: 500;
-		line-height: 1.6;
-	}
-
-	.log-line.highlight {
-		color: #f59e0b;
-		font-weight: 600;
-	}
-
-	/* Section Divider */
-	.section-divider {
-		padding: 8px 0;
-	}
-
-	.section-label {
-		font-size: 0.8rem;
-		font-weight: 600;
-		color: #a1a1aa;
-		letter-spacing: 0.06em;
-		text-transform: uppercase;
-	}
-
-	/* Module Links */
-	.module-links {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-	}
-
-	.module-link {
-		display: flex;
-		align-items: stretch;
-		gap: 0;
+	/* ===== HERO ===== */
+	.hero {
+		position: relative;
+		width: 100%;
+		aspect-ratio: 16/10;
+		overflow: hidden;
+		border: none;
 		padding: 0;
-		background: #1c1c1f;
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 16px;
 		cursor: pointer;
+		background: #1a1a1a;
+		display: block;
 		text-align: left;
 		font-family: inherit;
-		transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+	}
+
+	.hero-image {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: #1a1a1a;
+	}
+
+	.hero-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.hero-gradient {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			to top,
+			#0a0a0a 0%,
+			rgba(10, 10, 10, 0.85) 30%,
+			rgba(10, 10, 10, 0.3) 60%,
+			transparent 100%
+		);
+	}
+
+	.hero-content {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 20px;
+	}
+
+	.hero-title {
+		font-size: 2rem;
+		font-weight: 700;
+		margin: 0 0 8px;
+		color: #fff;
+		line-height: 1.1;
+	}
+
+	.hero-meta {
+		display: flex;
+		align-items: center;
+		gap: 6px;
+		font-size: 0.8rem;
+		color: #999;
+		margin-bottom: 8px;
+	}
+
+	.hero-dot {
+		color: #555;
+	}
+
+	.hero-desc {
+		font-size: 0.85rem;
+		color: #bbb;
+		line-height: 1.5;
+		margin: 0;
+		display: -webkit-box;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		-webkit-box-orient: vertical;
 		overflow: hidden;
 	}
 
-	.module-link:hover {
-		transform: translateY(-4px);
-		border-color: #8b5cf6;
-		box-shadow: 0 8px 24px rgba(139, 92, 246, 0.2);
-	}
-
-	.module-left {
+	/* ===== ROW SECTIONS ===== */
+	.row-section {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding: 16px;
-		background: #141416;
-		border-right: 1px solid rgba(255, 255, 255, 0.08);
+		gap: 14px;
 	}
 
-	.module-id-box {
-		width: 40px;
-		height: 40px;
-		background: rgba(139, 92, 246, 0.15);
-		border: 1px solid rgba(139, 92, 246, 0.4);
-		border-radius: 10px;
-		font-size: 0.75rem;
-		font-weight: 700;
-		color: #8b5cf6;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.module-right {
-		flex: 1;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		padding: 16px 20px;
-		background: transparent;
-		border: none;
-	}
-
-	.module-label {
-		font-size: 1rem;
-		font-weight: 600;
-		color: #fafafa;
-		letter-spacing: 0.02em;
-	}
-
-	.module-desc {
-		font-size: 0.85rem;
-		color: #71717a;
-		margin-top: 4px;
-		font-weight: 500;
-	}
-
-	.module-arrow {
-		color: #8b5cf6;
-		font-size: 1rem;
-		margin-top: 8px;
-		transition: transform 0.2s ease;
-	}
-
-	.module-link:hover .module-arrow {
-		transform: translateX(6px);
-	}
-
-	/* Status Section */
-	.status-section {
-		margin-top: auto;
-	}
-
-	.status-grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 10px;
-		margin-top: 12px;
-	}
-
-	.status-card {
+	.row-header {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 14px 16px;
-		background: #1c1c1f;
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		border-radius: 12px;
+		padding: 0 20px;
 	}
 
-	.status-key {
-		font-size: 0.75rem;
-		color: #71717a;
-		font-weight: 500;
-	}
-
-	.status-val {
-		font-size: 0.85rem;
+	.row-title {
+		font-size: 1.15rem;
 		font-weight: 600;
-		color: #a1a1aa;
+		color: #e8e8e8;
+		margin: 0;
 	}
 
-	.status-val.active {
-		color: #22c55e;
-	}
-
-	/* Footer */
-	.home-footer {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding-top: 16px;
-		border-top: 1px solid rgba(255, 255, 255, 0.08);
+	.row-see-all {
 		font-size: 0.8rem;
-		color: #71717a;
 		font-weight: 500;
+		color: #8ab4f8;
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 4px 0;
+		font-family: inherit;
 	}
 
-	.footer-dots {
+	.row-scroll {
 		display: flex;
-		gap: 6px;
+		gap: 12px;
+		overflow-x: auto;
+		padding: 0 20px;
+		scroll-snap-type: x mandatory;
+		-webkit-overflow-scrolling: touch;
+		scrollbar-width: none;
 	}
 
-	.fdot {
-		width: 8px;
-		height: 8px;
-		background: #8b5cf6;
-		border-radius: 50%;
+	.row-scroll::-webkit-scrollbar {
+		display: none;
 	}
 
-	.fdot.muted {
-		background: #232326;
+	.row-card {
+		flex-shrink: 0;
+		width: 130px;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		background: none;
+		border: none;
+		padding: 0;
+		cursor: pointer;
+		scroll-snap-align: start;
+		text-align: left;
+		font-family: inherit;
+	}
+
+	.row-card-image {
+		width: 130px;
+		height: 130px;
+		border-radius: 12px;
+		overflow: hidden;
+		background: #fff;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.row-card-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		padding: 10px;
+		transition: transform 0.3s ease;
+	}
+
+	.row-card:active .row-card-image img {
+		transform: scale(1.05);
+	}
+
+	.row-card-info {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		padding: 0 2px;
+	}
+
+	.row-card-title {
+		font-size: 0.8rem;
+		font-weight: 500;
+		color: #e8e8e8;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+	}
+
+	.row-card-meta {
+		font-size: 0.7rem;
+		color: #666;
+	}
+
+	/* ===== FOOTER ===== */
+	.gtv-footer {
+		padding: 24px 20px;
+		text-align: center;
+		font-size: 0.75rem;
+		color: #555;
 	}
 </style>

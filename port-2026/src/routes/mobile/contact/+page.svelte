@@ -2,24 +2,20 @@
 	import { onMount } from 'svelte';
 	import gsap from 'gsap';
 
-	let formStatus = 'idle'; // idle, sending, sent, error
+	let formStatus = $state('idle');
 	let messageInput: HTMLTextAreaElement;
 
 	const contactMethods = [
-		{ icon: '✉', label: 'EMAIL', value: 'hello@timothyitayi_icloud.com', href: 'mailto:hello@timothyitayi_icloud.com' },
-		{ icon: '◉', label: 'GITHUB', value: '@timothyitayi', href: 'https://github.com/timothyitayi' },
-		{ icon: '◈', label: 'LINKEDIN', value: '/in/timothyitayi', href: 'https://linkedin.com/in/timothyitayi' }
+		{ icon: '✉', label: 'Email', value: 'hello@timothyitayi_icloud.com', href: 'mailto:hello@timothyitayi_icloud.com' },
+		{ icon: '◉', label: 'GitHub', value: '@timothyitayi', href: 'https://github.com/timothyitayi' },
+		{ icon: '◈', label: 'LinkedIn', value: '/in/timothyitayi', href: 'https://linkedin.com/in/timothyitayi' }
 	];
 
 	const handleSubmit = async (e: Event) => {
 		e.preventDefault();
 		formStatus = 'sending';
-		
-		// Simulate send
 		await new Promise(resolve => setTimeout(resolve, 1500));
 		formStatus = 'sent';
-		
-		// Reset after 3s
 		setTimeout(() => {
 			formStatus = 'idle';
 			if (messageInput) messageInput.value = '';
@@ -29,61 +25,45 @@
 	onMount(() => {
 		gsap.from('.contact-section', {
 			opacity: 0,
-			y: 15,
+			y: 12,
 			duration: 0.3,
-			stagger: 0.1,
+			stagger: 0.08,
 			ease: 'power2.out'
 		});
 	});
 </script>
 
-<div class="mobile-contact">
+<div class="gtv-contact">
 	<!-- Header -->
-	<div class="page-header contact-section">
-		<div class="header-icon">◈</div>
-		<div class="header-text">
-			<h1 class="header-title">CONTACT</h1>
-			<div class="header-sub">ESTABLISH COMMUNICATION</div>
-		</div>
-	</div>
-
-	<!-- Status -->
-	<div class="status-block contact-section">
-		<div class="status-row">
-			<span class="status-key">CHANNEL</span>
-			<span class="status-val active">OPEN</span>
-		</div>
-		<div class="status-row">
-			<span class="status-key">RESPONSE</span>
-			<span class="status-val">~24H</span>
-		</div>
-	</div>
+	<header class="contact-header contact-section">
+		<h1 class="header-title">Contact</h1>
+		<p class="header-sub">Let's connect</p>
+	</header>
 
 	<!-- Contact Methods -->
-	<div class="methods-section contact-section">
-		<div class="section-label">DIRECT CHANNELS</div>
+	<section class="methods contact-section">
 		{#each contactMethods as method}
-			<a href={method.href} class="method-link" target="_blank" rel="noopener">
+			<a href={method.href} class="method-card" target="_blank" rel="noopener">
 				<span class="method-icon">{method.icon}</span>
 				<div class="method-info">
 					<span class="method-label">{method.label}</span>
 					<span class="method-value">{method.value}</span>
 				</div>
-				<span class="method-arrow">▸</span>
+				<span class="method-arrow">›</span>
 			</a>
 		{/each}
-	</div>
+	</section>
 
 	<!-- Message Form -->
-	<form class="message-form contact-section" onsubmit={handleSubmit}>
-		<div class="section-label">SEND TRANSMISSION</div>
-		
+	<form class="form-section contact-section" onsubmit={handleSubmit}>
+		<h2 class="section-title">Send a message</h2>
+
 		<div class="form-field">
-			<label class="field-label" for="name">IDENTIFIER</label>
-			<input 
-				type="text" 
-				id="name" 
-				class="field-input" 
+			<label class="field-label" for="name">Name</label>
+			<input
+				type="text"
+				id="name"
+				class="field-input"
 				placeholder="Your name"
 				required
 				disabled={formStatus === 'sending'}
@@ -91,11 +71,11 @@
 		</div>
 
 		<div class="form-field">
-			<label class="field-label" for="email">RETURN CHANNEL</label>
-			<input 
-				type="email" 
-				id="email" 
-				class="field-input" 
+			<label class="field-label" for="email">Email</label>
+			<input
+				type="email"
+				id="email"
+				class="field-input"
 				placeholder="your@email.com"
 				required
 				disabled={formStatus === 'sending'}
@@ -103,11 +83,11 @@
 		</div>
 
 		<div class="form-field">
-			<label class="field-label" for="message">MESSAGE</label>
-			<textarea 
-				id="message" 
-				class="field-input textarea" 
-				placeholder="Enter your message..."
+			<label class="field-label" for="message">Message</label>
+			<textarea
+				id="message"
+				class="field-input textarea"
+				placeholder="What's on your mind?"
 				rows="4"
 				required
 				disabled={formStatus === 'sending'}
@@ -115,182 +95,120 @@
 			></textarea>
 		</div>
 
-		<button 
-			type="submit" 
+		<button
+			type="submit"
 			class="submit-btn"
-			class:sending={formStatus === 'sending'}
-			class:sent={formStatus === 'sent'}
 			disabled={formStatus === 'sending' || formStatus === 'sent'}
 		>
 			{#if formStatus === 'idle'}
-				<span class="btn-icon">▸</span>
-				<span>TRANSMIT</span>
+				Send
 			{:else if formStatus === 'sending'}
-				<span class="btn-loader">◌</span>
-				<span>SENDING...</span>
+				Sending...
 			{:else if formStatus === 'sent'}
-				<span class="btn-icon">✓</span>
-				<span>TRANSMITTED</span>
+				Sent ✓
 			{/if}
 		</button>
 	</form>
-
-	<!-- Footer -->
-	<div class="page-footer contact-section">
-		<span class="footer-text">Ready for collaborations or just a chat.</span>
-	</div>
 </div>
 
 <style>
-	.mobile-contact {
+	.gtv-contact {
 		padding: 20px;
 		display: flex;
 		flex-direction: column;
-		gap: 18px;
-		color: #e4e8eb;
-		font-family: 'Inter', 'SF Pro Display', -apple-system, system-ui, sans-serif;
+		gap: 24px;
+		color: #e8e8e8;
+		font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+		min-height: 100%;
 	}
 
-	/* Header */
-	.page-header {
-		display: flex;
-		align-items: center;
-		gap: 14px;
-		padding-bottom: 16px;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-	}
-
-	.header-icon {
-		font-size: 1.6rem;
-		color: #7dd3c0;
-	}
-
-	.header-text {
-		flex: 1;
+	.contact-header {
+		padding-top: 8px;
 	}
 
 	.header-title {
-		font-size: 1.5rem;
+		font-size: 1.75rem;
 		font-weight: 700;
-		letter-spacing: 0.08em;
-		margin: 0;
-		color: #e4e8eb;
+		margin: 0 0 4px;
+		color: #e8e8e8;
 	}
 
 	.header-sub {
-		font-size: 0.65rem;
-		color: rgba(228, 232, 235, 0.45);
-		letter-spacing: 0.08em;
-		font-weight: 500;
+		font-size: 0.9rem;
+		color: #999;
+		margin: 0;
 	}
 
-	/* Status */
-	.status-block {
-		display: flex;
-		gap: 12px;
-	}
-
-	.status-row {
-		flex: 1;
-		display: flex;
-		justify-content: space-between;
-		padding: 12px 14px;
-		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		border-radius: 10px;
-	}
-
-	.status-key {
-		font-size: 0.65rem;
-		color: rgba(228, 232, 235, 0.4);
-		font-weight: 600;
-	}
-
-	.status-val {
-		font-size: 0.7rem;
-		font-weight: 600;
-		color: #e4e8eb;
-	}
-
-	.status-val.active {
-		color: #7dd3c0;
-	}
-
-	/* Section Label */
-	.section-label {
-		font-size: 0.6rem;
-		font-weight: 600;
-		letter-spacing: 0.1em;
-		color: rgba(228, 232, 235, 0.4);
-		margin-bottom: 10px;
-	}
-
-	/* Contact Methods */
-	.methods-section {
+	.methods {
 		display: flex;
 		flex-direction: column;
-		gap: 10px;
+		gap: 0;
+		border-radius: 14px;
+		overflow: hidden;
 	}
 
-	.method-link {
+	.method-card {
 		display: flex;
 		align-items: center;
 		gap: 14px;
 		padding: 16px;
-		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid rgba(255, 255, 255, 0.08);
-		border-radius: 14px;
+		background: #1a1a1a;
 		text-decoration: none;
-		transition: all 0.2s ease;
+		border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+		transition: background 0.2s;
 	}
 
-	.method-link:hover,
-	.method-link:active {
-		background: rgba(255, 255, 255, 0.06);
-		border-color: rgba(255, 255, 255, 0.12);
-		transform: translateY(-2px);
+	.method-card:last-child {
+		border-bottom: none;
+	}
+
+	.method-card:active {
+		background: #222;
 	}
 
 	.method-icon {
 		font-size: 1.2rem;
-		color: #7dd3c0;
-		width: 28px;
-		text-align: center;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.08);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
 	}
 
 	.method-info {
 		flex: 1;
 		display: flex;
 		flex-direction: column;
-		gap: 4px;
+		gap: 2px;
 	}
 
 	.method-label {
-		font-size: 0.65rem;
-		color: rgba(228, 232, 235, 0.45);
+		font-size: 0.8rem;
 		font-weight: 600;
-		letter-spacing: 0.06em;
+		color: #e8e8e8;
 	}
 
 	.method-value {
-		font-size: 0.9rem;
-		color: #e4e8eb;
-		font-weight: 500;
+		font-size: 0.78rem;
+		color: #999;
 	}
 
 	.method-arrow {
-		color: rgba(228, 232, 235, 0.3);
-		transition: all 0.2s ease;
+		font-size: 1.2rem;
+		color: #555;
 	}
 
-	.method-link:hover .method-arrow,
-	.method-link:active .method-arrow {
-		transform: translateX(4px);
-		color: #7dd3c0;
+	.section-title {
+		font-size: 1rem;
+		font-weight: 600;
+		color: #e8e8e8;
+		margin: 0 0 16px;
 	}
 
-	/* Form */
-	.message-form {
+	.form-section {
 		display: flex;
 		flex-direction: column;
 		gap: 14px;
@@ -303,32 +221,29 @@
 	}
 
 	.field-label {
-		font-size: 0.65rem;
-		font-weight: 600;
-		letter-spacing: 0.06em;
-		color: rgba(228, 232, 235, 0.5);
+		font-size: 0.75rem;
+		font-weight: 500;
+		color: #999;
 	}
 
 	.field-input {
 		padding: 14px 16px;
-		background: rgba(255, 255, 255, 0.03);
-		border: 1px solid rgba(255, 255, 255, 0.1);
+		background: #1a1a1a;
+		border: 1px solid rgba(255, 255, 255, 0.08);
 		border-radius: 12px;
-		color: #e4e8eb;
+		color: #e8e8e8;
 		font-family: inherit;
 		font-size: 0.95rem;
-		font-weight: 500;
 		outline: none;
-		transition: all 0.2s ease;
+		transition: border-color 0.2s;
 	}
 
 	.field-input::placeholder {
-		color: rgba(228, 232, 235, 0.3);
+		color: #555;
 	}
 
 	.field-input:focus {
-		border-color: rgba(125, 211, 192, 0.4);
-		background: rgba(255, 255, 255, 0.05);
+		border-color: rgba(138, 180, 248, 0.5);
 	}
 
 	.field-input:disabled {
@@ -341,70 +256,25 @@
 	}
 
 	.submit-btn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 10px;
 		padding: 16px;
-		background: linear-gradient(135deg, #7dd3c0 0%, #5ebc9a 100%);
+		background: #fff;
 		border: none;
-		border-radius: 12px;
-		color: #12161c;
+		border-radius: 28px;
+		color: #0a0a0a;
 		font-family: inherit;
-		font-size: 0.9rem;
+		font-size: 1rem;
 		font-weight: 600;
-		letter-spacing: 0.08em;
 		cursor: pointer;
 		transition: all 0.2s ease;
 	}
 
-	.submit-btn:hover:not(:disabled) {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 20px rgba(125, 211, 192, 0.3);
-	}
-
 	.submit-btn:active:not(:disabled) {
 		transform: scale(0.98);
+		background: #eee;
 	}
 
 	.submit-btn:disabled {
 		cursor: not-allowed;
 		opacity: 0.7;
-	}
-
-	.submit-btn.sending {
-		background: rgba(255, 255, 255, 0.1);
-		color: #e4e8eb;
-	}
-
-	.submit-btn.sent {
-		background: linear-gradient(135deg, #7dd3c0 0%, #5ebc9a 100%);
-	}
-
-	.btn-icon {
-		font-size: 1rem;
-	}
-
-	.btn-loader {
-		animation: spin 1s linear infinite;
-	}
-
-	@keyframes spin {
-		from { transform: rotate(0deg); }
-		to { transform: rotate(360deg); }
-	}
-
-	/* Footer */
-	.page-footer {
-		text-align: center;
-		padding-top: 16px;
-		border-top: 1px solid rgba(255, 255, 255, 0.06);
-	}
-
-	.footer-text {
-		font-size: 0.75rem;
-		color: rgba(228, 232, 235, 0.45);
-		font-style: italic;
-		font-weight: 500;
 	}
 </style>

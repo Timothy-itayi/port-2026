@@ -1,503 +1,340 @@
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
-	import gsap from 'gsap';
+	import { categoryLabels } from '$lib/data/projects.js';
 	import type { PageData } from './$types.js';
 
 	export let data: PageData;
 	const { project } = data;
-
-	onMount(() => {
-		const tl = gsap.timeline();
-		tl.from('.project-header, .project-image, .project-meta, .project-content', {
-			opacity: 0,
-			y: 15,
-			duration: 0.3,
-			stagger: 0.08,
-			ease: 'power2.out'
-		});
-	});
-
-	const handleBack = () => {
-		goto('/mobile/projects');
-	};
 </script>
 
-<div class="mobile-project-detail">
-	<!-- Navigation Bar -->
-	<nav class="detail-nav">
-		<button class="back-btn" onclick={handleBack}>
-			<span class="back-arrow">◂</span>
-			<span class="back-text">ARCHIVE</span>
-		</button>
-		<div class="nav-status">
-			<span class="status-dot"></span>
-			<span class="status-text">VIEWING</span>
-		</div>
-	</nav>
-
-	<!-- Project Header -->
-	<header class="project-header">
-		<div class="header-top">
-			<span class="project-id">PRJ/{project.slug.toUpperCase()}</span>
-			<span class="project-year">{project.year}</span>
-		</div>
-		<h1 class="project-title">{project.title}</h1>
-		<div class="project-author">BY {project.author.toUpperCase()}</div>
-	</header>
-
-	<!-- Project Image -->
-	<div class="project-image">
-		<div class="image-frame">
+<div class="gtv-detail">
+	<!-- Full-bleed Hero -->
+	<div class="detail-hero">
+		<div class="hero-image">
 			<img src={project.image} alt={project.title} />
 		</div>
-		<div class="image-label">
-			<span class="label-icon">◫</span>
-			<span class="label-text">PROJECT PREVIEW</span>
+		<div class="hero-gradient"></div>
+
+		<!-- Back button overlaid on image -->
+		<button class="back-fab" onclick={() => goto('/mobile/projects')} aria-label="Back">
+			<span class="back-icon">‹</span>
+		</button>
+
+		<!-- Title overlaid at bottom -->
+		<div class="hero-info">
+			<h1 class="detail-title">{project.title}</h1>
+			<div class="detail-meta">
+				<span class="meta-year">{project.year}</span>
+				<span class="meta-sep">·</span>
+				<span class="meta-category">{categoryLabels[project.category]}</span>
+				{#if project.client}
+					<span class="meta-sep">·</span>
+					<span class="meta-client">{project.client}</span>
+				{/if}
+			</div>
 		</div>
 	</div>
 
-	<!-- Project Metadata -->
-	<section class="project-meta">
-		<div class="meta-header">
-			<span class="section-icon">▤</span>
-			<span class="section-title">SPECIFICATIONS</span>
-		</div>
-		
-		<div class="meta-grid">
-			<div class="meta-item">
-				<span class="meta-label">CLIENT</span>
-				<span class="meta-value">{project.client || 'N/A'}</span>
-			</div>
-			<div class="meta-item">
-				<span class="meta-label">YEAR</span>
-				<span class="meta-value">{project.year}</span>
-			</div>
+	<!-- Description -->
+	<div class="detail-body">
+		<p class="detail-desc">{project.description}</p>
+
+		<!-- Primary CTA -->
+		{#if project.liveSiteUrl}
+			<a href={project.liveSiteUrl} target="_blank" rel="noopener" class="cta-primary">
+				<span class="cta-play">▶</span>
+				<div class="cta-text">
+					<span class="cta-label">Visit site</span>
+					<span class="cta-sub">Live project</span>
+				</div>
+			</a>
+		{/if}
+
+		<!-- Secondary Actions Row -->
+		<div class="action-row">
+			{#if project.githubUrl}
+				<a href={project.githubUrl} target="_blank" rel="noopener" class="action-item">
+					<span class="action-icon">◇</span>
+					<span class="action-label">Source</span>
+				</a>
+			{/if}
+			{#if project.youtubeUrl}
+				<a href={project.youtubeUrl} target="_blank" rel="noopener" class="action-item">
+					<span class="action-icon">▶</span>
+					<span class="action-label">Demo</span>
+				</a>
+			{/if}
 		</div>
 
+		<!-- Tech Stack -->
 		<div class="tech-section">
-			<span class="tech-label">TECH STACK</span>
-			<div class="tech-tags">
+			<h3 class="section-title">Tech Stack</h3>
+			<div class="tech-pills">
 				{#each project.techStack as tech}
-					<span class="tech-tag">{tech}</span>
+					<span class="tech-pill">{tech}</span>
 				{/each}
 			</div>
 		</div>
-	</section>
 
-	<!-- Project Description -->
-	<section class="project-content">
-		<div class="content-header">
-			<span class="section-icon">▧</span>
-			<span class="section-title">OVERVIEW</span>
-		</div>
-		
-		<div class="lead-text">
-			{project.description}
-		</div>
-
-		<div class="content-body">
+		<!-- Content -->
+		<div class="detail-content">
 			{@html project.content}
 		</div>
-	</section>
-
-	<!-- Action Buttons -->
-	<section class="project-actions">
-		{#if project.liveSiteUrl}
-			<a href={project.liveSiteUrl} target="_blank" rel="noopener" class="action-btn primary">
-				<span class="btn-icon">▸</span>
-				<span class="btn-text">VIEW LIVE SITE</span>
-			</a>
-		{/if}
-		{#if project.githubUrl}
-			<a href={project.githubUrl} target="_blank" rel="noopener" class="action-btn secondary">
-				<span class="btn-icon">◈</span>
-				<span class="btn-text">SOURCE CODE</span>
-			</a>
-		{/if}
-		{#if project.youtubeUrl}
-			<a href={project.youtubeUrl} target="_blank" rel="noopener" class="action-btn secondary">
-				<span class="btn-icon">▶</span>
-				<span class="btn-text">WATCH DEMO</span>
-			</a>
-		{/if}
-	</section>
-
-	<!-- Footer -->
-	<div class="detail-footer">
-		<span class="footer-line"></span>
-		<span class="footer-text">PROJECT ID: {project.slug.toUpperCase()}-001</span>
-		<span class="footer-line"></span>
 	</div>
 </div>
 
 <style>
-	.mobile-project-detail {
-		padding: 20px;
+	.gtv-detail {
 		display: flex;
 		flex-direction: column;
-		gap: 24px;
-		color: #fafafa;
+		background: #0a0a0a;
+		color: #e8e8e8;
+		font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 		min-height: 100%;
-		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-		background: #0a0a0b;
 	}
 
-	/* Navigation */
-	.detail-nav {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding-bottom: 16px;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-	}
-
-	.back-btn {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		background: #1c1c1f;
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 12px;
-		padding: 12px 16px;
-		font-family: inherit;
-		cursor: pointer;
-		transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-	}
-
-	.back-btn:hover,
-	.back-btn:active {
-		background: #232326;
-		border-color: rgba(139, 92, 246, 0.4);
-		transform: translateX(-4px);
-	}
-
-	.back-arrow {
-		color: #8b5cf6;
-		font-size: 1rem;
-	}
-
-	.back-text {
-		color: #fafafa;
-		font-size: 0.85rem;
-		font-weight: 600;
-		letter-spacing: 0.02em;
-	}
-
-	.nav-status {
-		display: flex;
-		align-items: center;
-		gap: 8px;
-		padding: 8px 14px;
-		background: #22c55e;
-		border-radius: 20px;
-	}
-
-	.status-dot {
-		width: 6px;
-		height: 6px;
-		border-radius: 50%;
-		background: #fff;
-		animation: softPulse 2s infinite;
-	}
-
-	@keyframes softPulse {
-		0%, 100% { opacity: 1; transform: scale(1); }
-		50% { opacity: 0.6; transform: scale(1.15); }
-	}
-
-	.status-text {
-		font-size: 0.7rem;
-		font-weight: 600;
-		color: #fff;
-		letter-spacing: 0.04em;
-	}
-
-	/* Header */
-	.project-header {
-		display: flex;
-		flex-direction: column;
-		gap: 10px;
-	}
-
-	.header-top {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-	}
-
-	.project-id {
-		font-size: 0.8rem;
-		font-weight: 500;
-		color: #71717a;
-		letter-spacing: 0.04em;
-	}
-
-	.project-year {
-		font-size: 0.8rem;
-		font-weight: 600;
-		color: #fff;
-		background: #8b5cf6;
-		padding: 6px 14px;
-		border-radius: 20px;
-	}
-
-	.project-title {
-		font-size: 2rem;
-		font-weight: 700;
-		margin: 0;
-		line-height: 1.15;
-		letter-spacing: -0.02em;
-		color: #fafafa;
-	}
-
-	.project-author {
-		font-size: 0.85rem;
-		font-weight: 500;
-		color: #71717a;
-		letter-spacing: 0.02em;
-	}
-
-	/* Image */
-	.project-image {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-	}
-
-	.image-frame {
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 16px;
-		background: #1c1c1f;
-		padding: 20px;
+	/* ===== HERO ===== */
+	.detail-hero {
+		position: relative;
+		width: 100%;
 		aspect-ratio: 16/10;
+		overflow: hidden;
+	}
+
+	.hero-image {
+		position: absolute;
+		inset: 0;
+		background: #1a1a1a;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
-	.image-frame img {
-		max-width: 100%;
-		max-height: 100%;
-		object-fit: contain;
-		border-radius: 10px;
+	.hero-image img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
 
-	.image-label {
+	.hero-gradient {
+		position: absolute;
+		inset: 0;
+		background: linear-gradient(
+			to top,
+			#0a0a0a 0%,
+			rgba(10, 10, 10, 0.8) 35%,
+			rgba(10, 10, 10, 0.2) 65%,
+			transparent 100%
+		);
+	}
+
+	.back-fab {
+		position: absolute;
+		top: 16px;
+		left: 16px;
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		background: rgba(0, 0, 0, 0.5);
+		backdrop-filter: blur(8px);
+		-webkit-backdrop-filter: blur(8px);
+		border: none;
+		cursor: pointer;
 		display: flex;
 		align-items: center;
-		gap: 8px;
+		justify-content: center;
+		z-index: 5;
+		transition: background 0.2s;
+	}
+
+	.back-fab:active {
+		background: rgba(0, 0, 0, 0.7);
+	}
+
+	.back-icon {
+		font-size: 1.6rem;
+		color: #fff;
+		line-height: 1;
+	}
+
+	.hero-info {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		padding: 0 20px 20px;
+		z-index: 2;
+	}
+
+	.detail-title {
+		font-size: 2rem;
+		font-weight: 700;
+		margin: 0 0 8px;
+		color: #fff;
+		line-height: 1.1;
+	}
+
+	.detail-meta {
+		display: flex;
+		align-items: center;
+		gap: 6px;
 		font-size: 0.8rem;
-		font-weight: 500;
-		color: #71717a;
-		letter-spacing: 0.04em;
+		color: #999;
 	}
 
-	.label-icon {
-		color: #8b5cf6;
+	.meta-sep {
+		color: #555;
 	}
 
-	/* Metadata Section */
-	.project-meta {
+	/* ===== BODY ===== */
+	.detail-body {
+		padding: 20px;
 		display: flex;
 		flex-direction: column;
-		gap: 16px;
-		padding: 20px;
-		background: #1c1c1f;
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		border-radius: 16px;
+		gap: 20px;
 	}
 
-	.meta-header,
-	.content-header {
+	.detail-desc {
+		font-size: 0.95rem;
+		color: #bbb;
+		line-height: 1.6;
+		margin: 0;
+	}
+
+	/* ===== PRIMARY CTA ===== */
+	.cta-primary {
 		display: flex;
 		align-items: center;
-		gap: 10px;
-		padding-bottom: 12px;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		gap: 14px;
+		padding: 14px 20px;
+		background: #fff;
+		border-radius: 28px;
+		text-decoration: none;
+		transition: all 0.2s ease;
 	}
 
-	.section-icon {
-		color: #8b5cf6;
+	.cta-primary:active {
+		transform: scale(0.98);
+		background: #eee;
+	}
+
+	.cta-play {
+		font-size: 1.2rem;
+		color: #0a0a0a;
+		width: 40px;
+		height: 40px;
+		background: #0a0a0a;
+		color: #fff;
+		border-radius: 50%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 0.9rem;
+	}
+
+	.cta-text {
+		display: flex;
+		flex-direction: column;
+	}
+
+	.cta-label {
 		font-size: 1rem;
+		font-weight: 600;
+		color: #0a0a0a;
+	}
+
+	.cta-sub {
+		font-size: 0.75rem;
+		color: #666;
+	}
+
+	/* ===== ACTION ROW ===== */
+	.action-row {
+		display: flex;
+		gap: 32px;
+		padding: 4px 0;
+	}
+
+	.action-item {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 6px;
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	.action-icon {
+		width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.08);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		font-size: 1rem;
+		color: #e8e8e8;
+		transition: background 0.2s;
+	}
+
+	.action-item:active .action-icon {
+		background: rgba(255, 255, 255, 0.15);
+	}
+
+	.action-label {
+		font-size: 0.7rem;
+		color: #999;
+		font-weight: 500;
+	}
+
+	/* ===== TECH ===== */
+	.tech-section {
+		display: flex;
+		flex-direction: column;
+		gap: 10px;
 	}
 
 	.section-title {
 		font-size: 0.85rem;
 		font-weight: 600;
-		letter-spacing: 0.04em;
-		color: #a1a1aa;
-		text-transform: uppercase;
+		color: #999;
+		margin: 0;
 	}
 
-	.meta-grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 16px;
-	}
-
-	.meta-item {
-		display: flex;
-		flex-direction: column;
-		gap: 6px;
-	}
-
-	.meta-label {
-		font-size: 0.75rem;
-		font-weight: 500;
-		color: #71717a;
-		letter-spacing: 0.04em;
-	}
-
-	.meta-value {
-		font-size: 1rem;
-		font-weight: 600;
-		color: #fafafa;
-	}
-
-	.tech-section {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-	}
-
-	.tech-label {
-		font-size: 0.75rem;
-		font-weight: 500;
-		color: #71717a;
-		letter-spacing: 0.04em;
-	}
-
-	.tech-tags {
+	.tech-pills {
 		display: flex;
 		flex-wrap: wrap;
 		gap: 8px;
 	}
 
-	.tech-tag {
-		font-size: 0.8rem;
-		font-weight: 600;
-		padding: 8px 14px;
-		border: 1px solid rgba(139, 92, 246, 0.4);
+	.tech-pill {
+		padding: 6px 14px;
 		border-radius: 20px;
-		color: #8b5cf6;
-		background: rgba(139, 92, 246, 0.15);
-	}
-
-	/* Content Section */
-	.project-content {
-		display: flex;
-		flex-direction: column;
-		gap: 18px;
-	}
-
-	.lead-text {
-		font-size: 1.05rem;
-		line-height: 1.65;
+		background: rgba(255, 255, 255, 0.08);
+		font-size: 0.78rem;
 		font-weight: 500;
-		color: #fafafa;
-		padding: 18px;
-		border-left: 3px solid #8b5cf6;
-		background: #1c1c1f;
-		border-radius: 0 12px 12px 0;
+		color: #bbb;
 	}
 
-	.content-body {
-		font-size: 0.95rem;
-		line-height: 1.75;
-		color: #a1a1aa;
+	/* ===== CONTENT ===== */
+	.detail-content {
+		font-size: 0.9rem;
+		line-height: 1.7;
+		color: #999;
 	}
 
-	.content-body :global(p) {
-		margin: 0 0 16px 0;
+	.detail-content :global(p) {
+		margin: 0 0 14px;
 	}
 
-	.content-body :global(h3) {
-		margin: 24px 0 12px 0;
-		font-size: 1rem;
-		font-weight: 600;
-		color: #fafafa;
-		letter-spacing: 0.02em;
-		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-		padding-bottom: 8px;
-	}
-
-	/* Actions */
-	.project-actions {
-		display: flex;
-		flex-direction: column;
-		gap: 12px;
-		margin-top: 8px;
-	}
-
-	.action-btn {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		gap: 12px;
-		padding: 18px 24px;
-		border-radius: 14px;
-		font-family: inherit;
-		text-decoration: none;
-		cursor: pointer;
-		transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-	}
-
-	.action-btn.primary {
-		background: #8b5cf6;
-		border: none;
-		color: #fff;
-	}
-
-	.action-btn.primary:hover,
-	.action-btn.primary:active {
-		background: #7c3aed;
-		transform: translateY(-4px);
-		box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);
-	}
-
-	.action-btn.secondary {
-		background: #1c1c1f;
-		border: 1px solid rgba(255, 255, 255, 0.12);
-		color: #fafafa;
-	}
-
-	.action-btn.secondary:hover,
-	.action-btn.secondary:active {
-		background: #232326;
-		border-color: rgba(139, 92, 246, 0.4);
-		transform: translateY(-2px);
-	}
-
-	.btn-icon {
-		font-size: 1rem;
-	}
-
-	.btn-text {
+	.detail-content :global(h3) {
 		font-size: 0.9rem;
 		font-weight: 600;
-		letter-spacing: 0.04em;
+		color: #e8e8e8;
+		margin: 20px 0 8px;
 	}
 
-	/* Footer */
-	.detail-footer {
-		display: flex;
-		align-items: center;
-		gap: 16px;
-		padding-top: 24px;
-		margin-top: auto;
-		color: #71717a;
-	}
-
-	.footer-line {
-		flex: 1;
-		height: 1px;
-		background: rgba(255, 255, 255, 0.08);
-	}
-
-	.footer-text {
-		font-size: 0.8rem;
-		font-weight: 500;
-		letter-spacing: 0.04em;
+	.detail-content :global(strong) {
+		color: #bbb;
 	}
 </style>
