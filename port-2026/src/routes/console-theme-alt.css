@@ -1,0 +1,181 @@
+/* ========== ALTERNATE THEME: MIDNIGHT BLUE ========== */
+
+/* Console Cover */
+.theme-alt .console-cover {
+	background: linear-gradient(180deg, #b8c4d4 0%, #8a9ab0 40%, #6a7a90 100%);
+}
+
+.theme-alt .cover-ridge {
+	background: linear-gradient(180deg, #5a6a80, #3a4a60);
+}
+
+/* Console Shell */
+.theme-alt .console-shell {
+	background: linear-gradient(155deg, #1a2a3a 0%, #0d1820 40%, #060c12 100%);
+}
+
+/* Console Housing */
+.theme-alt .console-housing {
+	background: linear-gradient(165deg, #253545 0%, #142030 50%, #0a1420 100%);
+}
+
+.theme-alt .console-housing-inner {
+	background: linear-gradient(165deg, #1e2e3e 0%, #0d1820 50%, #060c12 100%);
+}
+
+.theme-alt .console-shell-highlight {
+	background: linear-gradient(155deg, rgba(180, 200, 230, 0.12), transparent 55%);
+}
+
+/* Console Top */
+.theme-alt .console-top {
+	color: #b8d0f0;
+	text-shadow: 0 0 20px rgba(140, 180, 240, 0.3);
+}
+
+.theme-alt .top-title {
+	background: linear-gradient(165deg, rgba(40, 60, 90, 0.7), rgba(20, 35, 55, 0.85));
+}
+
+/* Toggle Lights - Alt Theme */
+.theme-alt .strip-toggle {
+	background: linear-gradient(90deg, #3a4555, #4a5565, #3a4555);
+}
+
+.theme-alt .strip-toggle.active {
+	background: linear-gradient(90deg, #8ab4f8, #a8ccff, #8ab4f8);
+	box-shadow:
+		0 0 20px rgba(138, 180, 248, 0.5),
+		0 0 40px rgba(138, 180, 248, 0.25),
+		0 3px 8px rgba(0, 0, 0, 0.4),
+		inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.theme-alt .strip-toggle-alt {
+	background: linear-gradient(90deg, #2a3545, #3a4555, #2a3545);
+}
+
+.theme-alt .strip-toggle-alt.active {
+	background: linear-gradient(90deg, #f08080, #ff9090, #f08080);
+	box-shadow:
+		0 0 20px rgba(240, 128, 128, 0.5),
+		0 0 40px rgba(240, 128, 128, 0.25),
+		0 3px 8px rgba(0, 0, 0, 0.4),
+		inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Console Body */
+.theme-alt .console-body {
+	background: linear-gradient(165deg, rgba(30, 45, 65, 0.6), rgba(15, 25, 40, 0.75));
+}
+
+/* Left Panel */
+.theme-alt .console-left {
+	background: linear-gradient(
+		165deg,
+		rgba(35, 55, 80, 0.8) 0%,
+		rgba(20, 35, 55, 0.88) 40%,
+		rgba(10, 18, 30, 0.94) 100%
+	);
+	box-shadow:
+		inset 0 2px 0 rgba(138, 180, 248, 0.08),
+		inset 0 -2px 0 rgba(0, 0, 0, 0.5),
+		0 6px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Screen */
+.theme-alt .console-screen {
+	background: linear-gradient(165deg, #0d1a2a, #050c14);
+}
+
+.theme-alt .screen-bezel {
+	background: linear-gradient(165deg, #080f1a, #030608);
+}
+
+.theme-alt .screen-frame {
+	border: 2px solid rgba(138, 180, 248, 0.3);
+	box-shadow:
+		0 0 24px rgba(138, 180, 248, 0.2),
+		inset 0 0 20px rgba(138, 180, 248, 0.08);
+}
+
+.theme-alt .screen-content {
+	background: linear-gradient(145deg, #0a1525, #061020);
+	color: #a8ccff;
+	box-shadow:
+		inset 0 6px 16px rgba(0, 0, 0, 0.7),
+		inset 0 -8px 20px rgba(0, 0, 0, 0.5),
+		inset 0 0 0 1px rgba(138, 180, 248, 0.15);
+}
+
+.theme-alt .screen-cursor {
+	background: #a8ccff;
+}
+
+/* Buttons */
+.theme-alt .button-wrapper {
+	background: linear-gradient(165deg, rgba(25, 40, 60, 0.9), rgba(8, 14, 22, 0.95));
+}
+
+.theme-alt .button-outline {
+	background: linear-gradient(165deg, #3a4a5e, #1a2230);
+}
+
+.theme-alt .button-top {
+	background: linear-gradient(155deg, #e8eef4, #8a9ab0);
+}
+
+.theme-alt .button-edge {
+	background: linear-gradient(155deg, #d0dae8, #8a9ab0);
+}
+
+.theme-alt .button-face {
+	background: linear-gradient(155deg, #f0f4f8, #b0c0d4);
+}
+
+.theme-alt .button-label {
+	color: #1a2a3a;
+}
+
+/* Printer */
+.theme-alt .console-right.printer {
+	background: linear-gradient(165deg, #c4ccd8 0%, #a8b4c4 50%, #8898a8 100%);
+}
+
+.theme-alt .printer-top {
+	background: linear-gradient(180deg, #d8dfe8, #c4ccd8);
+}
+
+.theme-alt .printer-output {
+	background: linear-gradient(180deg, #c0c8d4, #b4bcc8);
+}
+
+.theme-alt .printer-body {
+	background: linear-gradient(180deg, #a8b4c4, #9ca8b8);
+}
+
+.theme-alt .printer-window {
+	background: linear-gradient(165deg, #141820, #222830);
+}
+
+.theme-alt .printer-window-inner {
+	background: linear-gradient(165deg, #0a1828, #0d2535);
+	box-shadow: inset 0 0 8px rgba(138, 180, 248, 0.1);
+}
+
+.theme-alt .printer-vents span {
+	background: linear-gradient(180deg, #7888a0, #5868a0);
+}
+
+.theme-alt .roller-bar:first-child {
+	background: linear-gradient(180deg, #2a3040, #141820, #222830);
+}
+
+.theme-alt .roller-bar:last-child {
+	background: linear-gradient(
+		180deg,
+		rgba(35, 42, 55, 0.9) 0%,
+		rgba(25, 32, 45, 0.92) 50%,
+		rgba(20, 26, 38, 0.88) 100%
+	);
+}

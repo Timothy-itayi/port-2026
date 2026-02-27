@@ -3,6 +3,7 @@
 	import { goto } from '$app/navigation';
 	import gsap from 'gsap';
 	import { projects } from '$lib/data/projects.js';
+	import { styleActive } from '$lib/stores/theme.js';
 	import './paper.css';
 
 	export let content: string = '';
@@ -88,9 +89,8 @@
 	function handlePaperClick() {
 		if (isTransitioning || !visible) return;
 		
-		// If clicking "PROJECTS", zoom into the projects page
 		if (content === 'PROJECTS') {
-			zoomIntoPage('/projects');
+			zoomIntoPage($styleActive ? '/projects/gallery' : '/projects');
 		} else if (content === 'ABOUT') {
 			inspectPaper('/about');
 		} else if (content === 'RESUME') {
@@ -523,7 +523,8 @@
 	class:visible 
 	class:transitioning={isTransitioning} 
 	class:about-paper={content === 'ABOUT'}
-	class:projects-paper={content === 'PROJECTS'}
+	class:projects-paper={content === 'PROJECTS' && !$styleActive}
+	class:gallery-paper={content === 'PROJECTS' && $styleActive}
 	class:resume-paper={content === 'RESUME'}
 >
 	<button 
@@ -542,56 +543,67 @@
 			{#if content !== 'ABOUT' && content !== 'PROJECTS' && content !== 'RESUME'}
 				<div class="paper-header">{content || 'PRINTING...'}</div>
 			{/if}
-			{#if content === 'PROJECTS'}
-				<div class="projects-preview-full">
-					<nav class="preview-nav">
-						<div class="nav-links">
-							<span>Control Panel</span>
-							<span>Clones</span>
-						</div>
-						<div class="beta-tag">BETA</div>
-					</nav>
-
-					<header class="preview-header">
-						<h1 class="archival-title">PROJECTS</h1>
-					</header>
-
-					<div class="section-divider">
-						<h2>LATEST WORKS ADDED</h2>
+			{#if content === 'PROJECTS' && $styleActive}
+				<div class="gallery-preview">
+					<div class="gp-header">
+						<span class="gp-brand">TIMOTHY<sup>©</sup></span>
+						<span class="gp-cta">Contact</span>
 					</div>
-
-					<div class="preview-project-grid">
-						{#each projects as project}
-							<div class="preview-project-card">
-								<div class="card-header">
-									<div class="header-row">
-										<div class="label">Title</div>
-										<div class="value">{project.title}</div>
-									</div>
-									<div class="header-row author">
-										<div class="label">Author</div>
-										<div class="value">{project.author}</div>
-									</div>
+					<div class="gp-tabs">
+						<span class="gp-tab active">All</span>
+						<span class="gp-tab">Personal</span>
+						<span class="gp-tab">Web</span>
+						<span class="gp-tab">Mobile</span>
+					</div>
+					<div class="gp-grid">
+						{#each projects.slice(0, 6) as project}
+							<div class="gp-card">
+								<div class="gp-card-img">
+									<img src={project.image} alt={project.title} />
 								</div>
-								<div class="card-image">
-									<div class="image-inner">
-										<img src={project.image} alt={project.title} />
-									</div>
-								</div>
-								<div class="card-footer-desc">
-									<div class="desc-label">Notes:</div>
-									<div class="desc-text">{project.description}</div>
-								</div>
+								<span class="gp-card-title">{project.title}</span>
 							</div>
 						{/each}
 					</div>
-
-					<footer class="preview-footer">
-						<div class="footer-content">
-							<div class="footer-left">© 2026 TIMOTHY ITAYI</div>
-							<div class="footer-right">JAN 24 2026</div>
+					<div class="gp-footer">
+						<span class="gp-footer-brand">Timothy Itayi</span>
+						<span class="gp-footer-tagline">curated works</span>
+					</div>
+				</div>
+			{:else if content === 'PROJECTS'}
+				<div class="corp-preview">
+					<div class="cp-nav">
+						<span class="cp-logo">Timothy Itayi</span>
+						<div class="cp-nav-links">
+							<span>Home</span>
+							<span>Projects</span>
+							<span class="cp-cta">Contact</span>
 						</div>
-					</footer>
+					</div>
+					<div class="cp-hero">
+						<div class="cp-title">Projects</div>
+						<div class="cp-desc">A complete overview of engineering work.</div>
+					</div>
+					<div class="cp-table-head">
+						<span>Project</span>
+						<span>Category</span>
+						<span>Year</span>
+					</div>
+					{#each projects.slice(0, 4) as project}
+						<div class="cp-row">
+							<div class="cp-row-name">
+								<div class="cp-row-icon">
+									<img src={project.image} alt={project.title} />
+								</div>
+								<span class="cp-row-title">{project.title}</span>
+							</div>
+							<span class="cp-row-cat">{project.category}</span>
+							<span class="cp-row-year">{project.year}</span>
+						</div>
+					{/each}
+					<div class="cp-footer">
+						<span>© 2026 Timothy Itayi</span>
+					</div>
 				</div>
 			{:else if content === 'ABOUT'}
 				<div class="dossier-preview">

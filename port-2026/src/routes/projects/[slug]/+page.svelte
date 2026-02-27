@@ -4,6 +4,7 @@
 	import { browser } from '$app/environment';
 	import gsap from 'gsap';
 	import type { PageData } from './$types.js';
+	import { categoryLabels } from '$lib/data/projects.js';
 	import { BREAKPOINTS } from '$lib/utils/viewport.js';
 
 	export let data: PageData;
@@ -18,26 +19,34 @@
 	};
 
 	onMount(() => {
-		// Check viewport on mount and redirect if needed
 		checkViewportAndRedirect();
 
-		// Debounced resize handler
 		let resizeTimer: ReturnType<typeof setTimeout>;
 		resizeHandler = () => {
 			clearTimeout(resizeTimer);
 			resizeTimer = setTimeout(checkViewportAndRedirect, 100);
 		};
-		
 		window.addEventListener('resize', resizeHandler);
 
 		const tl = gsap.timeline();
-		tl.from('.top-nav, .project-header, .sidebar-item, .content-body', {
+		tl.from('.corp-nav, .breadcrumb', {
 			opacity: 0,
-			y: 20,
-			duration: 0.6,
-			stagger: 0.1,
+			y: -8,
+			duration: 0.4,
+			stagger: 0.06,
 			ease: 'power2.out'
 		});
+		tl.from(
+			'.detail-hero, .detail-grid',
+			{
+				opacity: 0,
+				y: 14,
+				duration: 0.5,
+				stagger: 0.08,
+				ease: 'power2.out'
+			},
+			'-=0.2'
+		);
 	});
 
 	onDestroy(() => {
@@ -51,327 +60,432 @@
 	<title>{project.title} | Timothy Itayi</title>
 </svelte:head>
 
-<div class="archive-wrapper">
-	<div class="archive-container">
-		<!-- Top Bar -->
-		<nav class="top-nav">
-			<div class="nav-links">
-				<a href="/projects" class="back-link">← BACK TO ARCHIVE</a>
-				<span class="breadcrumb-separator">/</span>
-				<span class="current-page">{project.title.toUpperCase()}</span>
-			</div>
-			<div class="status-tag">ACTIVE_PROJECT</div>
-		</nav>
+<div class="corp-wrapper">
+	<nav class="corp-nav">
+		<div class="nav-left">
+			<a href="/" class="nav-logo">Timothy Itayi</a>
+		</div>
+		<div class="nav-right">
+			<a href="/" class="nav-item">Home</a>
+			<a href="/projects" class="nav-item">Projects</a>
+			<a href="/contact" class="nav-item nav-item-cta">Contact</a>
+		</div>
+	</nav>
 
-		<!-- Main Layout -->
-		<main class="project-detail-layout">
-			<!-- Header Section -->
-			<header class="project-header">
-				<div class="title-block">
-					<h1 class="project-title">{project.title}</h1>
-					<p class="project-subtitle">BY {project.author.toUpperCase()}</p>
-				</div>
-			</header>
-
-			<div class="grid-container">
-				<!-- Sidebar: E-commerce style metadata -->
-				<aside class="metadata-sidebar">
-					<div class="sidebar-item">
-						<span class="label">CLIENT</span>
-						<span class="value">{project.client || 'N/A'}</span>
-					</div>
-					<div class="sidebar-item">
-						<span class="label">YEAR</span>
-						<span class="value">{project.year}</span>
-					</div>
-					<div class="sidebar-item">
-						<span class="label">TECH STACK</span>
-						<div class="tag-list">
-							{#each project.techStack as tech}
-								<span class="tech-tag">{tech}</span>
-							{/each}
-						</div>
-					</div>
-					<div class="sidebar-item buy-action">
-						<!-- E-commerce flavor: An action button -->
-						<button class="action-button">VIEW LIVE SITE</button>
-						<p class="availability">AVAILABLE FOR AUDIT</p>
-					</div>
-				</aside>
-
-				<!-- Content Area: Blog style -->
-				<section class="content-area">
-					<div class="featured-image">
-						<img src={project.image} alt={project.title} />
-					</div>
-					
-					<div class="content-body">
-						<div class="lead-text">
-							{project.description}
-						</div>
-						<div class="rich-text">
-							{@html project.content}
-						</div>
-					</div>
-				</section>
-			</div>
-		</main>
-
-		<!-- Footer -->
-		<footer class="archive-footer">
-			<div class="footer-content">
-				<div class="footer-left">
-					© 2026 TIMOTHY ITAYI / SYSTEM ENGINEER
-				</div>
-				<div class="footer-right">
-					PROJECT ID: {project.slug.toUpperCase()}-001
-				</div>
-			</div>
-		</footer>
+	<div class="breadcrumb">
+		<a href="/projects" class="bc-link">Projects</a>
+		<span class="bc-sep">/</span>
+		<span class="bc-current">{project.title}</span>
 	</div>
+
+	<header class="detail-hero">
+		<div class="hero-left">
+			<div class="hero-icon">
+				<img src={project.image} alt={project.title} />
+			</div>
+			<div class="hero-text">
+				<h1 class="hero-title">{project.title}</h1>
+				<p class="hero-desc">{project.description}</p>
+			</div>
+		</div>
+	</header>
+
+	<div class="detail-grid">
+		<aside class="detail-sidebar">
+			<div class="sidebar-group">
+				<h3 class="group-label">Details</h3>
+				<div class="detail-row">
+					<span class="detail-key">Author</span>
+					<span class="detail-val">{project.author}</span>
+				</div>
+				{#if project.client}
+					<div class="detail-row">
+						<span class="detail-key">Client</span>
+						<span class="detail-val">{project.client}</span>
+					</div>
+				{/if}
+				<div class="detail-row">
+					<span class="detail-key">Year</span>
+					<span class="detail-val">{project.year}</span>
+				</div>
+				<div class="detail-row">
+					<span class="detail-key">Category</span>
+					<span class="detail-val">{categoryLabels[project.category]}</span>
+				</div>
+			</div>
+
+			<div class="sidebar-group">
+				<h3 class="group-label">Tech stack</h3>
+				<div class="tag-list">
+					{#each project.techStack as tech}
+						<span class="tech-tag">{tech}</span>
+					{/each}
+				</div>
+			</div>
+
+			{#if project.liveSiteUrl || project.githubUrl || project.youtubeUrl}
+				<div class="sidebar-group">
+					<h3 class="group-label">Links</h3>
+					<div class="link-list">
+						{#if project.liveSiteUrl}
+							<a href={project.liveSiteUrl} target="_blank" rel="noopener" class="sidebar-link"
+								>Live site ↗</a
+							>
+						{/if}
+						{#if project.githubUrl}
+							<a href={project.githubUrl} target="_blank" rel="noopener" class="sidebar-link"
+								>GitHub ↗</a
+							>
+						{/if}
+						{#if project.youtubeUrl}
+							<a href={project.youtubeUrl} target="_blank" rel="noopener" class="sidebar-link"
+								>YouTube ↗</a
+							>
+						{/if}
+					</div>
+				</div>
+			{/if}
+		</aside>
+
+		<section class="detail-content">
+			<div class="content-body">
+				{@html project.content}
+			</div>
+		</section>
+	</div>
+
+	<footer class="corp-footer">
+		<span class="footer-copy">© 2026 Timothy Itayi</span>
+		<span class="footer-id">ID: {project.slug.toUpperCase()}</span>
+	</footer>
 </div>
 
 <style>
 	:global(body) {
-		background: #f0f0f0;
+		background: #fff;
 		margin: 0;
 		padding: 0;
 	}
 
-	.archive-wrapper {
+	.corp-wrapper {
 		min-height: 100vh;
 		background: #fff;
-		color: #000;
-		font-family: 'Courier New', Courier, monospace;
-		padding: 0 1rem 4rem 1rem;
-		display: flex;
-		flex-direction: column;
+		color: #0a2540;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+			sans-serif;
 	}
 
-	.archive-container {
-		max-width: 1200px;
-		margin: 0 auto;
-		width: 100%;
-		flex-grow: 1;
-		display: flex;
-		flex-direction: column;
-	}
-
-	/* Top Nav */
-	.top-nav {
+	/* ===== NAV ===== */
+	.corp-nav {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 1rem 0;
-		border-bottom: 2px solid #000;
-		font-size: 0.85rem;
-		font-weight: bold;
+		padding: 16px 48px;
+		border-bottom: 1px solid #e6e9ed;
 	}
 
-	.nav-links {
-		display: flex;
-		gap: 0.5rem;
-		align-items: center;
-	}
-
-	.back-link {
-		color: #000;
+	.nav-logo {
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: #0a2540;
 		text-decoration: none;
+		letter-spacing: -0.01em;
 	}
 
-	.back-link:hover {
-		text-decoration: underline;
+	.nav-right {
+		display: flex;
+		align-items: center;
+		gap: 32px;
 	}
 
-	.breadcrumb-separator {
-		opacity: 0.5;
+	.nav-item {
+		font-size: 0.88rem;
+		color: #546678;
+		text-decoration: none;
+		font-weight: 500;
+		transition: color 0.15s;
 	}
 
-	.status-tag {
-		background: #000;
+	.nav-item:hover {
+		color: #0a2540;
+	}
+
+	.nav-item-cta {
+		background: #0a2540;
 		color: #fff;
-		padding: 2px 8px;
-		font-size: 0.7rem;
-		font-weight: 900;
+		padding: 8px 18px;
+		border-radius: 6px;
+		font-weight: 600;
+		font-size: 0.84rem;
 	}
 
-	/* Layout */
-	.project-detail-layout {
-		margin-top: 2rem;
+	.nav-item-cta:hover {
+		background: #1a3a5c;
+		color: #fff;
 	}
 
-	.project-header {
-		padding-bottom: 2rem;
-		border-bottom: 1px solid #000;
-		margin-bottom: 2rem;
+	/* ===== BREADCRUMB ===== */
+	.breadcrumb {
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 20px 48px 0;
+		font-size: 0.82rem;
+		display: flex;
+		align-items: center;
+		gap: 8px;
 	}
 
-	.project-title {
-		font-size: 5rem;
-		line-height: 0.8;
+	.bc-link {
+		color: #546678;
+		text-decoration: none;
+		font-weight: 500;
+	}
+
+	.bc-link:hover {
+		color: #0a2540;
+	}
+
+	.bc-sep {
+		color: #c0c8d0;
+	}
+
+	.bc-current {
+		color: #0a2540;
+		font-weight: 600;
+	}
+
+	/* ===== HERO ===== */
+	.detail-hero {
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 32px 48px 40px;
+		border-bottom: 1px solid #e6e9ed;
+	}
+
+	.hero-left {
+		display: flex;
+		align-items: flex-start;
+		gap: 24px;
+	}
+
+	.hero-icon {
+		width: 64px;
+		height: 64px;
+		border-radius: 12px;
+		background: #f4f6f8;
+		border: 1px solid #e6e9ed;
+		overflow: hidden;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-shrink: 0;
+	}
+
+	.hero-icon img {
+		width: 100%;
+		height: 100%;
+		object-fit: contain;
+		padding: 8px;
+	}
+
+	.hero-text {
+		display: flex;
+		flex-direction: column;
+		gap: 6px;
+	}
+
+	.hero-title {
+		font-size: 1.8rem;
+		font-weight: 700;
 		margin: 0;
-		font-weight: 950;
-		letter-spacing: -4px;
+		color: #0a2540;
+		letter-spacing: -0.02em;
+		line-height: 1.2;
 	}
 
-	.project-subtitle {
-		margin: 0.5rem 0 0 0;
-		font-size: 1rem;
-		font-weight: 900;
-		opacity: 0.7;
+	.hero-desc {
+		font-size: 0.95rem;
+		color: #546678;
+		margin: 0;
+		line-height: 1.55;
+		font-weight: 400;
+		max-width: 600px;
 	}
 
-	.grid-container {
+	/* ===== GRID ===== */
+	.detail-grid {
 		display: grid;
-		grid-template-columns: 300px 1fr;
-		gap: 4rem;
+		grid-template-columns: 260px 1fr;
+		gap: 56px;
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 40px 48px 0;
 	}
 
-	/* Sidebar */
-	.metadata-sidebar {
+	/* ===== SIDEBAR ===== */
+	.detail-sidebar {
 		display: flex;
 		flex-direction: column;
-		gap: 2rem;
+		gap: 28px;
 	}
 
-	.sidebar-item {
+	.sidebar-group {
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
-		border-bottom: 1px solid #eee;
-		padding-bottom: 1rem;
+		gap: 10px;
 	}
 
-	.label {
-		font-size: 0.75rem;
-		font-weight: 900;
-		color: #666;
+	.group-label {
+		font-size: 0.72rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: #8898a8;
+		margin: 0;
 	}
 
-	.value {
-		font-size: 1.1rem;
-		font-weight: bold;
+	.detail-row {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		padding: 6px 0;
+		border-bottom: 1px solid #f0f2f5;
+	}
+
+	.detail-key {
+		font-size: 0.84rem;
+		color: #546678;
+		font-weight: 400;
+	}
+
+	.detail-val {
+		font-size: 0.84rem;
+		color: #0a2540;
+		font-weight: 500;
 	}
 
 	.tag-list {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5rem;
+		gap: 6px;
 	}
 
 	.tech-tag {
-		border: 1px solid #000;
-		padding: 2px 6px;
-		font-size: 0.75rem;
-		font-weight: bold;
+		font-size: 0.72rem;
+		font-weight: 500;
+		padding: 3px 10px;
+		border-radius: 4px;
+		background: #f0f2f5;
+		color: #546678;
 	}
 
-	.action-button {
-		background: #000;
-		color: #fff;
-		border: none;
-		padding: 1rem;
-		font-family: inherit;
-		font-weight: 900;
-		cursor: pointer;
-		width: 100%;
-		transition: transform 0.1s;
-	}
-
-	.action-button:hover {
-		transform: translate(-2px, -2px);
-		box-shadow: 4px 4px 0 #000;
-	}
-
-	.availability {
-		font-size: 0.65rem;
-		margin-top: 0.5rem;
-		font-weight: bold;
-		text-align: center;
-	}
-
-	/* Content Area */
-	.content-area {
+	.link-list {
 		display: flex;
 		flex-direction: column;
-		gap: 3rem;
+		gap: 6px;
 	}
 
-	.featured-image {
-		width: 100%;
-		border: 1px solid #000;
-		background: #f9f9f9;
-		aspect-ratio: 16/9;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		overflow: hidden;
+	.sidebar-link {
+		font-size: 0.84rem;
+		color: #3366cc;
+		text-decoration: none;
+		font-weight: 500;
+		transition: color 0.15s;
 	}
 
-	.featured-image img {
-		width: 100%;
-		height: 100%;
-		object-fit: contain;
-		padding: 40px;
+	.sidebar-link:hover {
+		color: #0a2540;
+	}
+
+	/* ===== CONTENT ===== */
+	.detail-content {
+		min-width: 0;
 	}
 
 	.content-body {
-		max-width: 800px;
+		font-size: 0.98rem;
+		line-height: 1.72;
+		color: #334155;
 	}
 
-	.lead-text {
-		font-size: 1.5rem;
-		line-height: 1.3;
-		font-weight: bold;
-		margin-bottom: 2rem;
-		border-left: 4px solid #000;
-		padding-left: 1.5rem;
+	.content-body :global(p) {
+		margin: 0 0 20px;
 	}
 
-	.rich-text {
+	.content-body :global(h3) {
 		font-size: 1.1rem;
-		line-height: 1.6;
-		font-weight: 500;
+		font-weight: 600;
+		color: #0a2540;
+		margin: 28px 0 10px;
+		letter-spacing: -0.01em;
 	}
 
-	.rich-text :global(h3) {
-		margin-top: 2rem;
-		font-size: 1.4rem;
-		font-weight: 900;
-		text-decoration: underline;
-	}
-
-	/* Footer */
-	.archive-footer {
-		margin-top: 4rem;
-		border-top: 1px solid #000;
-		padding: 1.5rem 0;
-	}
-
-	.footer-content {
+	/* ===== FOOTER ===== */
+	.corp-footer {
 		display: flex;
 		justify-content: space-between;
-		font-size: 0.75rem;
-		font-weight: 900;
+		align-items: center;
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 32px 48px 40px;
+		border-top: 1px solid #e6e9ed;
+		margin-top: 56px;
 	}
 
-	/* Responsive */
+	.footer-copy {
+		font-size: 0.78rem;
+		color: #8898a8;
+	}
+
+	.footer-id {
+		font-size: 0.72rem;
+		color: #c0c8d0;
+		font-family: 'SF Mono', 'Fira Code', monospace;
+		letter-spacing: 0.03em;
+	}
+
+	/* ===== RESPONSIVE ===== */
 	@media (max-width: 900px) {
-		.grid-container {
-			grid-template-columns: 1fr;
-			gap: 2rem;
+		.corp-nav {
+			padding: 14px 24px;
 		}
 
-		.metadata-sidebar {
+		.breadcrumb {
+			padding: 16px 24px 0;
+		}
+
+		.detail-hero {
+			padding: 24px 24px 32px;
+		}
+
+		.hero-left {
+			flex-direction: column;
+			gap: 16px;
+		}
+
+		.hero-title {
+			font-size: 1.5rem;
+		}
+
+		.detail-grid {
+			grid-template-columns: 1fr;
+			gap: 32px;
+			padding: 28px 24px 0;
+		}
+
+		.detail-sidebar {
 			order: 2;
 		}
 
-		.content-area {
+		.detail-content {
 			order: 1;
 		}
 
-		.project-title {
-			font-size: 3rem;
+		.corp-footer {
+			padding: 24px 24px 32px;
+			flex-direction: column;
+			gap: 4px;
+			align-items: flex-start;
 		}
 	}
 </style>

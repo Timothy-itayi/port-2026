@@ -3,7 +3,7 @@
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import gsap from 'gsap';
-	import { projects } from '$lib/data/projects.js';
+	import { projects, categoryLabels } from '$lib/data/projects.js';
 	import { BREAKPOINTS } from '$lib/utils/viewport.js';
 
 	let resizeHandler: (() => void) | null = null;
@@ -15,34 +15,34 @@
 	};
 
 	onMount(() => {
-		// Check viewport on mount and redirect if needed
 		checkViewportAndRedirect();
 
-		// Debounced resize handler
 		let resizeTimer: ReturnType<typeof setTimeout>;
 		resizeHandler = () => {
 			clearTimeout(resizeTimer);
 			resizeTimer = setTimeout(checkViewportAndRedirect, 100);
 		};
-		
 		window.addEventListener('resize', resizeHandler);
 
-		// Simple entrance animation
 		const tl = gsap.timeline();
-		tl.from('.top-nav, .main-header, .section-divider', {
+		tl.from('.corp-nav, .corp-hero', {
 			opacity: 0,
-			y: -10,
-			duration: 0.6,
-			stagger: 0.1,
+			y: -8,
+			duration: 0.5,
+			stagger: 0.08,
 			ease: 'power2.out'
 		});
-		tl.from('.project-card', {
-			opacity: 0,
-			y: 20,
-			duration: 0.6,
-			stagger: 0.1,
-			ease: 'power2.out'
-		}, '-=0.3');
+		tl.from(
+			'.project-row',
+			{
+				opacity: 0,
+				y: 12,
+				duration: 0.4,
+				stagger: 0.06,
+				ease: 'power2.out'
+			},
+			'-=0.2'
+		);
 	});
 
 	onDestroy(() => {
@@ -56,323 +56,351 @@
 	<title>Projects | Timothy Itayi</title>
 </svelte:head>
 
-<div class="archive-wrapper">
-	<div class="archive-container">
-		<!-- Top Bar -->
-		<nav class="top-nav">
-			<div class="nav-links">
-				<a href="/">Control Panel</a>
-				<a href="/clones">Clones</a>
-			</div>
-			<div class="beta-tag">BETA</div>
-		</nav>
-
-		<!-- Main Header -->
-		<header class="main-header">
-			<div class="brand">
-				<h1 class="archival-title">
-					PROJECTS
-				</h1>
-				
-			</div>
-			
-		</header>
-
-		<!-- Section Title -->
-		<div class="section-divider">
-			<h2>LATEST WORKS ADDED</h2>
+<div class="corp-wrapper">
+	<nav class="corp-nav">
+		<div class="nav-left">
+			<a href="/" class="nav-logo">Timothy Itayi</a>
 		</div>
+		<div class="nav-right">
+			<a href="/" class="nav-item">Home</a>
+			<a href="/clones" class="nav-item">Clones</a>
+			<a href="/contact" class="nav-item nav-item-cta">Contact</a>
+		</div>
+	</nav>
 
-		<!-- Project Grid -->
-		<main class="project-grid">
-			{#each projects as project}
-				<a href="/projects/{project.slug}" class="project-card-link">
-					<div class="project-card">
-						<div class="card-header">
-							<div class="header-row">
-								<div class="label">Title</div>
-								<div class="value">{project.title}</div>
-							</div>
-							<div class="header-row author">
-								<div class="label">Author</div>
-								<div class="value">{project.author}</div>
-							</div>
-						</div>
-						<div class="card-image">
-							<div class="image-inner">
-								<img src={project.image} alt={project.title} />
-							</div>
-						</div>
-						<div class="card-footer-desc">
-							<div class="desc-label">Notes:</div>
-							<div class="desc-text">{project.description}</div>
-						</div>
-					</div>
-				</a>
-			{/each}
-		</main>
+	<header class="corp-hero">
+		<h1 class="hero-title">Projects</h1>
+		<p class="hero-desc">
+			A complete overview of engineering work — applications, prototypes, and technical
+			explorations.
+		</p>
+	</header>
 
-		<!-- Footer -->
-		<footer class="archive-footer">
-			<div class="footer-content">
-				<div class="footer-left">
-					© 2026 TIMOTHY ITAYI / SYSTEM ENGINEER
-				</div>
-				<div class="footer-right">
-					LAST UPDATED: JAN 24 2026 [EST]
-				</div>
-			</div>
-		</footer>
+	<div class="table-header">
+		<span class="th-name">Project</span>
+		<span class="th-category">Category</span>
+		<span class="th-stack">Stack</span>
+		<span class="th-year">Year</span>
+		<span class="th-arrow"></span>
 	</div>
+
+	<main class="project-list">
+		{#each projects as project}
+			<a href="/projects/{project.slug}" class="project-row">
+				<div class="row-name">
+					<div class="row-icon">
+						<img src={project.image} alt={project.title} />
+					</div>
+					<div class="row-info">
+						<span class="row-title">{project.title}</span>
+						<span class="row-desc">{project.description}</span>
+					</div>
+				</div>
+				<span class="row-category">{categoryLabels[project.category]}</span>
+				<div class="row-stack">
+					{#each project.techStack.slice(0, 3) as tech}
+						<span class="stack-tag">{tech}</span>
+					{/each}
+				</div>
+				<span class="row-year">{project.year}</span>
+				<span class="row-arrow">→</span>
+			</a>
+		{/each}
+	</main>
+
+	<footer class="corp-footer">
+		<span class="footer-copy">© 2026 Timothy Itayi</span>
+		<span class="footer-meta">Last updated Jan 2026</span>
+	</footer>
 </div>
 
 <style>
 	:global(body) {
-		background: #f0f0f0;
+		background: #fff;
 		margin: 0;
 		padding: 0;
 	}
 
-	.archive-wrapper {
+	.corp-wrapper {
 		min-height: 100vh;
 		background: #fff;
-		color: #000;
-		font-family: 'Courier New', Courier, monospace;
-		padding: 0 1rem 4rem 1rem;
-		display: flex;
-		flex-direction: column;
+		color: #0a2540;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial,
+			sans-serif;
 	}
 
-	.archive-container {
-		max-width: 1200px;
-		margin: 0 auto;
-		width: 100%;
-		flex-grow: 1;
-		display: flex;
-		flex-direction: column;
-	}
-
-	/* Top Nav */
-	.top-nav {
+	/* ===== NAV ===== */
+	.corp-nav {
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-		padding: 0.5rem 0;
-		border-bottom: 1px solid #000;
-		font-size: 0.85rem;
-		font-weight: bold;
+		padding: 16px 48px;
+		border-bottom: 1px solid #e6e9ed;
 	}
 
-	.nav-links {
+	.nav-logo {
+		font-size: 0.95rem;
+		font-weight: 600;
+		color: #0a2540;
+		text-decoration: none;
+		letter-spacing: -0.01em;
+	}
+
+	.nav-right {
 		display: flex;
-		gap: 1.5rem;
+		align-items: center;
+		gap: 32px;
+	}
+
+	.nav-item {
+		font-size: 0.88rem;
+		color: #546678;
+		text-decoration: none;
+		font-weight: 500;
+		transition: color 0.15s;
+	}
+
+	.nav-item:hover {
+		color: #0a2540;
+	}
+
+	.nav-item-cta {
+		background: #0a2540;
+		color: #fff;
+		padding: 8px 18px;
+		border-radius: 6px;
+		font-weight: 600;
+		font-size: 0.84rem;
+	}
+
+	.nav-item-cta:hover {
+		background: #1a3a5c;
+		color: #fff;
+	}
+
+	/* ===== HERO ===== */
+	.corp-hero {
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 64px 48px 40px;
+	}
+
+	.hero-title {
+		font-size: 2.6rem;
+		font-weight: 700;
+		margin: 0 0 12px;
+		color: #0a2540;
+		letter-spacing: -0.03em;
+		line-height: 1.15;
+	}
+
+	.hero-desc {
+		font-size: 1.1rem;
+		color: #546678;
+		margin: 0;
+		line-height: 1.55;
+		max-width: 540px;
+		font-weight: 400;
+	}
+
+	/* ===== TABLE ===== */
+	.table-header {
+		display: grid;
+		grid-template-columns: 1fr 120px 200px 60px 32px;
+		gap: 16px;
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 0 48px 10px;
+		border-bottom: 1px solid #e6e9ed;
 		align-items: center;
 	}
 
-	.nav-links a {
-		color: #000;
-		text-decoration: none;
-		border-bottom: 2px solid transparent;
+	.table-header span {
+		font-size: 0.72rem;
+		font-weight: 600;
+		color: #8898a8;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
 	}
 
-	.nav-links a:hover, .nav-links a.active {
-		border-bottom: 2px solid #000;
+	/* ===== PROJECT ROWS ===== */
+	.project-list {
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 0 48px;
 	}
 
-	.nav-dropdown {
-		cursor: pointer;
-	}
-
-	.arrow {
-		font-size: 0.6rem;
-		margin-left: 2px;
-	}
-
-	.beta-tag {
-		color: #ff0000;
-		font-weight: 900;
-		font-size: 0.9rem;
-	}
-
-	/* Main Header */
-	.main-header {
+	.project-row {
 		display: grid;
-		grid-template-columns: 2fr 1fr;
-		gap: 2rem;
-		padding: 2.5rem 0;
-		align-items: start;
-	}
-
-	.archival-title {
-		font-size: 4rem;
-		line-height: 0.85;
-		margin: 0;
-		font-weight: 900;
-		letter-spacing: -3px;
-	}
-
-	.subtitle {
-		margin: 0.5rem 0 0 0;
-		font-size: 1.2rem;
-		font-weight: bold;
-		opacity: 0.8;
-	}
-
-	.description {
-		font-size: 1.1rem;
-		line-height: 1.2;
-		font-weight: bold;
-		padding-top: 0.5rem;
-		text-align: right;
-	}
-
-	/* Section Divider */
-	.section-divider {
-		border-top: 1px solid #000;
-		padding: 0.5rem 0;
-		margin-bottom: 1.5rem;
-	}
-
-	.section-divider h2 {
-		font-size: 0.8rem;
-		margin: 0;
-		letter-spacing: 0.1em;
-		font-weight: 900;
-	}
-
-	/* Project Grid */
-	.project-grid {
-		display: grid;
-		grid-template-columns: repeat(2, 1fr);
-		gap: 2.5rem;
-		margin-bottom: 4rem;
-	}
-
-	.project-card-link {
+		grid-template-columns: 1fr 120px 200px 60px 32px;
+		gap: 16px;
+		padding: 20px 0;
+		border-bottom: 1px solid #f0f2f5;
 		text-decoration: none;
 		color: inherit;
-		display: block;
+		align-items: center;
+		transition: background 0.15s;
 	}
 
-	.project-card {
-		border: 1px solid #000;
-		background: #fff;
-		display: flex;
-		flex-direction: column;
-		box-shadow: 6px 6px 0 #000;
-		transition: transform 0.2s;
+	.project-row:hover {
+		background: #f7f9fc;
+		margin: 0 -16px;
+		padding: 20px 16px;
+		border-radius: 8px;
+		border-color: transparent;
 	}
 
-	.project-card:hover {
-		transform: translate(-2px, -2px);
-		box-shadow: 8px 8px 0 #000;
-	}
-
-	.card-header {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.header-row {
-		display: grid;
-		grid-template-columns: 80px 1fr;
-		border-bottom: 1px solid #000;
-	}
-
-	.label {
-		padding: 0.8rem;
-		font-weight: 900;
-		border-right: 1px solid #000;
-		font-size: 0.85rem;
-	}
-
-	.value {
-		padding: 0.8rem;
-		font-size: 0.85rem;
-		font-weight: bold;
-	}
-
-	.card-image {
-		padding: 1.5rem;
+	.row-name {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		background: #fff;
-		border-bottom: 1px solid #000;
+		gap: 16px;
+		min-width: 0;
 	}
 
-	.image-inner {
-		width: 100%;
-		aspect-ratio: 16/9;
-		border: 1px solid #000;
+	.row-icon {
+		width: 40px;
+		height: 40px;
+		border-radius: 8px;
+		background: #f4f6f8;
+		border: 1px solid #e6e9ed;
 		overflow: hidden;
-		background: #eee;
 		display: flex;
 		align-items: center;
 		justify-content: center;
+		flex-shrink: 0;
 	}
 
-	.image-inner img {
+	.row-icon img {
 		width: 100%;
 		height: 100%;
 		object-fit: contain;
-		padding: 10px;
+		padding: 4px;
 	}
 
-	.card-footer-desc {
-		padding: 1rem;
-		background: #f9f9f9;
-		flex-grow: 1;
+	.row-info {
+		display: flex;
+		flex-direction: column;
+		gap: 2px;
+		min-width: 0;
 	}
 
-	.desc-label {
-		font-size: 0.7rem;
-		font-weight: 900;
-		margin-bottom: 0.3rem;
-		text-decoration: underline;
+	.row-title {
+		font-size: 0.92rem;
+		font-weight: 600;
+		color: #0a2540;
 	}
 
-	.desc-text {
-		font-size: 0.85rem;
+	.row-desc {
+		font-size: 0.78rem;
+		color: #8898a8;
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
 		line-height: 1.4;
-		font-weight: bold;
 	}
 
-	/* Footer */
-	.archive-footer {
-		margin-top: auto;
-		border-top: 1px solid #000;
-		padding: 1.5rem 0;
+	.row-category {
+		font-size: 0.8rem;
+		color: #546678;
+		font-weight: 500;
 	}
 
-	.footer-content {
+	.row-stack {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+	}
+
+	.stack-tag {
+		font-size: 0.7rem;
+		font-weight: 500;
+		padding: 2px 8px;
+		border-radius: 4px;
+		background: #f0f2f5;
+		color: #546678;
+	}
+
+	.row-year {
+		font-size: 0.82rem;
+		color: #8898a8;
+		font-weight: 500;
+		font-variant-numeric: tabular-nums;
+	}
+
+	.row-arrow {
+		font-size: 0.88rem;
+		color: #c0c8d0;
+		transition: color 0.15s;
+	}
+
+	.project-row:hover .row-arrow {
+		color: #0a2540;
+	}
+
+	/* ===== FOOTER ===== */
+	.corp-footer {
 		display: flex;
 		justify-content: space-between;
-		font-size: 0.75rem;
-		font-weight: 900;
+		align-items: center;
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 32px 48px 40px;
+		border-top: 1px solid #e6e9ed;
+		margin-top: 48px;
 	}
 
-	/* Responsive */
+	.footer-copy,
+	.footer-meta {
+		font-size: 0.78rem;
+		color: #8898a8;
+		font-weight: 400;
+	}
+
+	/* ===== RESPONSIVE ===== */
 	@media (max-width: 900px) {
-		.main-header {
-			grid-template-columns: 1fr;
-			gap: 1.5rem;
+		.corp-nav {
+			padding: 14px 24px;
 		}
-		.description {
-			text-align: left;
-		}
-		.project-grid {
-			grid-template-columns: 1fr;
-		}
-	}
 
-	@media (max-width: 600px) {
-		.archival-title {
-			font-size: 2.5rem;
+		.corp-hero {
+			padding: 40px 24px 28px;
 		}
-		.footer-content {
+
+		.hero-title {
+			font-size: 2rem;
+		}
+
+		.table-header {
+			display: none;
+		}
+
+		.project-list {
+			padding: 0 24px;
+		}
+
+		.project-row {
+			grid-template-columns: 1fr;
+			gap: 8px;
+			padding: 16px 0;
+		}
+
+		.project-row:hover {
+			margin: 0 -12px;
+			padding: 16px 12px;
+		}
+
+		.row-category,
+		.row-stack,
+		.row-year,
+		.row-arrow {
+			display: none;
+		}
+
+		.corp-footer {
+			padding: 24px 24px 32px;
 			flex-direction: column;
-			gap: 0.5rem;
+			gap: 4px;
+			align-items: flex-start;
 		}
 	}
 </style>

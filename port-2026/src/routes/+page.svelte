@@ -4,8 +4,10 @@
 	import { browser } from '$app/environment';
 	import gsap from 'gsap';
 	import './console.css';
+	import './console-theme-alt.css';
 	import Paper from '../lib/components/Paper.svelte';
 	import { BREAKPOINTS } from '$lib/utils/viewport.js';
+	import { themeActive, styleActive, toggleTheme, toggleStyle } from '$lib/stores/theme.js';
 
 	let selectedButton: string | null = null;
 	let lineOneEl: HTMLElement | null = null;
@@ -182,7 +184,7 @@
 
 <main class="stage">
 	<!-- Desktop Console + Printer UI -->
-		<section class="console-container">
+		<section class="console-container" class:theme-alt={$themeActive}>
 			<!-- Console Top Cover -->
 			<div class="console-cover">
 				<div class="cover-ridge"></div>
@@ -199,8 +201,20 @@
 						<div class="console-top">
 							<div class="top-title">CONTROL PANEL</div>
 							<div class="top-strip">
-								<span></span>
-								<span></span>
+								<button
+									class="strip-toggle"
+									class:active={$themeActive}
+									onclick={toggleTheme}
+									aria-label="Toggle colour theme"
+									type="button"
+								><span class="toggle-label">THEME</span></button>
+								<button
+									class="strip-toggle strip-toggle-alt"
+									class:active={$styleActive}
+									onclick={toggleStyle}
+									aria-label="Toggle layout style"
+									type="button"
+								><span class="toggle-label">STYLE</span></button>
 							</div>
 						</div>
 

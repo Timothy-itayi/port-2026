@@ -217,6 +217,91 @@ export const projects: Project[] = [
 		githubUrl: 'https://github.com/Timothy-itayi/Waitless'
 	},
 	{
+		slug: 'stacks',
+		title: 'Stacks',
+		author: 'Timothy Itayi',
+		image: '/stacks-logo.png',
+		description: 'A physics-driven block-stacking game built with Svelte and PixiJS — a greenfield initiative exploring real-time collision detection, 3D asset integration, and custom debugging instrumentation.',
+		category: 'personal',
+		year: '2025',
+		techStack: ['Svelte', 'PixiJS', 'TypeScript', 'JavaScript'],
+		content: `
+			<p>Stacks was conceived as a strategic R&D initiative to evaluate Svelte's viability as a game development framework while simultaneously upskilling in real-time physics simulation. The original scope considered a Flappy Bird derivative, but a rapid feasibility assessment determined that a block-stacking mechanic with destructible terrain would deliver greater technical ROI and a more compelling proof-of-concept for the target competencies.</p>
+			<h3>Technical Discovery</h3>
+			<p>This project represented the inaugural engagement with Svelte as a framework — a deliberate technology bet to expand the front-end toolkit beyond React and Next.js. PixiJS was selected as the rendering engine to operationalise 3D-style assets within a 2D game loop, providing hardware-accelerated WebGL performance without the overhead of a full 3D engine. The integration layer between Svelte's reactive state model and PixiJS's imperative render pipeline required non-trivial architectural decisions around data flow and frame synchronisation.</p>
+			<h3>Collision Physics Deep Dive</h3>
+			<p>The core technical deliverable was a ground-up implementation of collision detection mechanics. Rather than consuming a black-box physics library, the decision was made to build the collision system from first principles — bounding box calculations, overlap resolution, and floor coverage computation. To support iterative development and performance analysis, a custom real-time debugger was instrumented directly into the game, surfacing collision state, crate settlement status, physics activity flags, and floor coverage percentages in an overlay panel.</p>
+			<h3>Game Mechanics</h3>
+			<p>Players interact with a wave-based system where crates drop onto a platform. Dirt and grass-topped blocks are destructible via click events, explosive blocks trigger area-of-effect clearance of adjacent blocks, and floor space utilisation is tracked as a core KPI. The scoring model rewards efficient space management across escalating wave difficulty.</p>
+			<h3>Outcomes</h3>
+			<p>The initiative successfully validated Svelte as a viable framework for interactive, real-time applications beyond traditional web UIs. The custom collision debugger proved to be the highest-value deliverable — transforming an opaque physics system into a transparent, inspectable pipeline. Key takeaways around frame-rate-independent physics, state synchronisation patterns, and WebGL rendering constraints directly informed subsequent game development efforts.</p>
+		`,
+		liveSiteUrl: 'https://stacks-blond.vercel.app/'
+	},
+	{
+		slug: 'spincycle',
+		title: 'SpinCycle',
+		author: 'Timothy Itayi',
+		image: '/slot.png',
+		description: 'A modern slot machine game built with Svelte 5, TypeScript, and GSAP — a case study in simplifying over-engineered state management into a clean, array-based architecture.',
+		category: 'personal',
+		year: '2025',
+		techStack: ['Svelte 5', 'TypeScript', 'GSAP', 'Vitest'],
+		content: `
+			<p>SpinCycle is a slot machine game that started as a straightforward build — three reels, some symbols, a spin button — and quickly devolved into a state management nightmare. The project became less about the game and more about recognising when architectural complexity is the problem, not the solution.</p>
+			<h3>The Over-Engineering Trap</h3>
+			<p>The initial approach looked clean on paper: a central game store managing reel states, individual reel components handling animations, and a game loop coordinating spin timing. In practice, it produced phantom spins — second spins firing without user input — caused by race conditions between animation triggers and state updates scattered across too many files.</p>
+			<h3>The Five-Minute Break</h3>
+			<p>After hours of debugging, stepping away from the code reset the thinking entirely. The core question became: what does the game actually need to track during a spin? The answer was simple — which four symbols are currently visible on each reel, and how they change over time. Everything else was unnecessary complexity.</p>
+			<h3>Array-Based Solution</h3>
+			<p>The rebuild pre-allocates 100 sets of randomised symbols (2000 total per reel), uses index math to determine visibility, and lets GSAP handle animation while arrays provide the data. This eliminated the phantom spin bug, made debugging trivial, and reduced component complexity to something a single developer can reason about. 65+ tests cover game logic, state management, and configuration validation.</p>
+		`,
+		liveSiteUrl: 'https://slot-alpha.vercel.app/',
+		githubUrl: 'https://github.com/Timothy-itayi/spincycle'
+	},
+	{
+		slug: 'hashtable-visualiser',
+		title: 'HashTable Visualiser',
+		author: 'Timothy Itayi',
+		image: '/hashtable-icon.png',
+		description: 'An interactive teaching tool that visualises how hash tables work internally — supporting both simple value storage and key-value pair operations with insert, delete, and search.',
+		category: 'web-app',
+		year: '2025',
+		techStack: ['React', 'TypeScript', 'CSS'],
+		content: `
+			<p>HashTable Visualiser was built to demystify one of the most fundamental data structures in computer science. The tool provides a visual, step-by-step representation of how hash tables compute indices, handle collisions, and manage insertions, deletions, and lookups — operations that are typically invisible behind language abstractions like JavaScript objects or Python dictionaries.</p>
+			<h3>Two Modes</h3>
+			<p>The visualiser supports two distinct hash table types. The Simple Hash Table stores single values (strings) at hashed indices — functionally similar to a basic array with computed positions. The Key-Value Hash Table stores pairs, where the key is hashed to determine the storage location, mirroring real-world implementations. Users can switch between modes and adjust table sizes (5, 7, 11, 13) to observe how capacity affects distribution and collision frequency.</p>
+			<h3>Operations</h3>
+			<p>Three core operations are visualised: Insert adds a value or key-value pair at its computed hash index, Delete removes an entry by recomputing its position, and Search locates a value by walking the same hash path. Each operation animates the index computation and highlights the affected bucket, making the relationship between hash function output and storage location explicit.</p>
+			<h3>Intent</h3>
+			<p>This is a teaching tool, not a production hash table. Real implementations use far more sophisticated hashing algorithms, dynamic resizing, and collision resolution strategies. The goal here is conceptual clarity — giving learners an intuitive mental model of what happens under the hood when they write object keys or dictionary lookups.</p>
+		`,
+		liveSiteUrl: 'https://hashtable-visualiser.vercel.app/'
+	},
+	{
+		slug: 'grandprix-history',
+		title: 'Grand Prix History',
+		author: 'Timothy Itayi',
+		image: '/grand-prix-history-logo.png',
+		description: 'First-generation Formula 1 data platform — a full-stack initiative leveraging multiple third-party API integrations to deliver real-time motorsport intelligence.',
+		category: 'web-app',
+		year: '2023',
+		techStack: ['React', 'Node.js', 'Python', 'Jinja', 'Flowbite', 'Material UI'],
+		content: `
+			<p>Grand Prix History represents the initial go-to-market execution of a Formula 1 data aggregation platform. The project was scoped, architected, and delivered within a one-week sprint cycle — from stakeholder alignment (myself) through to production deployment. This initiative served as the foundational proof-of-concept that would later inform the strategic direction of Formula1 Heritage.</p>
+			<h3>Discovery & Requirements Gathering</h3>
+			<p>The initial ideation phase drew inspiration from P10, a Formula 1 fantasy league platform enabling users to predict DNF outcomes and P10 finishes. Preliminary API due diligence was conducted against the OpenF1 API — an open-source data provider offering real-time telemetry, radio transcripts, and standings data. Following technical feasibility analysis, the decision was made to pivot to the HyperRace API (sourced via RapidAPI marketplace) due to superior data accessibility and reduced integration overhead.</p>
+			<h3>Technical Execution</h3>
+			<p>The backend was stood up on Node.js with server-side endpoints orchestrating data retrieval from HyperRace API. The OpenF1 API was retained as a supplementary data source for driver-level detail enrichment. Frontend delivery leveraged React with component-driven architecture, integrated via an API client layer to maintain separation of concerns between data fetching and presentation logic.</p>
+			<h3>User Experience Enhancements</h3>
+			<p>The Flowbite Carousel library was deployed across the Grand Prix and Iconic Cars modules to deliver responsive, high-fidelity image carousels with configurable transition parameters. The Material UI Progress Bar was integrated into the timeline feature, synchronised with audio playback state to provide real-time visual progress indicators — enabling users to track narrative progression against the audio content timeline.</p>
+			<h3>Business Outcomes</h3>
+			<p>The platform was successfully deployed within the committed timeframe, validating the feasibility of multi-API integration patterns for motorsport data delivery. Key learnings around API selection criteria, backend orchestration patterns, and frontend library evaluation directly informed the subsequent architectural decisions in the Formula1 Heritage rebuild.</p>
+		`,
+		liveSiteUrl: 'https://grand-prix-history.vercel.app/'
+	},
+	{
 		slug: 'soundscape',
 		title: 'Soundscape',
 		author: 'Timothy Itayi',

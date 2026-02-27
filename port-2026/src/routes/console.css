@@ -197,45 +197,94 @@ body {
 
 .top-strip {
 	display: flex;
-	gap: 10px;
+	gap: 12px;
+	align-items: center;
 }
 
-.top-strip span {
+.strip-toggle {
 	position: relative;
-	display: block;
-	width: 65px;
-	height: 8px;
-	border-radius: 999px;
-	background: linear-gradient(90deg, #ffdbcf, #fff0ea, #ffdbcf);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 72px;
+	height: 24px;
+	border-radius: 12px;
+	border: none;
+	padding: 0;
+	cursor: pointer;
+	background: linear-gradient(180deg, #5a4a45, #3e3230);
 	box-shadow:
-		0 0 20px rgba(255, 219, 207, 0.5),
-		0 0 40px rgba(255, 219, 207, 0.25),
+		0 3px 8px rgba(0, 0, 0, 0.5),
+		inset 0 1px 0 rgba(255, 255, 255, 0.12),
+		inset 0 -1px 0 rgba(0, 0, 0, 0.3);
+	transition: all 0.3s ease;
+}
+
+.strip-toggle.active {
+	background: linear-gradient(180deg, #ffdbcf, #f0c8b8);
+	box-shadow:
+		0 0 16px rgba(255, 219, 207, 0.5),
+		0 0 32px rgba(255, 219, 207, 0.2),
 		0 3px 8px rgba(0, 0, 0, 0.4),
 		inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.top-strip span:nth-child(2) {
-	background: linear-gradient(90deg, #c45a5a, #e87878, #c45a5a);
+.strip-toggle-alt {
+	background: linear-gradient(180deg, #4a3535, #352525);
+}
+
+.strip-toggle-alt.active {
+	background: linear-gradient(180deg, #e87878, #c45a5a);
 	box-shadow:
-		0 0 20px rgba(196, 90, 90, 0.6),
-		0 0 40px rgba(196, 90, 90, 0.3),
+		0 0 16px rgba(196, 90, 90, 0.5),
+		0 0 32px rgba(196, 90, 90, 0.2),
 		0 3px 8px rgba(0, 0, 0, 0.4),
 		inset 0 1px 0 rgba(255, 255, 255, 0.5);
 }
 
-.top-strip span::before {
-	content: '';
-	position: absolute;
-	inset: -4px;
-	border-radius: 999px;
-	background: linear-gradient(165deg, rgba(255, 200, 180, 0.1), rgba(80, 40, 40, 0.2));
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	z-index: -1;
+.toggle-label {
+	font-size: 0.5rem;
+	font-weight: 800;
+	letter-spacing: 0.14em;
+	color: rgba(255, 255, 255, 0.3);
+	font-family: 'Courier New', monospace;
+	text-transform: uppercase;
+	transition: color 0.3s ease;
+	pointer-events: none;
+	user-select: none;
 }
 
-.top-strip span:nth-child(2)::before {
-	background: linear-gradient(165deg, rgba(200, 80, 80, 0.12), rgba(80, 30, 30, 0.25));
+.strip-toggle.active .toggle-label {
+	color: rgba(100, 50, 20, 0.7);
+}
+
+.strip-toggle-alt.active .toggle-label {
+	color: rgba(60, 15, 15, 0.6);
+}
+
+.strip-toggle::before {
+	content: '';
+	position: absolute;
+	inset: -3px;
+	border-radius: 14px;
+	background: linear-gradient(165deg, rgba(255, 200, 180, 0.04), rgba(80, 40, 40, 0.15));
+	border: 1px solid rgba(255, 255, 255, 0.06);
+	z-index: -1;
+	transition: all 0.3s ease;
+}
+
+.strip-toggle.active::before {
+	background: linear-gradient(165deg, rgba(255, 200, 180, 0.1), rgba(80, 40, 40, 0.15));
+	border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.strip-toggle-alt.active::before {
+	background: linear-gradient(165deg, rgba(200, 80, 80, 0.1), rgba(80, 30, 30, 0.2));
 	border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.strip-toggle:active {
+	transform: scale(0.96);
 }
 
 /* ========== CONSOLE BODY ========== */
