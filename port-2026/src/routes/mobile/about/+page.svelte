@@ -54,8 +54,8 @@
 			<span class="data-value highlight">TIMOTHY ITAYI</span>
 		</div>
 		<div class="data-row">
-			<span class="data-label">CODENAME</span>
-			<span class="data-value italic">"THE ENGINEER"</span>
+			<span class="data-label">ALIAS</span>
+			<span class="data-value">"TimTam"</span>
 		</div>
 		<div class="data-row">
 			<span class="data-label">CLASS</span>
@@ -71,7 +71,7 @@
 		</div>
 		<div class="data-row">
 			<span class="data-label">STATUS</span>
-			<span class="data-value status-active">ACTIVELY DEBUGGING</span>
+			<span class="data-value status-active">ACTIVELY LEARNING...</span>
 		</div>
 	</div>
 
@@ -92,15 +92,15 @@
 			<div class="intel-title">KNOWN STACK</div>
 			<div class="intel-tags">
 				<span class="tag">TypeScript</span>
-				<span class="tag">Svelte</span>
-				<span class="tag">Go</span>
-				<span class="tag">Rust</span>
-				<span class="tag">Python</span>
+				<span class="tag">React</span>
+				<span class="tag">PostgreSQL</span>
+				<span class="tag">Next.js</span>
+				<span class="tag">Node.js</span>
 			</div>
 		</div>
 		<div class="intel-box">
 			<div class="intel-title">INTERESTS</div>
-			<div class="intel-text">F1, endurance racing, UFC, boxing, books, tinkering</div>
+			<div class="intel-text">F1, Sim Racing, UFC, boxing, books, building/breaking/fixing things.</div>
 		</div>
 	</div>
 
@@ -108,8 +108,8 @@
 	<div class="bio-section dossier-section">
 		<div class="bio-label">KEYSTROKE ANALYSIS</div>
 		<div class="bio-keys">
-			<span class="key-combo">CTRL+C</span>
-			<span class="key-combo">CTRL+V</span>
+			<span class="key-combo">Google Search</span>
+		
 		</div>
 		<div class="bio-note">Primary productivity method. Suspicious proficiency.</div>
 	</div>

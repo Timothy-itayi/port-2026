@@ -98,7 +98,7 @@
 					<div class="data-row"><span class="data-label">CLASS</span><span class="data-value">SYSTEM ENGINEER / CREATIVE DEV</span></div>
 					<div class="data-row"><span class="data-label">LOCATION</span><span class="data-value">MELBOURNE, AU</span></div>
 					<div class="data-row"><span class="data-label">ORIGIN</span><span class="data-value">ZIMBABWE → NZ → AU</span></div>
-					<div class="data-row"><span class="data-label">STATUS</span><span class="data-value status-active">ACTIVELY DEBUGGING</span></div>
+					<div class="data-row"><span class="data-label">STATUS</span><span class="data-value status-active">ACTIVELY LEARNING...</span></div>
 				</div>
 
 				<div class="data-section wanted-section">
@@ -128,11 +128,10 @@
 				<div class="intel-title">KNOWN STACK</div>
 				<div class="intel-content tags">
 					<span class="tag">TypeScript</span>
-					<span class="tag">Svelte</span>
-					<span class="tag">Go</span>
-					<span class="tag">Python</span>
-					<span class="tag">Rust</span>
+					<span class="tag">REACT</span>
 					<span class="tag">PostgreSQL</span>
+					<span class="tag">Next.js</span>
+					<span class="tag">Node.js</span>
 				</div>
 			</div>
 			<div class="intel-box">
@@ -155,15 +154,10 @@
 				<div class="bio-label">KEYSTROKE ANALYSIS</div>
 				<div class="key-combo">
 					<div class="key-group">
-						<span class="key">CTRL</span><span class="key-plus">+</span><span class="key">C</span>
-						<div class="print-mini"></div>
-					</div>
-					<div class="key-group">
-						<span class="key">CTRL</span><span class="key-plus">+</span><span class="key">V</span>
-						<div class="print-mini"></div>
+						<span class="key">Google Search</span><span class="key-plus"></span>
 					</div>
 				</div>
-				<div class="bio-note">Primary method of productivity. Suspicious proficiency.</div>
+				<div class="bio-note">Primary productivity method. Suspicious proficiency.</div>
 			</div>
 		</footer>
 

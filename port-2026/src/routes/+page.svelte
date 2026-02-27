@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { onMount, tick } from 'svelte';
+	import { onMount, onDestroy, tick } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { browser } from '$app/environment';
 	import gsap from 'gsap';
 	import './console.css';
 	import Paper from '../lib/components/Paper.svelte';
-	import MobilePanel from '../lib/components/MobilePanel.svelte';
-	import { showMobileUI } from '$lib/utils/viewport';
+	import { BREAKPOINTS } from '$lib/utils/viewport.js';
 
 	let selectedButton: string | null = null;
 	let lineOneEl: HTMLElement | null = null;
@@ -16,6 +17,14 @@
 	let printContent = '';
 	let paperComponent: Paper;
 	let projectPrintSound: HTMLAudioElement | null = null;
+
+	const checkViewportAndRedirect = () => {
+		if (browser && window.innerWidth < BREAKPOINTS.tablet) {
+			goto('/mobile', { replaceState: true });
+		}
+	};
+
+	let resizeHandler: () => void;
 
 	const typeLine = (element: HTMLElement | null, text: string, duration = 1.6) => {
 		if (!element) return;
@@ -127,6 +136,18 @@
 	};
 
 	onMount(() => {
+		checkViewportAndRedirect();
+
+		let resizeTimer: ReturnType<typeof setTimeout>;
+		resizeHandler = () => {
+			clearTimeout(resizeTimer);
+			resizeTimer = setTimeout(checkViewportAndRedirect, 100);
+		};
+		window.addEventListener('resize', resizeHandler);
+		window.addEventListener('orientationchange', () => {
+			setTimeout(checkViewportAndRedirect, 150);
+		});
+
 		lineOneEl = document.querySelector<HTMLElement>('[data-terminal-line="1"]');
 		lineTwoEl = document.querySelector<HTMLElement>('[data-terminal-line="2"]');
 		promptEl = document.querySelector<HTMLElement>('[data-terminal-line="3"]');
@@ -134,7 +155,7 @@
 
 		// Initialize audio for project print sound
 		projectPrintSound = new Audio('/sounds/project-button-sound.mp3');
-		projectPrintSound.volume = 0.5; // Adjust volume as needed
+		projectPrintSound.volume = 0.5;
 
 		typeLine(lineOneEl, 'SYSTEM READY', 1.0);
 		gsap.delayedCall(1.3, () => typeLine(lineTwoEl, 'PORTFOLIO LOADED', 1.4));
@@ -147,6 +168,12 @@
 			visorEl?.removeEventListener('click', handleVisorClick);
 		};
 	});
+
+	onDestroy(() => {
+		if (browser && resizeHandler) {
+			window.removeEventListener('resize', resizeHandler);
+		}
+	});
 </script>
 
 <svelte:head>
@@ -154,13 +181,7 @@
 </svelte:head>
 
 <main class="stage">
-	{#if $showMobileUI}
-		<!-- Mobile Handheld Device UI -->
-		<section class="mobile-container">
-			<MobilePanel />
-		</section>
-	{:else}
-		<!-- Desktop Console + Printer UI -->
+	<!-- Desktop Console + Printer UI -->
 		<section class="console-container">
 			<!-- Console Top Cover -->
 			<div class="console-cover">
@@ -269,5 +290,4 @@
 				</div>
 			</div>
 		</section>
-	{/if}
 </main>

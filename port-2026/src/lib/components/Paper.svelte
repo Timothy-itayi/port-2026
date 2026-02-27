@@ -182,8 +182,8 @@
 			onComplete: () => {
 				// Trigger resume download
 				const link = document.createElement('a');
-				link.href = '/Software-Engineer_CV.pdf';
-				link.download = 'Software-Engineer_CV.pdf';
+				link.href = '/Resume_Timothy_Itayi.pdf';
+				link.download = 'Resume_Timothy_Itayi.pdf';
 				document.body.appendChild(link);
 				link.click();
 				document.body.removeChild(link);

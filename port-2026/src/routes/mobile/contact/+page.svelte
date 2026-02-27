@@ -6,7 +6,7 @@
 	let messageInput: HTMLTextAreaElement;
 
 	const contactMethods = [
-		{ icon: '✉', label: 'EMAIL', value: 'hello@timothyitayi.com', href: 'mailto:hello@timothyitayi.com' },
+		{ icon: '✉', label: 'EMAIL', value: 'hello@timothyitayi_icloud.com', href: 'mailto:hello@timothyitayi_icloud.com' },
 		{ icon: '◉', label: 'GITHUB', value: '@timothyitayi', href: 'https://github.com/timothyitayi' },
 		{ icon: '◈', label: 'LINKEDIN', value: '/in/timothyitayi', href: 'https://linkedin.com/in/timothyitayi' }
 	];
