@@ -436,7 +436,7 @@
 			}
 		} else {
 			// Standard cards: Start from -500, move to -210 (safely hidden)
-			tl.to(paperRef, { y: -210, duration: 0.01 });
+			tl.to(paperRef, { y: -410, duration: 0.5, ease: 'power2.out' });
 
 			// Initial peek for standard papers too to avoid "revealing too much"
 			tl.to(paperRef, {
@@ -589,7 +589,7 @@
 						<span>Category</span>
 						<span>Year</span>
 					</div>
-					{#each projects.slice(0, 4) as project}
+					{#each projects.slice(0, 6) as project}
 						<div class="cp-row">
 							<div class="cp-row-name">
 								<div class="cp-row-icon">

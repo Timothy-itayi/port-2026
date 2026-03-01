@@ -63,7 +63,7 @@
 		</div>
 		<div class="nav-right">
 			<a href="/" class="nav-item">Home</a>
-			<a href="/clones" class="nav-item">Clones</a>
+	
 			<a href="/contact" class="nav-item nav-item-cta">Contact</a>
 		</div>
 	</nav>
@@ -110,7 +110,7 @@
 
 	<footer class="corp-footer">
 		<span class="footer-copy">© 2026 Timothy Itayi</span>
-		<span class="footer-meta">Last updated Jan 2026</span>
+		<span class="footer-meta">Last updated Feb 2026</span>
 	</footer>
 </div>
 
