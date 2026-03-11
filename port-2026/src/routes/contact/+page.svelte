@@ -52,7 +52,7 @@
 		<button onclick={() => {
 			const link = document.createElement('a');
 			link.href = '/Resume_Timothy_itayi.pdf';
-			link.download = 'Resume_Timothy_Itayi.pdf';
+			link.download = 'Resume_Timothy_itayi.pdf';
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
