@@ -51,7 +51,7 @@
 		<p>Download my resume for hiring managers.</p>
 		<button onclick={() => {
 			const link = document.createElement('a');
-			link.href = '/Resume_Timothy_Itayi.pdf';
+			link.href = '/Resume_Timothy_itayi.pdf';
 			link.download = 'Resume_Timothy_Itayi.pdf';
 			document.body.appendChild(link);
 			link.click();
