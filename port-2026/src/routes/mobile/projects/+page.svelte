@@ -81,7 +81,7 @@
 				{/if}
 			</div>
 			<p class="hero-desc">{featured.description}</p>
-			<span class="hero-status">Currently in development</span>
+			<span class="hero-status">Currently under development</span>
 		</div>
 	</button>
 
