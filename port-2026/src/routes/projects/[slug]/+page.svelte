@@ -11,6 +11,7 @@
 	const { project } = data;
 
 	let resizeHandler: (() => void) | null = null;
+	let videoLoaded = false;
 
 	const checkViewportAndRedirect = () => {
 		if (browser && window.innerWidth < BREAKPOINTS.tablet) {
@@ -68,7 +69,7 @@
 		<div class="nav-right">
 			<a href="/" class="nav-item">Home</a>
 			<a href="/projects" class="nav-item">Projects</a>
-			<a href="/contact" class="nav-item nav-item-cta">Contact</a>
+			<a href="/Resume_Timothy_itayi.pdf" download="Resume_Timothy_itayi.pdf" class="nav-item nav-item-cta">Resume</a>
 		</div>
 	</nav>
 
@@ -88,6 +89,10 @@
 					loop
 					playsinline
 					disablepictureinpicture
+					preload="auto"
+					poster={project.image}
+					class:loaded={videoLoaded}
+					onloadeddata={() => (videoLoaded = true)}
 				></video>
 			</div>
 		{/if}
@@ -299,6 +304,12 @@
 		height: 100%;
 		object-fit: cover;
 		display: block;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.hero-video-banner video.loaded {
+		opacity: 1;
 	}
 
 	.hero-video-banner.portrait video {

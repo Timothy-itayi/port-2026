@@ -81,6 +81,7 @@
 				{/if}
 			</div>
 			<p class="hero-desc">{featured.description}</p>
+			<span class="hero-status">Currently in development</span>
 		</div>
 	</button>
 
@@ -222,6 +223,16 @@
 		line-clamp: 2;
 		-webkit-box-orient: vertical;
 		overflow: hidden;
+	}
+
+	.hero-status {
+		display: inline-block;
+		font-size: 0.7rem;
+		font-weight: 600;
+		font-style: italic;
+		color: #ccc;
+		margin-top: 6px;
+		letter-spacing: 0.02em;
 	}
 
 	/* ===== ROW SECTIONS ===== */

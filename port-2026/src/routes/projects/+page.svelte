@@ -67,7 +67,7 @@
 		<div class="nav-right">
 			<a href="/" class="nav-item">Home</a>
 	
-			<a href="/contact" class="nav-item nav-item-cta">Contact</a>
+			<a href="/Resume_Timothy_itayi.pdf" download="Resume_Timothy_itayi.pdf" class="nav-item nav-item-cta">Resume</a>
 		</div>
 	</nav>
 

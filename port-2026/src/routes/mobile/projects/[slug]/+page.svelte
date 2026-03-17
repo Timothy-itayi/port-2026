@@ -5,6 +5,7 @@
 
 	export let data: PageData;
 	const { project } = data;
+	let videoLoaded = false;
 </script>
 
 <div class="gtv-detail">
@@ -19,6 +20,10 @@
 					loop
 					playsinline
 					disablepictureinpicture
+					preload="auto"
+					poster={project.image}
+					class:loaded={videoLoaded}
+					onloadeddata={() => (videoLoaded = true)}
 				></video>
 			{:else}
 				<img src={project.image} alt={project.title} />
@@ -127,6 +132,15 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+
+	.hero-media video {
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.hero-media video.loaded {
+		opacity: 1;
 	}
 
 	.hero-media.portrait-preview video {

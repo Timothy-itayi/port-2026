@@ -31,19 +31,31 @@ export const projects: Project[] = [
 		subtitle: 'Surveillance Simulation Game',
 		author: 'Timothy Itayi',
 		image: '/projects/amber-app-icon.png',
-		description: 'A single-player mobile game inspired by Papers Please',
+		description: 'A grounded surveillance simulation where human decisions have city-wide consequences. Inspired by Papers Please, built natively for iOS.',
 		category: 'mobile-app',
 		client: 'Amber Ltd',
 		year: '2026',
 		techStack: ['ReactNative', 'TypeScript', 'GSAP'],
 		content: `
-			<p>Amber is a grounded surveillance simulation where human decisions have city-wide consequences..</p>
-			<h3>Inspiration</h3>
-			<p>I was inspired by the concept of Papers Please, where the player is tasked with managing a border control checkpoint and making decisions that have far-reaching consequences.</p>
-			<h3>The Challenge</h3>
-			<p>Creating a game purley for the IOS device but with a twist. I was not going to procedurally create NPC's like in papers please and was going to write my own story and characters.</p>
-		
+			<p>AMBER places you in the role of an operator at the Main Transit Hub of a fictional, divided city. Stripped of broad sci-fi tropes, this is a game about humans dealing with human problems: smuggling, warrants, and civil unrest. The tension stems from bureaucratic indifference and the ripple effects of your split-second choices.</p>
+
+			<h3>Core Philosophy</h3>
+			<p>Streamlined Surveillance. The interface mimics a familiar utilitarian handheld device, focusing on clean data, high-stakes decisions, and zero hand-holding.</p>
+
+			<h3>Gameplay Loop</h3>
+			<p>Review Documents, Run Database Checks, Decide (Approve/Deny), Live with the Consequences.</p>
+
+			<h3>Features</h3>
+			<ul>
+				<li><strong>The Work Surface:</strong> Manually process subjects arriving from various City Districts by reviewing their ID and Transit Tickets.</li>
+				<li><strong>Active Investigations:</strong> Query the central police database for outstanding warrants or verify travel history to catch discrepancies.</li>
+				<li><strong>The Forced Decision:</strong> No hand-holding. Skip the background checks if you want, but you own the consequences of a blind approval.</li>
+				<li><strong>The Node Map:</strong> A visual causality graph tracking your narrative branching. Tap a subject node to view the Trigger Link and see exactly how your decision led to a specific city-wide event.</li>
+				<li><strong>Live News Alerts:</strong> Major consequences from your decisions appear immediately as scrolling AMBER News Alerts on your UI.</li>
+				<li><strong>Utilitarian UI:</strong> A grounded, sticker-bombed handheld interface featuring a slide-to-start unlock mechanism.</li>
+			</ul>
 		`,
+		githubUrl: 'https://github.com/Timothy-itayi/blade-runner-ios',
 		previewVideo: '/preview-videos/amber-demo.mov',
 		portraitPreview: true
 	},
