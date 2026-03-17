@@ -364,7 +364,7 @@ export const projects: Project[] = [
 		title: 'Blog with Sanity',
 		subtitle: 'Developer Blog Platform',
 		author: 'Timothy Itayi',
-		image: '/projects/soundscape-logo.png',
+		image: '/projects/blog.png',
 		description: 'A developer blog built with Next.js and Sanity CMS, covering coding, game design, and web development projects and tutorials.',
 		category: 'web-app',
 		year: '2023',
