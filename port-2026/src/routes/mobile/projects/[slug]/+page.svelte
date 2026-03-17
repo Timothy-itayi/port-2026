@@ -10,8 +10,19 @@
 <div class="gtv-detail">
 	<!-- Full-bleed Hero -->
 	<div class="detail-hero">
-		<div class="hero-image">
-			<img src={project.image} alt={project.title} />
+		<div class="hero-media" class:portrait-preview={project.portraitPreview}>
+			{#if project.previewVideo}
+				<video
+					src={project.previewVideo}
+					autoplay
+					muted
+					loop
+					playsinline
+					disablepictureinpicture
+				></video>
+			{:else}
+				<img src={project.image} alt={project.title} />
+			{/if}
 		</div>
 		<div class="hero-gradient"></div>
 
@@ -23,6 +34,7 @@
 		<!-- Title overlaid at bottom -->
 		<div class="hero-info">
 			<h1 class="detail-title">{project.title}</h1>
+			<p class="detail-subtitle">{project.subtitle}</p>
 			<div class="detail-meta">
 				<span class="meta-year">{project.year}</span>
 				<span class="meta-sep">·</span>
@@ -101,19 +113,24 @@
 		overflow: hidden;
 	}
 
-	.hero-image {
+	.hero-media {
 		position: absolute;
 		inset: 0;
-		background: #1a1a1a;
+		background: #0a0a0a;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 	}
 
-	.hero-image img {
+	.hero-media img,
+	.hero-media video {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+
+	.hero-media.portrait-preview video {
+		object-fit: contain;
 	}
 
 	.hero-gradient {
@@ -172,6 +189,15 @@
 		margin: 0 0 8px;
 		color: #fff;
 		line-height: 1.1;
+	}
+
+	.detail-subtitle {
+		font-size: 0.75rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: rgba(255, 255, 255, 0.55);
+		margin: 0 0 4px;
 	}
 
 	.detail-meta {

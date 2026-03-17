@@ -89,9 +89,9 @@
 
 	button {
 		padding: 0.8rem 1.5rem;
-		background: #1a1a1a;
-		color: #ffffff;
-		border: none;
+		background: #ffffff;
+		color: #1a1a1a;
+		border: 1px solid #1a1a1a;
 		border-radius: 4px;
 		cursor: pointer;
 		font-family: monospace;

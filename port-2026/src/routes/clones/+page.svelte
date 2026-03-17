@@ -84,9 +84,6 @@
 		<!-- Footer -->
 		<footer class="archive-footer">
 			<div class="footer-content">
-				<div class="footer-left">
-					© 2026 TIMOTHY ITAYI / SYSTEM ENGINEER
-				</div>
 				<div class="footer-right">
 					LAST UPDATED: JAN 24 2026 [EST]
 				</div>

@@ -135,7 +135,7 @@
 
 	<!-- Footer -->
 	<div class="panel-footer">
-		<span class="footer-text">TIMOTHY ITAYI © 2026</span>
+		<span class="footer-text">TIMOTHY ITAYI</span>
 		<div class="footer-indicators">
 			<span class="footer-dot"></span>
 			<span class="footer-dot"></span>

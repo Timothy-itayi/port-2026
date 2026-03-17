@@ -51,19 +51,6 @@
 		inset 0 1px 0 rgba(255, 255, 255, 0.8);
 }
 
-.theme-alt .strip-toggle-alt {
-	background: linear-gradient(90deg, #2a3545, #3a4555, #2a3545);
-}
-
-.theme-alt .strip-toggle-alt.active {
-	background: linear-gradient(90deg, #f08080, #ff9090, #f08080);
-	box-shadow:
-		0 0 20px rgba(240, 128, 128, 0.5),
-		0 0 40px rgba(240, 128, 128, 0.25),
-		0 3px 8px rgba(0, 0, 0, 0.4),
-		inset 0 1px 0 rgba(255, 255, 255, 0.5);
-}
-
 /* Console Body */
 .theme-alt .console-body {
 	background: linear-gradient(165deg, rgba(30, 45, 65, 0.6), rgba(15, 25, 40, 0.75));

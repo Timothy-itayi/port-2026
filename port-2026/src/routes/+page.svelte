@@ -7,7 +7,7 @@
 	import './console-theme-alt.css';
 	import Paper from '../lib/components/Paper.svelte';
 	import { BREAKPOINTS } from '$lib/utils/viewport.js';
-	import { themeActive, styleActive, toggleTheme, toggleStyle } from '$lib/stores/theme.js';
+	import { themeActive, toggleTheme } from '$lib/stores/theme.js';
 
 	let selectedButton: string | null = null;
 	let lineOneEl: HTMLElement | null = null;
@@ -208,13 +208,6 @@
 									aria-label="Toggle colour theme"
 									type="button"
 								><span class="toggle-label">THEME</span></button>
-								<button
-									class="strip-toggle strip-toggle-alt"
-									class:active={$styleActive}
-									onclick={toggleStyle}
-									aria-label="Toggle layout style"
-									type="button"
-								><span class="toggle-label">STYLE</span></button>
 							</div>
 						</div>
 
@@ -234,7 +227,7 @@
 								</div>
 
 								<div class="button-row">
-									{#each ['PROJECTS', 'ABOUT', 'RESUME'] as label}
+									{#each ['ABOUT', 'PROJECTS', 'RESUME'] as label}
 										<div class="button-wrapper">
 											<button
 												class="tactile-button"

@@ -3,8 +3,11 @@
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import gsap from 'gsap';
-	import { projects, categoryLabels } from '$lib/data/projects.js';
+	import { categoryLabels, getProjectsByCategory } from '$lib/data/projects.js';
+	import type { ProjectCategory } from '$lib/data/projects.js';
 	import { BREAKPOINTS } from '$lib/utils/viewport.js';
+
+	const categories: ProjectCategory[] = ['mobile-app', 'web-app'];
 
 	let resizeHandler: (() => void) | null = null;
 
@@ -33,12 +36,12 @@
 			ease: 'power2.out'
 		});
 		tl.from(
-			'.project-row',
+			'.category-section',
 			{
 				opacity: 0,
 				y: 12,
 				duration: 0.4,
-				stagger: 0.06,
+				stagger: 0.1,
 				ease: 'power2.out'
 			},
 			'-=0.2'
@@ -76,40 +79,49 @@
 		</p>
 	</header>
 
-	<div class="table-header">
-		<span class="th-name">Project</span>
-		<span class="th-category">Category</span>
-		<span class="th-stack">Stack</span>
-		<span class="th-year">Year</span>
-		<span class="th-arrow"></span>
-	</div>
-
-	<main class="project-list">
-		{#each projects as project}
-			<a href="/projects/{project.slug}" class="project-row">
-				<div class="row-name">
-					<div class="row-icon">
-						<img src={project.image} alt={project.title} />
-					</div>
-					<div class="row-info">
-						<span class="row-title">{project.title}</span>
-						<span class="row-desc">{project.description}</span>
-					</div>
+	{#each categories as cat}
+		{@const catProjects = getProjectsByCategory(cat)}
+		{#if catProjects.length > 0}
+			<section class="category-section">
+				<div class="category-header">
+					<h2 class="category-title">{categoryLabels[cat]}</h2>
+					<span class="category-count">{catProjects.length}</span>
 				</div>
-				<span class="row-category">{categoryLabels[project.category]}</span>
-				<div class="row-stack">
-					{#each project.techStack.slice(0, 3) as tech}
-						<span class="stack-tag">{tech}</span>
+
+				<div class="table-header">
+					<span class="th-name">Project</span>
+					<span class="th-stack">Stack</span>
+					<span class="th-year">Year</span>
+					<span class="th-arrow"></span>
+				</div>
+
+				<div class="project-list">
+					{#each catProjects as project}
+						<a href="/projects/{project.slug}" class="project-row">
+							<div class="row-name">
+								<div class="row-icon">
+									<img src={project.image} alt={project.title} />
+								</div>
+								<div class="row-info">
+									<span class="row-title">{project.title}</span>
+									<span class="row-desc">{project.description}</span>
+								</div>
+							</div>
+							<div class="row-stack">
+								{#each project.techStack.slice(0, 3) as tech}
+									<span class="stack-tag">{tech}</span>
+								{/each}
+							</div>
+							<span class="row-year">{project.year}</span>
+							<span class="row-arrow">→</span>
+						</a>
 					{/each}
 				</div>
-				<span class="row-year">{project.year}</span>
-				<span class="row-arrow">→</span>
-			</a>
-		{/each}
-	</main>
+			</section>
+		{/if}
+	{/each}
 
 	<footer class="corp-footer">
-		<span class="footer-copy">© 2026 Timothy Itayi</span>
 		<span class="footer-meta">Last updated Feb 2026</span>
 	</footer>
 </div>
@@ -203,14 +215,47 @@
 		font-weight: 400;
 	}
 
+	/* ===== CATEGORY SECTIONS ===== */
+	.category-section {
+		max-width: 1120px;
+		margin: 0 auto;
+		padding: 0 48px;
+	}
+
+	.category-section + .category-section {
+		margin-top: 48px;
+	}
+
+	.category-header {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		padding: 28px 0 16px;
+	}
+
+	.category-title {
+		font-size: 1.1rem;
+		font-weight: 700;
+		color: #0a2540;
+		margin: 0;
+		letter-spacing: -0.01em;
+	}
+
+	.category-count {
+		font-size: 0.72rem;
+		font-weight: 600;
+		color: #8898a8;
+		background: #f0f2f5;
+		padding: 2px 8px;
+		border-radius: 10px;
+	}
+
 	/* ===== TABLE ===== */
 	.table-header {
 		display: grid;
-		grid-template-columns: 1fr 120px 200px 60px 32px;
+		grid-template-columns: 1fr 200px 60px 32px;
 		gap: 16px;
-		max-width: 1120px;
-		margin: 0 auto;
-		padding: 0 48px 10px;
+		padding: 0 0 10px;
 		border-bottom: 1px solid #e6e9ed;
 		align-items: center;
 	}
@@ -224,15 +269,9 @@
 	}
 
 	/* ===== PROJECT ROWS ===== */
-	.project-list {
-		max-width: 1120px;
-		margin: 0 auto;
-		padding: 0 48px;
-	}
-
 	.project-row {
 		display: grid;
-		grid-template-columns: 1fr 120px 200px 60px 32px;
+		grid-template-columns: 1fr 200px 60px 32px;
 		gap: 16px;
 		padding: 20px 0;
 		border-bottom: 1px solid #f0f2f5;
@@ -297,12 +336,6 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 		line-height: 1.4;
-	}
-
-	.row-category {
-		font-size: 0.8rem;
-		color: #546678;
-		font-weight: 500;
 	}
 
 	.row-stack {
@@ -370,12 +403,12 @@
 			font-size: 2rem;
 		}
 
-		.table-header {
-			display: none;
+		.category-section {
+			padding: 0 24px;
 		}
 
-		.project-list {
-			padding: 0 24px;
+		.table-header {
+			display: none;
 		}
 
 		.project-row {
@@ -389,7 +422,6 @@
 			padding: 16px 12px;
 		}
 
-		.row-category,
 		.row-stack,
 		.row-year,
 		.row-arrow {

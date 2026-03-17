@@ -1,270 +1,180 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { projects, categoryLabels, getProjectsByCategory, getFeaturedProject } from '$lib/data/projects.js';
-	import type { ProjectCategory } from '$lib/data/projects.js';
-
-	const featured = getFeaturedProject();
-	const categories: ProjectCategory[] = ['personal', 'web-app', 'mobile-app'];
 </script>
 
-<div class="gtv-home">
-	<!-- Featured Hero -->
-	<button class="hero" onclick={() => goto(`/mobile/projects/${featured.slug}`)}>
-		<div class="hero-image">
-			<img src={featured.image} alt={featured.title} />
+<div class="welcome-screen">
+	<div class="welcome-inner">
+		<div class="welcome-photo">
+			<img src="/about/about-image-1.jpeg" alt="Timothy Itayi" />
 		</div>
-		<div class="hero-gradient"></div>
-		<div class="hero-content">
-			<h1 class="hero-title">{featured.title}</h1>
-			<div class="hero-meta">
-				<span class="hero-year">{featured.year}</span>
-				<span class="hero-dot">·</span>
-				<span class="hero-category">{categoryLabels[featured.category]}</span>
-				{#if featured.client}
-					<span class="hero-dot">·</span>
-					<span class="hero-client">{featured.client}</span>
-				{/if}
-			</div>
-			<p class="hero-desc">{featured.description}</p>
+
+		<div class="welcome-intro">
+			<h1 class="welcome-name">Timothy Itayi</h1>
+			<p class="welcome-role">Full-Stack Developer</p>
+			<p class="welcome-location">Melbourne, Australia</p>
 		</div>
-	</button>
 
-	<!-- Category Rows -->
-	{#each categories as cat}
-		{@const catProjects = getProjectsByCategory(cat)}
-		{#if catProjects.length > 0}
-			<section class="row-section">
-				<div class="row-header">
-					<h2 class="row-title">{categoryLabels[cat]}</h2>
-					<button class="row-see-all" onclick={() => goto('/mobile/projects')}>See all</button>
-				</div>
-				<div class="row-scroll">
-					{#each catProjects as project}
-						<button class="row-card" onclick={() => goto(`/mobile/projects/${project.slug}`)}>
-							<div class="row-card-image">
-								<img src={project.image} alt={project.title} />
-							</div>
-							<div class="row-card-info">
-								<span class="row-card-title">{project.title}</span>
-								<span class="row-card-meta">{project.year}</span>
-							</div>
-						</button>
-					{/each}
-				</div>
-			</section>
-		{/if}
-	{/each}
+		<p class="welcome-pitch">
+			I build polished, performant interfaces for web and mobile.
+			Specialising in React, React Native, TypeScript, and Next.js,
+			with backend experience across Node.js, AWS, and PostgreSQL.
+		</p>
 
-	<!-- Footer -->
-	<footer class="gtv-footer">
-		<span>Timothy Itayi © 2026</span>
-	</footer>
+		<ul class="welcome-details">
+			<li><span class="detail-label">Focus</span> Frontend & mobile development</li>
+			<li><span class="detail-label">Stack</span> React, React Native, TypeScript, SvelteKit</li>
+			<li><span class="detail-label">Training</span> Dev Academy, Harvard CS50</li>
+		
+		</ul>
+
+		<div class="welcome-actions">
+			<button class="welcome-cta" onclick={() => goto('/mobile/projects')}>
+				View Projects
+			</button>
+			<a class="welcome-resume" href="/Resume_Timothy_Itayi.pdf" download="Resume_Timothy_Itayi.pdf">
+				Resume
+			</a>
+		</div>
+	</div>
 </div>
 
 <style>
-	.gtv-home {
+	.welcome-screen {
 		display: flex;
 		flex-direction: column;
-		gap: 28px;
-		padding-bottom: 24px;
-		background: #0a0a0a;
-		color: #e8e8e8;
-		font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-	}
-
-	/* ===== HERO ===== */
-	.hero {
-		position: relative;
-		width: 100%;
-		aspect-ratio: 16/10;
-		overflow: hidden;
-		border: none;
-		padding: 0;
-		cursor: pointer;
-		background: #1a1a1a;
-		display: block;
-		text-align: left;
-		font-family: inherit;
-	}
-
-	.hero-image {
-		position: absolute;
-		inset: 0;
-		display: flex;
 		align-items: center;
 		justify-content: center;
-		background: #1a1a1a;
+		min-height: 100%;
+		background: #0a0a0a;
+		color: #e8e8e8;
+		font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+		padding: 3rem 1.5rem;
 	}
 
-	.hero-image img {
+	.welcome-inner {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.5rem;
+		width: 100%;
+		max-width: 340px;
+	}
+
+	.welcome-photo {
+		width: 80px;
+		height: 80px;
+		border-radius: 50%;
+		overflow: hidden;
+		border: 2px solid rgba(255, 255, 255, 0.12);
+	}
+
+	.welcome-photo img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
 	}
 
-	.hero-gradient {
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(
-			to top,
-			#0a0a0a 0%,
-			rgba(10, 10, 10, 0.85) 30%,
-			rgba(10, 10, 10, 0.3) 60%,
-			transparent 100%
-		);
+	.welcome-intro {
+		text-align: center;
 	}
 
-	.hero-content {
-		position: absolute;
-		bottom: 0;
-		left: 0;
-		right: 0;
-		padding: 20px;
-	}
-
-	.hero-title {
-		font-size: 2rem;
+	.welcome-name {
+		font-size: 1.4rem;
 		font-weight: 700;
-		margin: 0 0 8px;
+		margin: 0;
 		color: #fff;
-		line-height: 1.1;
+		letter-spacing: -0.01em;
 	}
 
-	.hero-meta {
+	.welcome-role {
+		font-size: 0.85rem;
+		font-weight: 500;
+		color: #999;
+		margin: 0.2rem 0 0;
+	}
+
+	.welcome-location {
+		font-size: 0.78rem;
+		font-weight: 400;
+		color: #666;
+		margin: 0.15rem 0 0;
+	}
+
+	.welcome-pitch {
+		font-size: 0.84rem;
+		line-height: 1.6;
+		color: #aaa;
+		margin: 0;
+		text-align: center;
+	}
+
+	.welcome-details {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+		width: 100%;
 		display: flex;
-		align-items: center;
-		gap: 6px;
+		flex-direction: column;
+		gap: 0.5rem;
+		border-top: 1px solid rgba(255, 255, 255, 0.08);
+		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+		padding: 1rem 0;
+	}
+
+	.welcome-details li {
 		font-size: 0.8rem;
 		color: #999;
-		margin-bottom: 8px;
+		line-height: 1.4;
 	}
 
-	.hero-dot {
-		color: #555;
+	.detail-label {
+		display: inline-block;
+		font-size: 0.65rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: #fff;
+		background: rgba(255, 255, 255, 0.1);
+		padding: 2px 6px;
+		border-radius: 3px;
+		margin-right: 0.4rem;
+		vertical-align: middle;
 	}
 
-	.hero-desc {
-		font-size: 0.85rem;
-		color: #bbb;
-		line-height: 1.5;
-		margin: 0;
-		display: -webkit-box;
-		-webkit-line-clamp: 2;
-		line-clamp: 2;
-		-webkit-box-orient: vertical;
-		overflow: hidden;
-	}
-
-	/* ===== ROW SECTIONS ===== */
-	.row-section {
+	.welcome-actions {
 		display: flex;
 		flex-direction: column;
-		gap: 14px;
-	}
-
-	.row-header {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-		padding: 0 20px;
-	}
-
-	.row-title {
-		font-size: 1.15rem;
-		font-weight: 600;
-		color: #e8e8e8;
-		margin: 0;
-	}
-
-	.row-see-all {
-		font-size: 0.8rem;
-		font-weight: 500;
-		color: #8ab4f8;
-		background: none;
-		border: none;
-		cursor: pointer;
-		padding: 4px 0;
-		font-family: inherit;
-	}
-
-	.row-scroll {
-		display: flex;
-		gap: 12px;
-		overflow-x: auto;
-		padding: 0 20px;
-		scroll-snap-type: x mandatory;
-		-webkit-overflow-scrolling: touch;
-		scrollbar-width: none;
-	}
-
-	.row-scroll::-webkit-scrollbar {
-		display: none;
-	}
-
-	.row-card {
-		flex-shrink: 0;
-		width: 130px;
-		display: flex;
-		flex-direction: column;
-		gap: 8px;
-		background: none;
-		border: none;
-		padding: 0;
-		cursor: pointer;
-		scroll-snap-align: start;
-		text-align: left;
-		font-family: inherit;
-	}
-
-	.row-card-image {
-		width: 130px;
-		height: 130px;
-		border-radius: 12px;
-		overflow: hidden;
-		background: #fff;
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.row-card-image img {
+		gap: 0.6rem;
 		width: 100%;
-		height: 100%;
-		object-fit: contain;
-		padding: 10px;
-		transition: transform 0.3s ease;
+		margin-top: 0.25rem;
 	}
 
-	.row-card:active .row-card-image img {
-		transform: scale(1.05);
+	.welcome-cta {
+		width: 100%;
+		padding: 0.85rem;
+		background: #fff;
+		color: #0a0a0a;
+		border: none;
+		border-radius: 10px;
+		font-size: 0.9rem;
+		font-weight: 600;
+		cursor: pointer;
+		font-family: inherit;
 	}
 
-	.row-card-info {
-		display: flex;
-		flex-direction: column;
-		gap: 2px;
-		padding: 0 2px;
-	}
-
-	.row-card-title {
-		font-size: 0.8rem;
-		font-weight: 500;
-		color: #e8e8e8;
-		white-space: nowrap;
-		overflow: hidden;
-		text-overflow: ellipsis;
-	}
-
-	.row-card-meta {
-		font-size: 0.7rem;
-		color: #666;
-	}
-
-	/* ===== FOOTER ===== */
-	.gtv-footer {
-		padding: 24px 20px;
+	.welcome-resume {
+		display: block;
+		width: 100%;
+		padding: 0.85rem;
+		background: transparent;
+		color: #fff;
+		border: 1px solid rgba(255, 255, 255, 0.2);
+		border-radius: 10px;
+		font-size: 0.9rem;
+		font-weight: 600;
 		text-align: center;
-		font-size: 0.75rem;
-		color: #555;
+		text-decoration: none;
+		font-family: inherit;
+		box-sizing: border-box;
 	}
 </style>

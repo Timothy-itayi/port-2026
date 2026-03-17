@@ -79,12 +79,27 @@
 	</div>
 
 	<header class="detail-hero">
-		<div class="hero-left">
-			<div class="hero-icon">
-				<img src={project.image} alt={project.title} />
+		{#if project.previewVideo}
+			<div class="hero-video-banner" class:portrait={project.portraitPreview}>
+				<video
+					src={project.previewVideo}
+					autoplay
+					muted
+					loop
+					playsinline
+					disablepictureinpicture
+				></video>
 			</div>
+		{/if}
+		<div class="hero-left">
+			{#if !project.previewVideo}
+				<div class="hero-icon">
+					<img src={project.image} alt={project.title} />
+				</div>
+			{/if}
 			<div class="hero-text">
 				<h1 class="hero-title">{project.title}</h1>
+				<p class="hero-subtitle">{project.subtitle}</p>
 				<p class="hero-desc">{project.description}</p>
 			</div>
 		</div>
@@ -155,7 +170,6 @@
 	</div>
 
 	<footer class="corp-footer">
-		<span class="footer-copy">© 2026 Timothy Itayi</span>
 		<span class="footer-id">ID: {project.slug.toUpperCase()}</span>
 	</footer>
 </div>
@@ -262,6 +276,37 @@
 		border-bottom: 1px solid #e6e9ed;
 	}
 
+	.hero-video-banner {
+		width: 100%;
+		aspect-ratio: 16 / 9;
+		border-radius: 12px;
+		overflow: hidden;
+		background: #0a0a0a;
+		margin-bottom: 24px;
+	}
+
+	.hero-video-banner.portrait {
+		width: 100%;
+		aspect-ratio: auto;
+		height: 520px;
+		display: flex;
+		justify-content: center;
+		background: #f4f6f8;
+	}
+
+	.hero-video-banner video {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+	}
+
+	.hero-video-banner.portrait video {
+		width: auto;
+		height: 100%;
+		object-fit: contain;
+	}
+
 	.hero-left {
 		display: flex;
 		align-items: flex-start;
@@ -301,6 +346,15 @@
 		color: #0a2540;
 		letter-spacing: -0.02em;
 		line-height: 1.2;
+	}
+
+	.hero-subtitle {
+		font-size: 0.82rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+		color: #8898a8;
+		margin: 0;
 	}
 
 	.hero-desc {

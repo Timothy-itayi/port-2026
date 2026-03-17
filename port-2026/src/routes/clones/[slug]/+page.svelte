@@ -40,6 +40,7 @@
 			<header class="project-header">
 				<div class="title-block">
 					<h1 class="project-title">{clone.title}</h1>
+					<p class="project-type">{clone.subtitle}</p>
 					<p class="project-subtitle">BY {clone.author.toUpperCase()}</p>
 				</div>
 			</header>
@@ -128,9 +129,6 @@
 		<!-- Footer -->
 		<footer class="archive-footer">
 			<div class="footer-content">
-				<div class="footer-left">
-					© 2026 TIMOTHY ITAYI / SYSTEM ENGINEER
-				</div>
 				<div class="footer-right">
 					CLONE ID: {clone.slug.toUpperCase()}-001
 				</div>
@@ -222,8 +220,16 @@
 		letter-spacing: -4px;
 	}
 
-	.project-subtitle {
+	.project-type {
 		margin: 0.5rem 0 0 0;
+		font-size: 0.85rem;
+		font-weight: 900;
+		letter-spacing: 0.05em;
+		opacity: 0.5;
+	}
+
+	.project-subtitle {
+		margin: 0.3rem 0 0 0;
 		font-size: 1rem;
 		font-weight: 900;
 		opacity: 0.7;

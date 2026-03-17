@@ -3,7 +3,6 @@
 	import { goto } from '$app/navigation';
 	import gsap from 'gsap';
 	import { projects } from '$lib/data/projects.js';
-	import { styleActive } from '$lib/stores/theme.js';
 	import './paper.css';
 
 	export let content: string = '';
@@ -90,7 +89,7 @@
 		if (isTransitioning || !visible) return;
 		
 		if (content === 'PROJECTS') {
-			zoomIntoPage($styleActive ? '/projects/gallery' : '/projects');
+			zoomIntoPage('/projects');
 		} else if (content === 'ABOUT') {
 			inspectPaper('/about');
 		} else if (content === 'RESUME') {
@@ -523,8 +522,7 @@
 	class:visible 
 	class:transitioning={isTransitioning} 
 	class:about-paper={content === 'ABOUT'}
-	class:projects-paper={content === 'PROJECTS' && !$styleActive}
-	class:gallery-paper={content === 'PROJECTS' && $styleActive}
+	class:projects-paper={content === 'PROJECTS'}
 	class:resume-paper={content === 'RESUME'}
 >
 	<button 
@@ -543,34 +541,7 @@
 			{#if content !== 'ABOUT' && content !== 'PROJECTS' && content !== 'RESUME'}
 				<div class="paper-header">{content || 'PRINTING...'}</div>
 			{/if}
-			{#if content === 'PROJECTS' && $styleActive}
-				<div class="gallery-preview">
-					<div class="gp-header">
-						<span class="gp-brand">TIMOTHY<sup>©</sup></span>
-						<span class="gp-cta">Contact</span>
-					</div>
-					<div class="gp-tabs">
-						<span class="gp-tab active">All</span>
-						<span class="gp-tab">Personal</span>
-						<span class="gp-tab">Web</span>
-						<span class="gp-tab">Mobile</span>
-					</div>
-					<div class="gp-grid">
-						{#each projects.slice(0, 6) as project}
-							<div class="gp-card">
-								<div class="gp-card-img">
-									<img src={project.image} alt={project.title} />
-								</div>
-								<span class="gp-card-title">{project.title}</span>
-							</div>
-						{/each}
-					</div>
-					<div class="gp-footer">
-						<span class="gp-footer-brand">Timothy Itayi</span>
-						<span class="gp-footer-tagline">curated works</span>
-					</div>
-				</div>
-			{:else if content === 'PROJECTS'}
+			{#if content === 'PROJECTS'}
 				<div class="corp-preview">
 					<div class="cp-nav">
 						<span class="cp-logo">Timothy Itayi</span>
@@ -602,87 +573,49 @@
 						</div>
 					{/each}
 					<div class="cp-footer">
-						<span>© 2026 Timothy Itayi</span>
+						<span>Timothy Itayi</span>
 					</div>
 				</div>
-			{:else if content === 'ABOUT'}
-				<div class="dossier-preview">
-					<!-- Header -->
-					<div class="dp-header">
-						<div class="dp-brand">
-							<div class="dp-seal">&#9881;</div>
-							<div class="dp-agency">
-								<div class="dp-agency-name">Bureau of Engineering Investigation</div>
-								<div class="dp-agency-sub">PERSONNEL DOSSIER</div>
-							</div>
+		{:else if content === 'ABOUT'}
+			<div class="about-preview">
+					<div class="ap-header">
+						<div class="ap-header-left">
+							<div class="ap-name">Timothy Itayi</div>
+							<div class="ap-role">Full-Stack & Mobile Developer</div>
+							<div class="ap-location">Melbourne, Australia</div>
 						</div>
-						<div class="dp-file-info">
-							<span class="dp-file-label">FILE</span>
-							<span class="dp-file-value">#2026-TI-0x3F</span>
+						<div class="ap-header-right">
+							<img src="/about/about-image-1.jpeg" alt="Timothy Itayi" class="ap-photo" />
 						</div>
 					</div>
-					
-					<!-- Body -->
-					<div class="dp-body">
-						<!-- Photo Column -->
-						<div class="dp-photo-col">
-							<div class="dp-taped-photo">
-								<div class="dp-tape dp-tape-top"></div>
-								<div class="dp-tape dp-tape-bottom"></div>
-								<img src="/about/about-image-1.jpeg" alt="Timothy" />
-							</div>
-							<div class="dp-photo-label">SUBJECT #TI-001</div>
-							<div class="dp-stamps">
-								<span class="dp-stamp dp-classified">CLASSIFIED</span>
-								<span class="dp-stamp dp-approved">APPROVED</span>
+
+					<div class="ap-section">
+						<div class="ap-section-title">Summary</div>
+						<div class="ap-text">Full-stack developer with a frontend focus. 3 years building polished interfaces for web and mobile with React and React Native.</div>
+					</div>
+
+					<div class="ap-two-col">
+						<div class="ap-section">
+							<div class="ap-section-title">Core Stack</div>
+							<div class="ap-stack-list">
+								<div class="ap-stack-row"><span class="ap-stack-cat">Frontend</span> React, React Native, TypeScript</div>
+								<div class="ap-stack-row"><span class="ap-stack-cat">Backend</span> Node.js, AWS, PostgreSQL</div>
+								<div class="ap-stack-row"><span class="ap-stack-cat">Tooling</span> Git, CI/CD, Serverless</div>
 							</div>
 						</div>
-						
-						<!-- Data Column -->
-						<div class="dp-data-col">
-							<div class="dp-data-section">
-								<div class="dp-data-row"><span class="dp-label">SUBJECT</span><span class="dp-value dp-highlight-name">TIMOTHY ITAYI</span></div>
-								<div class="dp-data-row"><span class="dp-label">CODENAME</span><span class="dp-value dp-highlight-codename">"THE ENGINEER"</span></div>
-								<div class="dp-data-row"><span class="dp-label">CLASS</span><span class="dp-value">SYSTEM ENGINEER</span></div>
-								<div class="dp-data-row"><span class="dp-label">LOCATION</span><span class="dp-value">MELBOURNE, AU</span></div>
-								<div class="dp-data-row"><span class="dp-label">STATUS</span><span class="dp-value dp-status-active">ACTIVE</span></div>
-							</div>
-							
-							<div class="dp-data-section dp-wanted-section">
-								<div class="dp-section-title">WANTED FOR:</div>
-								<div class="dp-wanted-content">Refactoring • Docs • Friday deploys</div>
+						<div class="ap-section">
+							<div class="ap-section-title">Focus Areas</div>
+							<div class="ap-focus-list">
+								<div class="ap-focus-item">Responsive web interfaces with React</div>
+								<div class="ap-focus-item">Cross-platform mobile with React Native</div>
+								<div class="ap-focus-item">Complex state & real-time sync</div>
 							</div>
 						</div>
 					</div>
-					
-					<!-- Intel Grid -->
-					<div class="dp-intel-grid">
-						<div class="dp-intel-box">
-							<div class="dp-intel-title">STACK</div>
-							<div class="dp-intel-tags">
-								<span class="dp-tag">TS</span>
-								<span class="dp-tag">Svelte</span>
-								<span class="dp-tag">Go</span>
-								<span class="dp-tag">Rust</span>
-							</div>
-						</div>
-						<div class="dp-intel-box">
-							<div class="dp-intel-title">INTERESTS</div>
-							<div class="dp-intel-text">F1, UFC, books</div>
-						</div>
-						<div class="dp-intel-box">
-							<div class="dp-intel-title">ANTI-PATTERNS</div>
-							<div class="dp-intel-text dp-anti">Magic numbers, god classes</div>
-						</div>
-					</div>
-					
-					<!-- Footer -->
-					<div class="dp-footer">
-						<div class="dp-bio-label">KEYSTROKE ANALYSIS</div>
-						<div class="dp-key-combo">
-							<span class="dp-key">CTRL+C</span>
-							<span class="dp-key">CTRL+V</span>
-						</div>
+
+					<div class="ap-footer">
+						<span class="ap-footer-note">Melbourne, AU</span>
+						<span class="ap-footer-btn">Go Back</span>
 					</div>
 				</div>
 			{:else if content === 'RESUME'}

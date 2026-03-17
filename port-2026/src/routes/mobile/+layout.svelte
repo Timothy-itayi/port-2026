@@ -8,15 +8,6 @@
 
 	const { children } = $props();
 
-	const navItems = [
-		{ label: 'Home', path: '/mobile', icon: '⌂', exact: true },
-		{ label: 'Projects', path: '/mobile/projects', icon: '◫', exact: false },
-		{ label: 'About', path: '/mobile/about', icon: '◉', exact: true },
-		{ label: 'Resume', path: '/mobile/resume', icon: '◈', exact: true }
-	];
-
-	let currentPath = $derived($page.url.pathname);
-
 	const getDesktopRoute = (mobilePath: string): string => {
 		if (mobilePath === '/mobile') return '/';
 		return mobilePath.replace(/^\/mobile/, '');
@@ -50,15 +41,6 @@
 			window.removeEventListener('resize', resizeHandler);
 		}
 	});
-
-	const isActive = (itemPath: string, exact: boolean): boolean => {
-		if (exact) return currentPath === itemPath;
-		return currentPath === itemPath || currentPath.startsWith(itemPath + '/');
-	};
-
-	const handleNavClick = (path: string) => {
-		goto(path);
-	};
 </script>
 
 <div class="mobile-shell">
@@ -67,18 +49,4 @@
 			{@render children()}
 		</div>
 	</main>
-
-	<nav class="tab-bar">
-		{#each navItems as item}
-			<button
-				class="tab-item"
-				class:active={isActive(item.path, item.exact)}
-				onclick={() => handleNavClick(item.path)}
-				aria-label={item.label}
-			>
-				<span class="tab-icon">{item.icon}</span>
-				<span class="tab-label">{item.label}</span>
-			</button>
-		{/each}
-	</nav>
 </div>
