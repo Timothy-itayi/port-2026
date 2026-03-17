@@ -48,7 +48,7 @@
 <main class="resume-page">
 	<div class="resume-content">
 		<h1>RESUME</h1>
-		<p>Download my resume for hiring managers.</p>
+		
 		<button onclick={() => {
 			const link = document.createElement('a');
 			link.href = '/Resume_Timothy_itayi.pdf';
