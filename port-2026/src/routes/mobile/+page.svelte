@@ -15,23 +15,40 @@
 		</div>
 
 		<p class="welcome-pitch">
-			I build polished, performant interfaces for web and mobile.
-			Specialising in React, React Native, TypeScript, and Next.js,
-			with backend experience across Node.js, AWS, and PostgreSQL.
+			I build with React, React Native, TypeScript, and Next.js.
+			Passionate about improving and always learning.
 		</p>
 
-		<ul class="welcome-details">
-			<li><span class="detail-label">Focus</span> Frontend & mobile development</li>
-			<li><span class="detail-label">Stack</span> React, React Native, TypeScript, SvelteKit</li>
-			<li><span class="detail-label">Training</span> Dev Academy, Harvard CS50</li>
-		
-		</ul>
+		<div class="welcome-stack">
+			<div class="stack-group">
+				<span class="stack-label">Frontend</span>
+				<div class="stack-items">
+					<span class="stack-chip">React</span>
+					<span class="stack-chip">React Native</span>
+					<span class="stack-chip">TypeScript</span>
+					<span class="stack-chip">Next.js</span>
+					<span class="stack-chip">SvelteKit</span>
+				</div>
+			</div>
+			<div class="stack-group">
+				<span class="stack-label">Backend</span>
+				<div class="stack-items">
+					<span class="stack-chip">Node.js</span>
+					<span class="stack-chip">AWS</span>
+					<span class="stack-chip">PostgreSQL</span>
+				</div>
+			</div>
+		</div>
+
+		<div class="welcome-training">
+			<span class="detail-label">Training</span> Dev Academy, Harvard CS50
+		</div>
 
 		<div class="welcome-actions">
 			<button class="welcome-cta" onclick={() => goto('/mobile/projects')}>
 				View Projects
 			</button>
-			<a class="welcome-resume" href="/Resume_Timothy_Itayi.pdf" download="Resume_Timothy_Itayi.pdf">
+			<a class="welcome-resume" href="/Resume_Timothy_itayi.pdf" download="Resume_Timothy_Itayi.pdf">
 				Resume
 			</a>
 		</div>
@@ -108,23 +125,49 @@
 		text-align: center;
 	}
 
-	.welcome-details {
-		list-style: none;
-		padding: 0;
-		margin: 0;
+	.welcome-stack {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
-		gap: 0.5rem;
+		gap: 0.75rem;
 		border-top: 1px solid rgba(255, 255, 255, 0.08);
 		border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 		padding: 1rem 0;
 	}
 
-	.welcome-details li {
+	.stack-group {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+	}
+
+	.stack-label {
+		font-size: 0.65rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: #666;
+	}
+
+	.stack-items {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+	}
+
+	.stack-chip {
+		font-size: 0.75rem;
+		font-weight: 500;
+		color: #ccc;
+		background: rgba(255, 255, 255, 0.08);
+		padding: 3px 10px;
+		border-radius: 4px;
+	}
+
+	.welcome-training {
 		font-size: 0.8rem;
 		color: #999;
-		line-height: 1.4;
+		width: 100%;
 	}
 
 	.detail-label {

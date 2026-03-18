@@ -8,6 +8,12 @@
 	import Paper from '../lib/components/Paper.svelte';
 	import { BREAKPOINTS } from '$lib/utils/viewport.js';
 	import { themeActive, toggleTheme } from '$lib/stores/theme.js';
+	import { projects } from '$lib/data/projects.js';
+
+	const showcaseSlugs = ['amber', 'stacks', 'formula1-heritage'];
+	const featuredProjects = showcaseSlugs
+		.map(slug => projects.find(p => p.slug === slug))
+		.filter((p): p is NonNullable<typeof p> => p !== undefined);
 
 	let selectedButton: string | null = null;
 	let lineOneEl: HTMLElement | null = null;
@@ -159,6 +165,22 @@
 		projectPrintSound = new Audio('/sounds/project-button-sound.mp3');
 		projectPrintSound.volume = 0.5;
 
+		gsap.from('.hero-section', {
+			opacity: 0,
+			y: 20,
+			duration: 0.6,
+			ease: 'power2.out'
+		});
+
+		gsap.from('.teaser-card', {
+			opacity: 0,
+			y: 16,
+			duration: 0.4,
+			stagger: 0.1,
+			delay: 0.3,
+			ease: 'power2.out'
+		});
+
 		typeLine(lineOneEl, 'SYSTEM READY', 1.0);
 		gsap.delayedCall(1.3, () => typeLine(lineTwoEl, 'PORTFOLIO LOADED', 1.4));
 		gsap.delayedCall(3.0, () => typeLine(promptEl, '> SELECT CMD', 0.9));
@@ -182,9 +204,93 @@
 	<title>Timothy Itayi | Portfolio</title>
 </svelte:head>
 
-<main class="stage">
+<main class="stage" class:theme-alt={$themeActive}>
+	<!-- Hero Section -->
+	<section class="hero-section">
+		<div class="hero-inner">
+			<div class="hero-photo">
+				<img src="/about/about-image-1.jpeg" alt="Timothy Itayi" />
+			</div>
+			<div class="hero-info">
+				<h1 class="hero-name">Timothy Itayi</h1>
+				<p class="hero-role">Frontend & Mobile Developer</p>
+				<p class="hero-location">Melbourne, Australia</p>
+			</div>
+			<p class="hero-pitch">
+				I build with React, React Native, TypeScript, and Next.js. Specialising in frontend development, always looking to improve.
+			</p>
+			<div class="hero-stack">
+				<div class="hero-stack-group">
+					<span class="hero-stack-label">Frontend</span>
+					<div class="hero-stack-items">
+						<span class="hero-chip">React</span>
+						<span class="hero-chip">React Native</span>
+						<span class="hero-chip">TypeScript</span>
+						<span class="hero-chip">Next.js</span>
+						<span class="hero-chip">SvelteKit</span>
+					</div>
+				</div>
+				<div class="hero-stack-group">
+					<span class="hero-stack-label">Backend</span>
+					<div class="hero-stack-items">
+						<span class="hero-chip">Node.js</span>
+						<span class="hero-chip">AWS</span>
+						<span class="hero-chip">PostgreSQL</span>
+					</div>
+				</div>
+			</div>
+			<div class="hero-training">
+				<span class="hero-training-label">Training</span> Dev Academy · Harvard CS50
+			</div>
+		</div>
+	</section>
+
+	<!-- Project Teasers -->
+	<section class="teaser-section">
+		<h2 class="teaser-heading">Showcase</h2>
+		<div class="teaser-grid">
+			{#each featuredProjects as project}
+				<div class="teaser-card" role="button" tabindex="0" onclick={() => goto(`/projects/${project.slug}`)} onkeydown={(e) => { if (e.key === 'Enter') goto(`/projects/${project.slug}`); }}>
+					<div class="teaser-thumb" class:portrait={project.portraitPreview}>
+						{#if project.previewVideo}
+							<video
+								src={project.previewVideo}
+								autoplay
+								muted
+								loop
+								playsinline
+								disablepictureinpicture
+								preload="auto"
+								poster={project.image}
+							></video>
+						{:else}
+							<img src={project.image} alt={project.title} />
+						{/if}
+					</div>
+					<div class="teaser-info">
+						<span class="teaser-title">{project.title}</span>
+						<span class="teaser-sub">{project.subtitle}</span>
+						<div class="teaser-tags">
+							{#each project.techStack.slice(0, 3) as tech}
+								<span class="teaser-tag">{tech}</span>
+							{/each}
+						</div>
+					</div>
+					<div class="teaser-links">
+						{#if project.liveSiteUrl}
+							<a href={project.liveSiteUrl} target="_blank" rel="noopener" class="teaser-link-badge live" onclick={(e) => e.stopPropagation()}>Live</a>
+						{/if}
+						{#if project.githubUrl}
+							<a href={project.githubUrl} target="_blank" rel="noopener" class="teaser-link-badge" onclick={(e) => e.stopPropagation()}>GitHub</a>
+						{/if}
+					</div>
+				</div>
+			{/each}
+		</div>
+	</section>
+
 	<!-- Desktop Console + Printer UI -->
-		<section class="console-container" class:theme-alt={$themeActive}>
+		<section class="console-container">
 			<!-- Console Top Cover -->
 			<div class="console-cover">
 				<div class="cover-ridge"></div>
@@ -201,6 +307,18 @@
 						<div class="console-top">
 							<div class="top-title">CONTROL PANEL</div>
 							<div class="top-strip">
+								<a href="https://github.com/Timothy-itayi" target="_blank" rel="noopener" class="strip-link">
+									<span class="toggle-label">GITHUB</span>
+								</a>
+								<a href="https://linkedin.com/in/timothyitayi" target="_blank" rel="noopener" class="strip-link">
+									<span class="toggle-label">LINKEDIN</span>
+								</a>
+								<a href="mailto:hello@timothyitayi_icloud.com" class="strip-link">
+									<span class="toggle-label">EMAIL</span>
+								</a>
+								<a href="/Resume_Timothy_itayi.pdf" download="Resume_Timothy_itayi.pdf" class="strip-link">
+									<span class="toggle-label">RESUME</span>
+								</a>
 								<button
 									class="strip-toggle"
 									class:active={$themeActive}
@@ -244,6 +362,7 @@
 										</div>
 									{/each}
 								</div>
+
 							</div>
 
 							<!-- Right Panel: Printer -->
