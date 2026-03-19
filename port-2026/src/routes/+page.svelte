@@ -213,9 +213,6 @@
 	<!-- Hero Section -->
 	<section class="hero-section">
 		<div class="hero-inner">
-			<div class="hero-photo">
-				<img src="/about/about-image-1.jpeg" alt="Timothy Itayi" />
-			</div>
 			<div class="hero-info">
 				<h1 class="hero-name">Timothy Itayi</h1>
 				<p class="hero-role">Frontend & Mobile Developer</p>

@@ -4,10 +4,6 @@
 
 <div class="welcome-screen">
 	<div class="welcome-inner">
-		<div class="welcome-photo">
-			<img src="/about/about-image-1.jpeg" alt="Timothy Itayi" loading="eager" onload={(e) => e.currentTarget.classList.add('loaded')} />
-		</div>
-
 		<div class="welcome-intro">
 			<h1 class="welcome-name">Timothy Itayi</h1>
 			<p class="welcome-role">Full-Stack Developer</p>
@@ -75,26 +71,6 @@
 		gap: 1.5rem;
 		width: 100%;
 		max-width: 340px;
-	}
-
-	.welcome-photo {
-		width: 80px;
-		height: 80px;
-		border-radius: 50%;
-		overflow: hidden;
-		border: 2px solid rgba(255, 255, 255, 0.12);
-	}
-
-	.welcome-photo img {
-		width: 100%;
-		height: 100%;
-		object-fit: cover;
-		opacity: 0;
-		transition: opacity 0.3s ease;
-	}
-
-	.welcome-photo :global(img.loaded) {
-		opacity: 1;
 	}
 
 	.welcome-intro {
