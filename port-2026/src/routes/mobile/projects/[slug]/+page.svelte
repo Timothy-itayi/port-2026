@@ -26,7 +26,7 @@
 					onloadeddata={() => (videoLoaded = true)}
 				></video>
 			{:else}
-				<img src={project.image} alt={project.title} />
+				<img src={project.image} alt={project.title} class="hero-img" onload={(e) => e.currentTarget.classList.add('loaded')} />
 			{/if}
 		</div>
 		<div class="hero-gradient"></div>
@@ -132,6 +132,15 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+	}
+
+	.hero-media img {
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.hero-media :global(img.loaded) {
+		opacity: 1;
 	}
 
 	.hero-media video {

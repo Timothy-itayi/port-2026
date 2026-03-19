@@ -15,6 +15,7 @@
 		.map(slug => projects.find(p => p.slug === slug))
 		.filter((p): p is NonNullable<typeof p> => p !== undefined);
 
+	let viewportReady = false;
 	let selectedButton: string | null = null;
 	let lineOneEl: HTMLElement | null = null;
 	let lineTwoEl: HTMLElement | null = null;
@@ -144,7 +145,11 @@
 	};
 
 	onMount(() => {
-		checkViewportAndRedirect();
+		if (browser && window.innerWidth < BREAKPOINTS.tablet) {
+			goto('/mobile', { replaceState: true });
+			return;
+		}
+		viewportReady = true;
 
 		let resizeTimer: ReturnType<typeof setTimeout>;
 		resizeHandler = () => {
@@ -204,7 +209,7 @@
 	<title>Timothy Itayi | Portfolio</title>
 </svelte:head>
 
-<main class="stage" class:theme-alt={$themeActive}>
+<main class="stage" class:theme-alt={$themeActive} class:ready={viewportReady}>
 	<!-- Hero Section -->
 	<section class="hero-section">
 		<div class="hero-inner">

@@ -54,8 +54,8 @@
 
 	const downloadResume = () => {
 		const link = document.createElement('a');
-		link.href = '/Resume_Timothy_Itayi.pdf';
-		link.download = 'Resume_Timothy_Itayi.pdf';
+		link.href = '/Resume_Timothy_itayi.pdf';
+		link.download = 'Resume_Timothy_itayi.pdf';
 		document.body.appendChild(link);
 		link.click();
 		document.body.removeChild(link);
@@ -66,7 +66,7 @@
 	<!-- Featured Hero -->
 	<button class="hero" onclick={() => navigateToProject(featured.slug)}>
 		<div class="hero-image">
-			<img src={featured.image} alt={featured.title} />
+			<img src={featured.image} alt={featured.title} loading="eager" onload={(e) => e.currentTarget.classList.add('loaded')} />
 		</div>
 		<div class="hero-gradient"></div>
 		<div class="hero-content">
@@ -97,7 +97,7 @@
 					{#each catProjects as project}
 						<button class="row-card" onclick={() => navigateToProject(project.slug)}>
 							<div class="row-card-image">
-								<img src={project.image} alt={project.title} />
+								<img src={project.image} alt={project.title} loading="lazy" onload={(e) => e.currentTarget.classList.add('loaded')} />
 							</div>
 							<div class="row-card-info">
 								<span class="row-card-title">{project.title}</span>
@@ -170,6 +170,12 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.hero-image :global(img.loaded) {
+		opacity: 1;
 	}
 
 	.hero-gradient {
@@ -301,7 +307,12 @@
 		height: 100%;
 		object-fit: contain;
 		padding: 10px;
-		transition: transform 0.3s ease;
+		opacity: 0;
+		transition: opacity 0.3s ease, transform 0.3s ease;
+	}
+
+	.row-card-image :global(img.loaded) {
+		opacity: 1;
 	}
 
 	.row-card:active .row-card-image img {

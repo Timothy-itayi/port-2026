@@ -5,7 +5,7 @@
 <div class="welcome-screen">
 	<div class="welcome-inner">
 		<div class="welcome-photo">
-			<img src="/about/about-image-1.jpeg" alt="Timothy Itayi" />
+			<img src="/about/about-image-1.jpeg" alt="Timothy Itayi" loading="eager" onload={(e) => e.currentTarget.classList.add('loaded')} />
 		</div>
 
 		<div class="welcome-intro">
@@ -89,6 +89,12 @@
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
+		opacity: 0;
+		transition: opacity 0.3s ease;
+	}
+
+	.welcome-photo :global(img.loaded) {
+		opacity: 1;
 	}
 
 	.welcome-intro {
