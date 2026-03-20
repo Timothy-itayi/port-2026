@@ -25,7 +25,6 @@
 	let isPrinting = false;
 	let printContent = '';
 	let paperComponent: Paper;
-	let projectPrintSound: HTMLAudioElement | null = null;
 
 	const checkViewportAndRedirect = () => {
 		if (browser && window.innerWidth < BREAKPOINTS.tablet) {
@@ -88,26 +87,9 @@
 			.add(() => {
 				// Start paper animation as visor settles
 				isPrinting = true;
-				
-				// Play sound effect for PROJECTS button when print starts
-				if (label === 'PROJECTS' && projectPrintSound) {
-					projectPrintSound.currentTime = 0;
-					projectPrintSound.play().catch(() => {
-						// Ignore autoplay errors
-					});
-				}
-			}, 0.35); // Trigger print early during the spring-back
+			}, 0.35);
 		} else {
-			// If no visor, start immediately
 			isPrinting = true;
-			
-			// Play sound effect for PROJECTS button when print starts
-			if (label === 'PROJECTS' && projectPrintSound) {
-				projectPrintSound.currentTime = 0;
-				projectPrintSound.play().catch(() => {
-					// Ignore autoplay errors
-				});
-			}
 		}
 	};
 
@@ -165,10 +147,6 @@
 		lineTwoEl = document.querySelector<HTMLElement>('[data-terminal-line="2"]');
 		promptEl = document.querySelector<HTMLElement>('[data-terminal-line="3"]');
 		visorEl = document.querySelector<HTMLElement>('.roller-bar:last-child');
-
-		// Initialize audio for project print sound
-		projectPrintSound = new Audio('/sounds/project-button-sound.mp3');
-		projectPrintSound.volume = 0.5;
 
 		gsap.from('.hero-section', {
 			opacity: 0,
